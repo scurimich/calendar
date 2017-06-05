@@ -1,0 +1,38 @@
+.cur-day {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+	align-items: flex-end;
+	width: 230px;
+
+	&__arr {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 25px;
+		width: 23px;
+		color: #323232;
+		font-size: 20px;
+		background-color: #ebebeb;
+		text-decoration: none;
+		border-radius: 2px;
+	}
+
+	&__title {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 170px;
+		height: 25px;
+		background-color: #ebebeb;
+		border-radius: 2px;
+	}
+
+	&__link {
+		font-family: 'Open Sans', sans-serif;
+		font-size: 16px;
+		font-weight: 600;
+		color: #323232;
+		text-decoration: none;
+	}
+}

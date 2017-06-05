@@ -1,0 +1,13 @@
+.sidebar {
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
+	width: 230px;
+	background-color: #323232;
+	border-right: 1px solid #858585;
+
+  &__body {
+    display: flex;
+    flex-grow: 1;
+  }
+}

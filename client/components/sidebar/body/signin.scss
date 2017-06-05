@@ -1,0 +1,46 @@
+.auth {
+  flex-grow: 1;
+  padding-top: 20%;
+
+  &__title {
+    margin-bottom: 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #f0403c;
+    text-align: center;
+  }
+
+  &__form {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+
+  &__input {
+    box-sizing: border-box;
+    margin-bottom: 5px;
+    padding: 3px 10px 4px 10px;
+    width: 90%;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    color: #323232;
+    border: 1px solid #ebebeb;
+    background-color: #fff;
+  }
+
+  &__button {
+    box-sizing: border-box;
+    margin-top: 5px;
+    padding: 3px 8px 4px 8px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #f0403c;
+    background-color: #ebebeb;
+    border: 1px solid #ebebeb;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+}

@@ -1,0 +1,87 @@
+$authBackColor: #333;
+$authColor: #999;
+
+.footer {
+	padding: 5px;
+	background-color: #444;
+
+	&__head {
+		display: flex;
+		flex-wrap: nowrap;
+	}
+
+	&__controls {
+		width: 60%;
+		display: flex;
+		flex-wrap: nowrap;
+		margin-bottom: 5px;
+	}
+
+	&__settings {
+		display: flex;
+		align-items: center;
+		font-size: 20px;
+		color: #000;
+		margin-right: 15px;
+		cursor: pointer;
+	}
+
+	&__auth {
+		display: block;
+		padding: 2px 8px 3px;
+		font-family: 'Open Sans', sans-serif;
+		font-size: 14px;
+		color: $authColor;
+		background-color: $authBackColor;
+		border-radius: 2px;
+		cursor: pointer;
+		transition: .3s;
+
+		&:hover {
+			background-color: darken($authBackColor, 5%);
+			color: lighten($authColor, 50%)
+		}
+	}
+
+	&__socials {
+		width: 30%;
+	}
+
+	&__bot {
+		display: flex;
+		justify-content: center;
+		overflow: hidden;
+	}
+
+	&__copyright {
+		font-family: 'Open Sans Condensed', sans-serif;
+		font-size: 14px;
+		color: #999;
+	}
+}
+
+.socials {
+		width: 40%;
+
+	&__list {
+		display: flex;
+		flex-wrap: nowrap;
+		justify-content: space-between;
+		list-style: none;
+		padding: 0 10px;
+	}
+
+	&__item {
+
+	}
+
+	&__link {
+		font-size: 18px;
+		color: #999;
+		transition: .2s;
+
+		&:hover {
+			color: #fff;
+		}
+	}
+}

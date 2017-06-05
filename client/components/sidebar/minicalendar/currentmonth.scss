@@ -1,0 +1,34 @@
+$arrowColor: #808080;
+
+.cur-month {
+	display: flex;
+	flex-wrap: nowrap;
+	padding: 10px;
+
+	&__title {
+		font-family: 'Open Sans', sans-serif;
+		font-weight: 200;
+		font-size: 18px;
+		color: #f0403c;
+		width: 150px;
+	}
+
+	&__control {
+		margin-left: 20px;
+		flex-grow: 1;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		transition: .2s;
+	}
+
+	&__arrow {
+		font-size: 18px;
+		color: #808080;
+		cursor: pointer;
+
+		&:hover {
+			color: lighten($arrowColor, 20%);
+		}
+	}
+}

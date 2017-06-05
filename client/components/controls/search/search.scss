@@ -1,0 +1,30 @@
+.search {
+	position: relative;
+
+	&__input {
+		box-sizing: border-box;
+		background-color: #e6e6e6;
+		height: 25px;
+		width: 230px;
+		padding: 2px 15px 3px;
+		border-radius: 3px;
+		border: none;
+		font-family: 'Open Sans';
+		font-size: 13px;
+	}
+
+	&__cancel {
+		box-sizing: border-box;
+		position: absolute;
+		right: 5px;
+		top: 6px;
+		font-size: 10px;
+		width: 13px;
+		height: 13px;
+		padding: 1px 0 0 2px;
+		border-radius: 50%;
+		color: #fff;
+		background-color: #aaa;
+		cursor: pointer
+	}
+}

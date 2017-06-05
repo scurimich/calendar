@@ -1,0 +1,29 @@
+.views {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	width: 292px;
+	list-style: none;
+
+
+	&__link {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 25px;
+		width: 70px;
+		font-family: 'Open Sans', sans-serif;
+		font-size: 13px;
+		font-weight: 600;
+		text-decoration: none;
+		color: #323232;
+		background-color: #ebebeb;
+		transition: .3s;
+		cursor: pointer;
+
+		&_active {
+			color: #fff;
+			background-color: #f0403c;
+		}
+	}
+}

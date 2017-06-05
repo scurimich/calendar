@@ -1,0 +1,30 @@
+.search-res {
+	flex-grow: 1;
+	overflow: hidden;
+
+	&__head {
+		padding: 0 10px;
+		font-family: 'Open Sans', sans-serif;
+		font-size: 16px;
+		font-weight: 400;
+		color: #808080;
+		word-break: break-all;
+	}
+
+	&__list {
+		padding: 0 10px 0 5px;
+	}
+
+	&__item {
+		font-family: 'Open Sans', sans-serif;
+		font-size: 13px;
+		font-weight: 400;
+		color: #fff;
+	}
+}
+
+.side-event__link {
+	flex-grow: 1;
+	display: flex;
+	cursor: pointer;
+}

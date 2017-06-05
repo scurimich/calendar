@@ -1,0 +1,10 @@
+export const FULL_WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+export const WEEKDAYS = FULL_WEEKDAYS.map(val => val.substr(0, 3));
+export const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+export const WEEKS_COUNT = 6;
+export const DAYS_IN_WEEK = 7;
+export const NOW = new Date();
+export const TODAY = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate());
+export const MONTH_IN_YEAR = 12;
+export const DAY = 86400000;
+export const DAYS_IN_MONTH_SPACE = 42;
