@@ -21,7 +21,7 @@ export default class Month extends React.Component {
 
 	getMonth() {
 		const { space, monthInfo } = this.props;
-		let firstDay = new Date(monthInfo.current.year, monthInfo.previous.number, monthInfo.previous.days - (monthInfo.previous.extraDays));
+		let firstDay = new Date(monthInfo.current.year, monthInfo.current.number, 1 - (monthInfo.previous.extraDays));
 		const monthArray = [];
 
 		for (let i = 0; i < WEEKS_COUNT; i++, firstDay = new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate() + DAYS_IN_WEEK)) {

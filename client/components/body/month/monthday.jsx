@@ -5,11 +5,7 @@ const MonthDay = ({ date, current, today, hover, id, onDateClick, onAddClick, on
     <li
       id='day'
       data-date={id}
-      className={`month__day month-day
-        ${current ? 'month-day_active' : ''}
-        ${today ? 'month-day_today' : ''}
-        ${hover ? 'month-day_hover' : ''}
-      `}
+      className={`month__day month-day${current ? ' month-day_active' : ''}${today ? ' month-day_today' : ''}${hover ? ' month-day_hover' : ''}`}
       data-dd='true'
       onClick={onDayClick}
     >

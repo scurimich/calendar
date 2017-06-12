@@ -11,6 +11,7 @@ export default class MonthEvents extends React.Component {
     const { events, date } = this.props;
     if (events.length) {
       const lines = getWeekEvents(events, date);
+      console.log(lines)
 
       return lines.map((line, ndx) => {
         return <li key={ndx} className='week-events__line'>
