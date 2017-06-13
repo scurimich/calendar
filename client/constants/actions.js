@@ -32,6 +32,7 @@ export const CHANGE_DATE = 'CHANGE_CURRENT_DATE';
 export const SELECT_EVENT = 'SELECT_EVENT';
 //view
 export const CHANGE_VIEW = 'CHANGE_VIEW';
+export const CHANGE_VIEWINFO = 'CHANGE_VIEWINFO';
 //search
 export const CHANGE_SEARCH_STR = 'CHANGE_SEARCH_STR';
 //windows

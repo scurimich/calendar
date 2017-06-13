@@ -13,11 +13,13 @@ import groupsStatus from './groupsstatus';
 import groupWindow from './groupwindow';
 import sidebar from './sidebar';
 import space from './space';
+import viewInfo from './viewinfo';
 
 const reducer = combineReducers({
 	form,
 	user,
 	view,
+	viewInfo,
 	date,
 	search,
 	events,

@@ -7,32 +7,14 @@ export default class MonthEvents extends React.Component {
     super(props);
   }
 
-  renderEvents() {
-    const { events, date } = this.props;
+  getEvents() {
+    const { events, date, linesCount } = this.props;
     if (events.length) {
-      const lines = getWeekEvents(events, date);
-      console.log(lines)
-
-      return lines.map((line, ndx) => {
-        return <li key={ndx} className='week-events__line'>
-          {
-            line.map((item, ndx) => {
-              if (!item._id) {
-                return <span className={`week-events__offset week-events__offset_${item.size}`} key={ndx}></span>
-              }
-              return (
-                <span
-                  className={this.eventClasses(item)} 
-                  key={ndx} 
-                  id={item._id}
-                >
-                  {item.title}
-                </span>
-              );
-            })
-          }
-        </li>
-      });
+      return getWeekEvents(events, date, linesCount);
+    }
+    return {
+      lines: [],
+      extra: []
     }
   }
 
@@ -43,9 +25,34 @@ export default class MonthEvents extends React.Component {
   }
 
   render() {
+    const currentEvents = this.getEvents();
+    const { lines, extra } = currentEvents;
     return (
       <ul className='month__week-events week-events'>
-        {this.renderEvents()}
+        {
+          lines.map((line, ndx) => {
+            return (
+              <li key={ndx} className='week-events__line'>
+              {
+                line.map((item, ndx) => {
+                  return !item._id ?
+                    <div className={`week-events__offset week-events__offset_${item.size}`} key={ndx}></div> :
+                    <span className={this.eventClasses(item)} key={ndx} id={item._id}> {item.title} </span>
+                })
+              }
+              </li>
+            );
+          })
+        }
+        <li className='week-events__line'>
+          {
+            extra.map((item, ndx) => {
+              return item === 0 ?
+                <div className={'week-events__offset week-events__offset_1'} key={ndx}></div> :
+                <div className={'week-events__more'} key={ndx}><span className={'week-events__more-text'}>{`+ ${item} more`}</span></div>
+            })
+          }
+        </li>
       </ul>
     );
   }

@@ -10,7 +10,7 @@ import {
 	setSpace,
 	setMiniSpace
 } from '../../../actions/space';
-import { setView } from '../../../actions/view';
+import { setView, changeViewInfo } from '../../../actions/view';
 
 import './month.scss';
 
@@ -56,10 +56,12 @@ export default class Month extends React.Component {
 			date,
 			space,
 			monthInfo,
+			viewInfo,
 			eventDragAndDrop,
 			eventWindowShow,
-			setDate,
 			setView,
+			changeViewInfo,
+			setDate,
 			setSpace,
 			setMiniSpace
 		} = this.props;
@@ -85,6 +87,7 @@ export default class Month extends React.Component {
 									curNumber={monthInfo.current.days} 
 									key={ndx} 
 									weekNdx={ndx}
+									viewInfo={viewInfo}
 									selectedEvent={this.getSelectedEventDates()}
 									setDate={setDate}
 									setSpace={setSpace}
@@ -92,6 +95,7 @@ export default class Month extends React.Component {
 									setView={setView}
 									eventWindowShow={eventWindowShow}
 									eventDragAndDrop={eventDragAndDrop}
+									changeViewInfo={changeViewInfo}
 								/>
 							})
 						}
@@ -105,7 +109,8 @@ export default class Month extends React.Component {
 const mapStateToProps = state => ({
 	date: state.date,
 	space: state.space.main,
-	selectedEvent: state.selected
+	selectedEvent: state.selected,
+	viewInfo: state.viewInfo
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
@@ -113,7 +118,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 	setDate,
 	setSpace,
 	setMiniSpace,
-	setView
+	setView,
+	changeViewInfo
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Month);

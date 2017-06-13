@@ -56,15 +56,20 @@ export function sortEvents(a, b) {
   return a.dateBegin - b.dateBegin || b.duration - a.duration;
 }
 
-export function getWeekEvents(data, date) {
+export function getWeekEvents(data, date, linesCount) {
   const events = [...data];
   if (!events.length) return;
   events.sort(sortEvents);
   const lines = [];
+  const extra = [];
+  const result = {
+    lines,
+    extra
+  }
   let counter = 0;
   let flag = true;
 
-  while(events.length) {
+  while((linesCount && counter < linesCount) || (events.length && !linesCount)) {
     let day = date;
     let size = 0;
     let currentOffset;
@@ -105,5 +110,14 @@ export function getWeekEvents(data, date) {
     }
     counter++;
   }
-  return lines;
+
+  if (!events.length) return result;
+
+  let day = date;
+  for (let i = 0; i < DAYS_IN_WEEK; i++) {
+    const currentEvents = events.filter(event => (event.dateBegin <= day && event.dateEnd >= day)).length;
+    extra.push(currentEvents);
+    day = new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1);
+  }
+  return result;
 }

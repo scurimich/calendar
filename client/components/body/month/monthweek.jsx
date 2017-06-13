@@ -35,7 +35,8 @@ export default class MonthWeek extends React.Component {
           : null,
         onDateClick: this.onDateClick.bind(this, oneDay),
         onAddClick: this.onAddClick.bind(this, oneDay),
-        onDayClick: this.onDayClick.bind(this, oneDay)
+        onDayClick: this.onDayClick.bind(this, oneDay),
+        getCellHeight: this.getCellHeight.bind(this)
       });
     }
     return week;
@@ -63,11 +64,20 @@ export default class MonthWeek extends React.Component {
     setMiniSpace(date);
   }
 
+  getCellHeight(cell) {
+    if (!cell) return;
+    const { changeViewInfo } = this.props;
+    const LINE_HEIGHT = 21;
+    const height = cell.clientHeight - LINE_HEIGHT;
+    changeViewInfo({ cellSize: Math.floor(height / LINE_HEIGHT) });
+  }
+
   render() {
     const {
       firstDay,
       events,
       weekNdx,
+      viewInfo,
       selectedEvent,
       changeSelectedEvent,
       changeEvent,
@@ -78,6 +88,7 @@ export default class MonthWeek extends React.Component {
         <MonthEvents
           date={firstDay}
           events={events}
+          linesCount={viewInfo.cellSize}
           ndx={weekNdx}
           selectedEvent={selectedEvent}
           changeSelectedEvent={changeSelectedEvent}

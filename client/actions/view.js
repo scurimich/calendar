@@ -1,5 +1,9 @@
-import { CHANGE_VIEW } from '../constants/actions';
+import { CHANGE_VIEW, CHANGE_VIEWINFO } from '../constants/actions';
 
 export function setView(view) {
-	return { type: CHANGE_VIEW, view }
+	return { type: CHANGE_VIEW, view };
+}
+
+export function changeViewInfo(data) {
+  return { type: CHANGE_VIEWINFO, data };
 }

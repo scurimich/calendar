@@ -114,6 +114,7 @@ export default class Controls extends React.Component {
 
 
 const mapStateToProps = (state) => {
+	// console.log(state)
 	return {
 		activeView: state.view,
 		date: state.date,
