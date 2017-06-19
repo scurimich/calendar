@@ -7,10 +7,18 @@ import { addNull } from '../../../utils';
 export default class MonthWeek extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      selected: null
+    };
+    this.changeSelectedDate = this.changeSelectedDate.bind(this);
+  }
+
+  changeSelectedDate(date, e) {
+    this.setState({ selected: date });
   }
 
   getWeek() {
-    const { firstDay, activeDate, prevDays, curNumber, selectedEvent } = this.props;
+    const { firstDay, activeDate, prevDays, curNumber, selectedEvent, events } = this.props;
     const week = [];
     const year = firstDay.getFullYear();
     const month = firstDay.getMonth();
@@ -19,6 +27,7 @@ export default class MonthWeek extends React.Component {
       : new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate() - day);
 
     for (let i = 1; i <= DAYS_IN_WEEK; oneDay = new Date(oneDay.getFullYear(), oneDay.getMonth(), oneDay.getDate() + 1), i++) {
+      const currentEvents = events.filter(event => (event.dateBegin <= oneDay && event.dateEnd >= oneDay));
       const currentYear = oneDay.getFullYear();
       const currentMonth = addNull(oneDay.getMonth() + 1);
       const currentDate = addNull(oneDay.getDate());
@@ -26,6 +35,8 @@ export default class MonthWeek extends React.Component {
 
       week.push({
         date: oneDay,
+        selected: this.state.selected - oneDay === 0,
+        events: currentEvents,
         id: currentDay,
         current: !Boolean(activeDate - oneDay),
         today: !Boolean(TODAY - oneDay),
@@ -36,13 +47,15 @@ export default class MonthWeek extends React.Component {
         onDateClick: this.onDateClick.bind(this, oneDay),
         onAddClick: this.onAddClick.bind(this, oneDay),
         onDayClick: this.onDayClick.bind(this, oneDay),
-        getCellHeight: this.getCellHeight.bind(this)
+        getCellHeight: this.getCellHeight.bind(this),
+        changeSelectedDate: this.changeSelectedDate.bind(this)
       });
     }
     return week;
   }
 
-  onAddClick(date) {
+  onAddClick(date, e) {
+    e.stopPropagation();
     const { eventWindowShow } = this.props;
     const data = {
       dateBegin: date,
@@ -51,13 +64,13 @@ export default class MonthWeek extends React.Component {
     eventWindowShow(data);
   }
 
-  onDayClick(date, e) {
-    if (e.target.id === 'add-event' || e.target.id === 'day-date') return;
+  onDayClick(date) {
     const {setDate} = this.props;
     setDate(date);
   }
 
-  onDateClick(date) {
+  onDateClick(date, e) {
+    e.stopPropagation();
     const { setView, setSpace, setMiniSpace } = this.props;
     setView('Day');
     setSpace(date);
@@ -94,6 +107,7 @@ export default class MonthWeek extends React.Component {
           changeSelectedEvent={changeSelectedEvent}
           changeEvent={changeEvent}
           eventDragAndDrop={eventDragAndDrop}
+          changeSelectedDate={this.changeSelectedDate}
         />
         <ul className='month__week'>
           {

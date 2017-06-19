@@ -1,7 +1,9 @@
 import React from 'react';
 import { reduxForm, Field, SubmissionError } from 'redux-form';
+import Select from 'react-select';
 import { WEEKDAYS, DAY } from '../../constants/calendar';
 
+import 'react-select/dist/react-select.css';
 import './eventwindow.scss';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -69,7 +71,14 @@ const validate = values => {
 	return errors;
 }
 
+const options = [
+	{ value: 'one', label: 'One', color: '#000000' },
+	{ value: 'two', label: 'Two', color: '#eeeeee' }
+];
 
+function logChange(val) {
+  console.log("Selected: ", val);
+}
 
 class EventWindow extends React.Component {
 	constructor(props) {
@@ -79,16 +88,20 @@ class EventWindow extends React.Component {
 		this.state = {
 			allDay: allDay,
 			periodic: periodic,
-			notification: notification
+			notification: notification,
+			group: null
 		};
 
 		this.changeState = this.changeState.bind(this);
 		this.submit = this.submit.bind(this);
+		this.selectChange = this.selectChange.bind(this);
 	}
 
 	popupClasses() {
-		let classes = 'event-window'
-		return this.props.window.showed ? classes += ' opened' : classes;
+		const { showed } = this.props.window;
+		let classes = 'event-window';
+		console.log(showed)
+		return showed ? classes += ' opened' : classes;
 	}
 
 	changeState(e) {
@@ -119,10 +132,36 @@ class EventWindow extends React.Component {
 		});
 	}
 
+	selectRender({ label, value, color }, index) {
+		return (
+			<div className='group-select__option'>
+				<span className='group-select__color' style={ {backgroundColor: color} }></span>
+				<span className='group-select__text'>{label}</span>
+			</div>
+		);
+	}
+
+	selectLabelRender({ color, label, value }) {
+		return (
+			<div className='group-select__label'>
+				<span className='group-select__color' style={ {backgroundColor: color} }></span>
+				<span className='group-select__text'>{label}</span>
+			</div>
+		);
+	}
+
+	selectChange(group) {
+		this.setState({ group: group.value });
+	}
+
+	selectClear() {
+		this.selectChange.bind(this, null);
+	}
+
 	render() {
 		const { handleSubmit, onWindowClose, window, addGroup, reset } = this.props;
 		const {dateBegin, dateEnd, timeBegin, timeEnd } = window.data;
-		const { allDay, periodic, notification } = this.state;
+		const { allDay, periodic, notification, group } = this.state;
 		return (
 			<div className={this.popupClasses()} id='event-window'>
 				<div className='event-window__popup'>
@@ -169,12 +208,18 @@ class EventWindow extends React.Component {
 							<div className='event-window__link-cont'>
 								<a href='#' className='event-window__add' onClick={addGroup}>Add Group</a>
 							</div>
-							<Field className='event-window__select event-window__select_groups' component='select' name='group'>
-								<option value=''>Choose the group</option>
-								<option value='my'>My</option>
-								<option value='work'>Work</option>
-								<option value='family'>Family</option>
-							</Field>
+							<Select
+								className='event-window__select event-window__select_groups group-select'
+								name='group'
+								placeholder='Select type(group) of event'
+								searchable={false}
+								options={options}
+								optionRenderer={this.selectRender}
+								value={group}
+								valueRenderer={this.selectLabelRender}
+								onChange={this.selectChange}
+								resetValue={this.selectClear}
+							/>
 						</div>
 						<div className='event-window__notification'>
 							<Field className='event-window__checkbox' component='input' type='checkbox' id='notification' name='notification' onClick={this.changeState} checked={notification}/>

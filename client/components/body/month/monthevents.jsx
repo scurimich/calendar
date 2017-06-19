@@ -24,9 +24,14 @@ export default class MonthEvents extends React.Component {
       ${item.hidden ? 'week-events__item_hidden' : ''}`;
   }
 
+  moreClick(date, e) {
+    const { changeSelectedDate } = this.props;
+    changeSelectedDate(date);
+  }
+
   render() {
     const currentEvents = this.getEvents();
-    const { lines, extra } = currentEvents;
+    const { lines, extra, changeSelectedDate } = currentEvents;
     return (
       <ul className='month__week-events week-events'>
         {
@@ -47,9 +52,9 @@ export default class MonthEvents extends React.Component {
         <li className='week-events__line'>
           {
             extra.map((item, ndx) => {
-              return item === 0 ?
+              return item.count === 0 ?
                 <div className={'week-events__offset week-events__offset_1'} key={ndx}></div> :
-                <div className={'week-events__more'} key={ndx}><span className={'week-events__more-text'}>{`+ ${item} more`}</span></div>
+                <div className={'week-events__more'} key={ndx}><span className={'week-events__more-text'} onClick={this.moreClick.bind(this, item.date)}>{`+ ${item.count} more`}</span></div>
             })
           }
         </li>

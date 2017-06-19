@@ -53,32 +53,32 @@ export function fetchEvents() {
 
 export function addEvent(data) {
   console.log(data)
-  const token = localStorage.getItem('token');
-  return dispatch => {
-    return fetch('/event', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify(data)
-    })
-    .then(res => {
-      if (res.status === 403) throw new Error('Please login or register');
-      if (res.status === 401) throw new Error('Please login or register');
-      return res.json()
-    })
-    .then(data => {
-      if(data.error) throw new Error({message: data.error});
-      dispatch({ type: EVENT_WINDOW_HIDE });
-      dispatch(reset('event'));
-      dispatch({ type: EVENT_ADD, event: data });
-    })
-    .catch((err) => {
-      // console.log(err);
-      // console.log(err.message);
-    })
-  };
+  // const token = localStorage.getItem('token');
+  // return dispatch => {
+  //   return fetch('/event', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': token
+  //     },
+  //     body: JSON.stringify(data)
+  //   })
+  //   .then(res => {
+  //     if (res.status === 403) throw new Error('Please login or register');
+  //     if (res.status === 401) throw new Error('Please login or register');
+  //     return res.json()
+  //   })
+  //   .then(data => {
+  //     if(data.error) throw new Error({message: data.error});
+  //     dispatch({ type: EVENT_WINDOW_HIDE });
+  //     dispatch(reset('event'));
+  //     dispatch({ type: EVENT_ADD, event: data });
+  //   })
+  //   .catch((err) => {
+  //     // console.log(err);
+  //     // console.log(err.message);
+  //   })
+  // };
 }
 
 export function removeEvent(event) {

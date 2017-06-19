@@ -116,7 +116,7 @@ export function getWeekEvents(data, date, linesCount) {
   let day = date;
   for (let i = 0; i < DAYS_IN_WEEK; i++) {
     const currentEvents = events.filter(event => (event.dateBegin <= day && event.dateEnd >= day)).length;
-    extra.push(currentEvents);
+    extra.push({date: day, count: currentEvents});
     day = new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1);
   }
   return result;

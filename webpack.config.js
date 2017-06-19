@@ -50,15 +50,15 @@ module.exports = {
 				loader: 'babel',
 				exclude: [/node_modules/, /public/]
 			},
-			// {
-			// 	test:/\.json$/,
-			// 	loader: 'json',
-			// 	exclude: [/node_modules/, /public/]
-			// },
 			{
 				test: /\.scss/,
 				loader: ExtractTextPlugin.extract('css!sass'),
 				exclude: [/node_modules/, /public/]
+			},
+			{
+				test: /\.css$/,
+				loader: ExtractTextPlugin.extract('css'),
+				exclude: [/public/]
 			}
 		]
 	}

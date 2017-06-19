@@ -275,8 +275,8 @@
 	}
 
 	&__select {
+		margin-bottom: 10px;
 		box-sizing: border-box;
-		padding: 2px 5px 3px 5px;
 		font-family: 'Open Sans', sans-serif;
 		font-size: 16px;
 		color: #323232;
@@ -369,6 +369,44 @@
 	    width: 25px;
 	    padding-right: 5px;
 		}
+
+	}
+}
+
+.Select {
+	width: 300px;
+
+	&-control {
+		border-radius: 0;
+	}
+}
+
+.group-select {
+
+	&__label {
+		font-family: 'Open Sans', sans-serif;
+		font-size: 14px;
+		color: #323232;
+	}
+
+	&__color {
+		display: inline-block;
+		vertical-align: middle;
+		width: 20px;
+		height: 20px;
+		border-radius: 4px;
+		margin-right: 5px;
+	}
+
+	&__text {
+		display: inline-block;
+		vertical-align: middle;
+		font-family: 'Open Sans', sans-serif;
+		font-size: 14px;
+		color: #323232;
+	}
+
+	&__option {
 
 	}
 }
