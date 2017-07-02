@@ -40,6 +40,25 @@ const inputTime = ({ input, label, type, disabled, required, meta: { touched, er
 	);
 }
 
+const selectGroup = (field) => {
+	// console.log(field)
+	const { group, name, onChange, optionRenderer, options, resetValue, valueRenderer } = field;
+	return (
+		<Select 
+			className='event-window__select event-window__select_groups group-select'
+			placeholder='Select type(group) of event'
+			name={name}
+			searchable={false}
+			options={options}
+			onChange={onChange}
+			optionRenderer={optionRenderer}
+			valueRenderer={valueRenderer}
+			resetValue={resetValue}
+			value={group}
+		/>
+	);
+}
+
 const validate = values => {
 	// console.log(values)
 	const dateBegin = new Date(values.dateBegin);
@@ -83,7 +102,7 @@ function logChange(val) {
 class EventWindow extends React.Component {
 	constructor(props) {
 		super(props);
-		const { allDay, periodic, notification } = this.props.window.data;
+		const { allDay, periodic, notification } = this.props.eventWindow.data;
 		// console.log(this.props)
 		this.state = {
 			allDay: allDay,
@@ -95,12 +114,14 @@ class EventWindow extends React.Component {
 		this.changeState = this.changeState.bind(this);
 		this.submit = this.submit.bind(this);
 		this.selectChange = this.selectChange.bind(this);
+		this.selectRender = this.selectRender.bind(this);
+		this.selectLabelRender = this.selectLabelRender.bind(this);
+		this.selectClear = this.selectClear.bind(this);
 	}
 
 	popupClasses() {
-		const { showed } = this.props.window;
+		const { showed } = this.props.eventWindow;
 		let classes = 'event-window';
-		console.log(showed)
 		return showed ? classes += ' opened' : classes;
 	}
 
@@ -112,6 +133,7 @@ class EventWindow extends React.Component {
 	}
 
 	submit(values) {
+		console.log(values)
 		return sleep(0)
 		.then(() => {
 			const {allDay, periodic, notification} = this.state;
@@ -142,6 +164,7 @@ class EventWindow extends React.Component {
 	}
 
 	selectLabelRender({ color, label, value }) {
+		console.log(arguments)
 		return (
 			<div className='group-select__label'>
 				<span className='group-select__color' style={ {backgroundColor: color} }></span>
@@ -159,9 +182,10 @@ class EventWindow extends React.Component {
 	}
 
 	render() {
-		const { handleSubmit, onWindowClose, window, addGroup, reset } = this.props;
-		const {dateBegin, dateEnd, timeBegin, timeEnd } = window.data;
+		const { handleSubmit, onWindowClose, eventWindow, addGroup } = this.props;
+		const { dateBegin, dateEnd, timeBegin, timeEnd } = eventWindow.data;
 		const { allDay, periodic, notification, group } = this.state;
+		console.log(group)
 		return (
 			<div className={this.popupClasses()} id='event-window'>
 				<div className='event-window__popup'>
@@ -208,17 +232,15 @@ class EventWindow extends React.Component {
 							<div className='event-window__link-cont'>
 								<a href='#' className='event-window__add' onClick={addGroup}>Add Group</a>
 							</div>
-							<Select
-								className='event-window__select event-window__select_groups group-select'
+							<Field
 								name='group'
-								placeholder='Select type(group) of event'
-								searchable={false}
+								component={selectGroup}
 								options={options}
-								optionRenderer={this.selectRender}
-								value={group}
-								valueRenderer={this.selectLabelRender}
 								onChange={this.selectChange}
+								optionRenderer={this.selectRender}
+								valueRenderer={this.selectLabelRender}
 								resetValue={this.selectClear}
+								group={group}
 							/>
 						</div>
 						<div className='event-window__notification'>
@@ -227,7 +249,6 @@ class EventWindow extends React.Component {
 						</div>
 						<div className='event-window__control'>
 							<button className='event-window__button' type='submit'>submit</button>
-							<button className='event-window__button' type='button' onClick={reset}>clear</button>
 						</div>
 					</form>
 				</div>

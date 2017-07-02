@@ -1,23 +1,27 @@
 import {
   LOGIN,
-  AUTH_ERROR,
-  LOGOUT
+  LOGIN_ERROR,
+  LOGOUT,
+  REGISTER_ERROR
 } from '../constants/actions.js';
 
 const initialState = {
   authenticated: false,
   status: '',
-  error: ''
+  loginError: null,
+  registerError: null
 }
 
 export default function user(state = initialState, action) {
   switch (action.type) {
-    case AUTH_ERROR:
-      return { ...state, error: action.error, authenticated: false };
+    case LOGIN_ERROR:
+      return { ...state, loginError: action.error, authenticated: false };
+    case REGISTER_ERROR:
+      return {...state, registerError: action.error, authenticated: false};
     case LOGIN:
-      return { ...state, authenticated: true, error: '' };
+      return { ...state, authenticated: true, loginError: null, registerError: null };
     case LOGOUT:
-      return { ...state, authenticated: false, error: '' };
+      return { ...state, authenticated: false, loginError: null, registerError: null };
     default:
       return state;
   }

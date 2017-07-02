@@ -2,15 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { login, register, auth } from '../../../actions/auth';
+// import { login, register, auth } from '../../../actions/auth';
 import { groupWindowShow } from '../../../actions/groupwindow';
 import { eventWindowShow } from '../../../actions/eventwindow';
 import { fetchEvents } from '../../../actions/events';
 import { fetchGroups } from '../../../actions/groups';
 
 import SearchResult from './searchresults';
-import Signin from './signin';
-import Signup from './signup';
 import AddItem from './additem';
 import Events from './events';
 
@@ -58,9 +56,9 @@ class SidebarBody extends React.Component {
   }
   getContent() {
     const { user, search, events, groups, eventWindowShow, eventsStatus, fetchEvents } = this.props;
-    const token = localStorage.getItem('token');
-    if (!user.authenticated && token) return <span className='spinner'></span>;
-    if (!user.authenticated && !token) return this.renderAuth()
+    // const token = localStorage.getItem('token');
+    // if (!user.authenticated && token) return <span className='spinner'></span>;
+    // if (!user.authenticated && !token) return this.renderAuth()
     if (search) return (
       <SearchResult
         search={search}
@@ -94,8 +92,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   eventWindowShow,
   groupWindowShow,
-  login,
-  register,
+  // login,
+  // register,
   fetchEvents,
   fetchGroups
 }, dispatch);

@@ -17,13 +17,13 @@ const jwtOptions = {
 passport.use('local-login', new LocalStrategy(localOptions, (email, password, done) => {
   User.findOne({ email }, (err, user) => {
     if (err) return done(err);
-    if (!user) return done(null, false, {email:'user not found'});
+    if (!user) return done(null, false, {email:'User not found'});
 
     user.comparePassword(password, (err, isMatch) => {
       if (isMatch) {
         return done(null, user);
       } else {
-        return done(null, false, {password: 'incorrect password'});
+        return done(null, false, {password: 'Incorrect password'});
       }
     });
   });
@@ -33,7 +33,7 @@ passport.use('local-register', new LocalStrategy(localOptions, (email, password,
   User.findOne({ email }, (err, user) => {
     if (err) return done(err);
     if (user) {
-      return done(null, false, {email: 'this email is already taken'});
+      return done(null, false, {email: 'This email is already taken'});
     } else {
       let newUser = new User();
 

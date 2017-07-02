@@ -43,7 +43,8 @@ const eventSchema = mongoose.Schema({
   notification: {
     type: Boolean,
     required: true
-  }
+  },
+  parent: mongoose.Schema.Types.ObjectId
 });
 
 eventSchema.pre('save', function (next) {

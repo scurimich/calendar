@@ -1,4 +1,5 @@
 import passport from 'passport';
+import path from 'path';
 import { login, register, logout, auth} from './controllers/user';
 import { getEvents, addEvent, updateEvent, deleteEvent} from './controllers/event';
 import { getGroups, addGroup, updateGroup, deleteGroup} from './controllers/group';
@@ -21,7 +22,7 @@ export default function (app) {
   app.put('/group/:id', reqAuth, updateGroup);
   app.delete('/group/:id', reqAuth, deleteGroup);
 
-  app.get('/', (req, res) => {
+  app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname + '/../public/index.html'));
   });
 }

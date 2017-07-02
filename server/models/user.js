@@ -7,12 +7,12 @@ const userSchema = mongoose.Schema({
     type: String,
     unique: true,
     required: true,
-    match: /^[\w-_]+@\w+.\w{2,4}$/i
+    match: [/^[\w-_]+@\w+.\w{2,4}$/i, 'Incorrect email']
   },
   password: {
     type: String,
     required: true,
-    match: /^(\w\s?){6,20}$/i
+    match: [/^(\w\s?){6,20}$/i, 'Password must be more than 6 and less than 20 characters']
   }
 });
 

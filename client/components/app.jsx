@@ -24,14 +24,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-// const mapStateToProps = (state) => ({
-//   auth: state.user.authenticated
-// });
-
-// const mapDispatchToProps = (dispatch) => bindActionCreators({
-//   fetchEvents
-// }, dispatch);
-
-// export default connect(mapStateToProps, mapDispatchToProps)(App);
-// export default App;

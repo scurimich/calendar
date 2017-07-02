@@ -118,7 +118,7 @@ export default class Body extends React.Component {
 				{this.setCurrentView()}
 				<EventWindow
 					sendData={addEvent}
-					window={eventWindow}
+					eventWindow={eventWindow}
 					onWindowClose={eventWindowHide}
 					addGroup={groupWindowShow}
 				/>
