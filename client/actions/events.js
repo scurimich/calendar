@@ -1,3 +1,4 @@
+import { reset, SubmissionError } from 'redux-form';
 import {
   EVENTS_FETCHING,
   EVENTS_FETCH_ERROR,
@@ -8,7 +9,7 @@ import {
   EVENT_CHANGE,
   EVENT_WINDOW_HIDE
 } from '../constants/actions.js';
-import { reset } from 'redux-form';
+import { serverRequest } from '../utils';
 
 
 export function fetchEvents() {
@@ -34,15 +35,14 @@ export function fetchEvents() {
             }
             if (prop === 'timeBegin' || prop === 'timeEnd') {
               event[prop] = new Date(event[prop]);
-              // console.log(event[prop], event.title)
             }
             
           }
         }
         return event;
       });
-      dispatch({ type: EVENTS_FETCH_OK });
       dispatch({ type: EVENTS_ADD, events});
+      dispatch({ type: EVENTS_FETCH_OK });
     })
     .catch((err) => {
       console.log(err);
@@ -52,33 +52,16 @@ export function fetchEvents() {
 }
 
 export function addEvent(data) {
-  console.log(data)
-  // const token = localStorage.getItem('token');
-  // return dispatch => {
-  //   return fetch('/event', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': token
-  //     },
-  //     body: JSON.stringify(data)
-  //   })
-  //   .then(res => {
-  //     if (res.status === 403) throw new Error('Please login or register');
-  //     if (res.status === 401) throw new Error('Please login or register');
-  //     return res.json()
-  //   })
-  //   .then(data => {
-  //     if(data.error) throw new Error({message: data.error});
-  //     dispatch({ type: EVENT_WINDOW_HIDE });
-  //     dispatch(reset('event'));
-  //     dispatch({ type: EVENT_ADD, event: data });
-  //   })
-  //   .catch((err) => {
-  //     // console.log(err);
-  //     // console.log(err.message);
-  //   })
-  // };
+  const token = localStorage.getItem('token');
+  return serverRequest(data, '/event', 'POST', token)
+    .then(([responce, json]) => {
+      if (responce.status !== 200) throw new SubmissionError({_error: 'Adding failed'});
+      if(json.error) throw new SubmissionError({_error: json.error});
+      dispatch({ type: EVENT_WINDOW_HIDE });
+      dispatch(reset('event'));
+      dispatch({ type: EVENT_ADD, json });
+      resolve();
+    });
 }
 
 export function removeEvent(event) {

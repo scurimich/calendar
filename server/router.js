@@ -22,7 +22,11 @@ export default function (app) {
   app.put('/group/:id', reqAuth, updateGroup);
   app.delete('/group/:id', reqAuth, deleteGroup);
 
-  app.get('*', (req, res) => {
+  app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname + '/../public/index.html'));
+  });
+
+  app.get('/login', (req, res) => {
     res.sendFile(path.resolve(__dirname + '/../public/index.html'));
   });
 }

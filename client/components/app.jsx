@@ -1,10 +1,13 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchEvents } from '../actions/events';
+import { bindActionCreators } from 'redux';
+import { Redirect } from 'react-router';
+
 import Sidebar from './sidebar/sidebar';
 import Controls from './controls/controls';
 import Body from './body/body';
+
+import { login, register, auth } from '../actions/auth';
 import './app.scss';
 
 export default class App extends React.Component {
@@ -13,6 +16,11 @@ export default class App extends React.Component {
   }
 
   render() {
+    const { auth, user } = this.props;
+    const { authenticated } = user;
+    const token = localStorage.getItem('token');
+    if (!token) return <Redirect to='/login' />;
+    if (token && !authenticated) auth(token);
     return (
       <div className="container">
         <Sidebar />
@@ -24,3 +32,14 @@ export default class App extends React.Component {
     );
   }
 }
+
+
+const mapStateToProps = state => ({
+  user: state.user
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  auth
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

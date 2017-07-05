@@ -135,7 +135,7 @@ export default class Body extends React.Component {
 
 
 
-const mapStateToProps = (state, props) => ({
+const mapStateToProps = state => ({
 	active: state.view,
 	date: state.date,
 	events: state.events,
@@ -145,7 +145,7 @@ const mapStateToProps = (state, props) => ({
 	selectedEvent: state.selected
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
+const mapDispatchToProps = dispatch => bindActionCreators({
 	eventWindowShow,
 	eventWindowHide,
 	selectEvent,

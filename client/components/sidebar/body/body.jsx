@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-// import { login, register, auth } from '../../../actions/auth';
 import { groupWindowShow } from '../../../actions/groupwindow';
 import { eventWindowShow } from '../../../actions/eventwindow';
 import { fetchEvents } from '../../../actions/events';
@@ -27,16 +26,6 @@ class SidebarBody extends React.Component {
     });
   }
 
-  renderAuth() {
-    const { login, register } = this.props;
-    return (
-      <div className='auth'>
-        <Signin submit={login} />
-        <Signup submit={register} />
-      </div>
-    );
-  }
-
   renderEvents() {
     const { user, date, events, eventWindowShow, groupWindowShow, fetchEvents, eventsStatus, fetchGroups, groupsStatus } = this.props;
     return (
@@ -54,11 +43,9 @@ class SidebarBody extends React.Component {
       </div>
     );
   }
+
   getContent() {
-    const { user, search, events, groups, eventWindowShow, eventsStatus, fetchEvents } = this.props;
-    // const token = localStorage.getItem('token');
-    // if (!user.authenticated && token) return <span className='spinner'></span>;
-    // if (!user.authenticated && !token) return this.renderAuth()
+    const { search, groups, eventWindowShow } = this.props;
     if (search) return (
       <SearchResult
         search={search}
@@ -92,8 +79,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   eventWindowShow,
   groupWindowShow,
-  // login,
-  // register,
   fetchEvents,
   fetchGroups
 }, dispatch);

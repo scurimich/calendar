@@ -13,8 +13,8 @@ export default class Events extends React.Component {
 
 	componentWillMount() {
 		const { auth, fetchEvents, eventsStatus, fetchGroups, groupsStatus } = this.props;
-		if (!eventsStatus.status) fetchEvents();
-		if (!groupsStatus.status) fetchGroups();
+		// if (!eventsStatus.status) fetchEvents();
+		// if (!groupsStatus.status) fetchGroups();
 	}
 
   formatDate(date) {

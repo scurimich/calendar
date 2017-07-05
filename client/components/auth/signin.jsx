@@ -1,6 +1,14 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { reduxForm, Field } from 'redux-form';
-import { login } from '../../actions/auth';
+
+const input = ({ input, name, label, type, meta: { touched, error } }) => {
+  return (
+    <label className='auth__label'> {label}
+      <input className='auth__input' {...input} type={type} name={name} placeholder={label} />
+      {touched && (error && <span className='auth__error'>{error}</span>)}
+    </label>
+  );
+};
 
 const validate = values => {
   const errors = {};
@@ -17,32 +25,21 @@ const validate = values => {
   return errors;
 }
 
-const input = ({ input, name, label, type, required, meta: { touched, error } }) => {
+const Signin = ({ handleSubmit, submit }) => {
   return (
-    <label className='auth__label'> {label}
-      <input className='auth__input' {...input} type={type} name={name} placeholder={label} />
-      {touched && (error && <span className='auth__error'>{error}</span>)}
-    </label>
+    <form id='sign' className='auth__form auth__form_signin' onSubmit={handleSubmit(submit)}>
+  		<h2 className='auth__title'>Login</h2>
+  		<Field className='auth__input' component={input} type='text' name='email' label='Email' />
+  		<Field className='auth__input' component={input} type='password' name='password' label='Password' />
+  		<button className='auth__button'>login</button>
+  	</form>
   );
-};
-
-class Signin extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  
-  render() {
-    const { handleSubmit } = this.props;
-    return (
-      <form id='sign' className='auth__form auth__form_signin' onSubmit={handleSubmit(login)}>
-    		<h2 className='auth__title'>Login</h2>
-    		<Field className='auth__input' component={input} type='text' name='email' label='Email' />
-    		<Field className='auth__input' component={input} type='password' name='password' label='Password' />
-    		<button className='auth__button'>login</button>
-    	</form>
-    );
-  }
 }
+
+Signin.propTypes = {
+  handleSubmit: PropTypes.func,
+  submit: PropTypes.func
+};
 
 export default reduxForm({
   form: 'signin',

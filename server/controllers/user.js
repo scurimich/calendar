@@ -31,8 +31,8 @@ export function logout(req, res, next) {
 
 export function auth(req, res, next) {
   passport.authenticate('jwt', (err, user, info) => {
-    if(err) return res.send({errors: err.errors});
-    if(!user) return res.send({errors: info});
+    if (err) return res.send({errors: err.errors});
+    if (!user) return res.send({errors: info});
     res.send({
       token: 'JWT ' + generateToken(user),
       user: user.email

@@ -9,7 +9,6 @@ export function getEvents(req, res) {
     if (err) return res.status(403).end();
     const id = decoded._doc._id;
     Event.find({user: id}, (err, events) => {
-      console.log(events[0].dateBegin, typeof events[0].dateBegin)
       if(err) return res.status(400).end();
       res.json(events);
     });

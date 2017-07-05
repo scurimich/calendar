@@ -1,5 +1,6 @@
-import { LOGIN, LOGIN_ERROR, LOGOUT, REGISTER, REGISTER_ERROR } from '../constants/actions';
 import { SubmissionError } from 'redux-form';
+import { LOGIN, LOGIN_ERROR, LOGOUT, REGISTER, REGISTER_ERROR } from '../constants/actions';
+import { serverRequest } from '../utils';
 
 export function login(user, dispatch) {
   return serverRequest(user, '/login', 'POST')
@@ -7,7 +8,6 @@ export function login(user, dispatch) {
       if (responce.status !== 200) throw new SubmissionError({_error: 'Login Failed'}); 
       if (json.errors) throw new SubmissionError(json.errors);
       else {
-        console.log(json)
         localStorageSave(json);
         dispatch({type: LOGIN, email: json.user});
         window.location.href='/';
@@ -60,14 +60,11 @@ export function auth(token) {
       return res.json()
     })
     .then(data => {
-      // console.log(data)
-      if(data.message || data.errors) throw new Error(data.message);
+      if (data.errors) throw new Error();
       const user = localStorage.getItem('user');
       dispatch({type: LOGIN, email: user});
-        window.location.href='/';
     })
     .catch((err) => {
-      console.log(err);
       dispatch({type: LOGOUT});
       localStorageClear();
     });
@@ -83,15 +80,4 @@ function localStorageSave(data) {
 function localStorageClear() {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
-}
-
-function serverRequest(values, address, method, token) {
-  return fetch(address, {
-    method: method,
-    headers: {
-      'Authorization': token,
-      'Content-Type': 'application/json; charset=UTF-8'
-    },
-    body: JSON.stringify(values)
-  }).then(responce => Promise.all([responce, responce.json()]));
 }

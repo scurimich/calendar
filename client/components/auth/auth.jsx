@@ -1,8 +1,9 @@
 import React from 'react';
-import Signup from './signup';
-import Signin from './signin';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Redirect } from 'react-router';
+import Signup from './signup';
+import Signin from './signin';
 
 import { login, register, auth } from '../../actions/auth';
 import './auth.scss';
@@ -13,27 +14,37 @@ class Auth extends React.Component {
   }
 
   render() {
-    const { login, register, user } = this.props;
-
+    const { auth, user } = this.props;
+    const { authenticated } = user;
+    const token = localStorage.getItem('token');
+    if (token && !authenticated) {
+      auth(token);
+      return (
+        <div className='auth__spin-container'>
+          <span className='auth__spinner'>
+            <i className="fa fa-spinner" aria-hidden="true"></i>
+          </span>
+        </div>
+      );
+    }
+    if (authenticated) return <Redirect to='/' />;
     return (
       <div className='auth'>
-        <Signin />
+        <Signin submit={login} />
         <div className='auth__splitter'>
           <span className='auth__split-text'>or</span>
         </div>
-        <Signup />
+        <Signup submit={register} />
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   user: state.user
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  login,
-  register,
+const mapDispatchToProps = dispatch => bindActionCreators({
   auth
 }, dispatch);
 

@@ -1,10 +1,9 @@
-import React from 'react';
-import { reduxForm, Field, SubmissionError } from 'redux-form';
-import { register } from '../../actions/auth';
+import React, { PropTypes } from 'react';
+import { reduxForm, Field } from 'redux-form';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const input = ({ input, name, label, type, required, meta: { touched, error } }) => {
+const input = ({ input, name, label, type, meta: { touched, error } }) => {
   return (
     <label className='auth__label'> {label}
       <input className='auth__input' {...input} type={type} name={name} placeholder={label} />
@@ -33,25 +32,23 @@ const validate = values => {
   return errors;
 }
 
-class Signup extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    const { handleSubmit } = this.props;
-
-    return (
-      <form id='signup' className='auth__form auth__form_signup' onSubmit={handleSubmit(register)}>
-        <h2 className='auth__title'>Create new account</h2>
-        <Field component={input} label='Email' type='text' name='email' />
-        <Field component={input} label='Password' type='text' name='password' />
-        <Field component={input} label='Repeat password' type='text' name='repeat' />
-        <button className='auth__button' type='submit'>register</button>
-      </form>
-    );
-  }
+const Signup = ({ handleSubmit, submit }) => {
+  return (
+    <form id='signup' className='auth__form auth__form_signup' onSubmit={handleSubmit(submit)}>
+      <h2 className='auth__title'>Create new account</h2>
+      <Field component={input} label='Email' type='text' name='email' />
+      <Field component={input} label='Password' type='text' name='password' />
+      <Field component={input} label='Repeat password' type='text' name='repeat' />
+      <button className='auth__button' type='submit'>register</button>
+    </form>
+  );
 }
+
+Signup.propTypes = {
+  handleSubmit: PropTypes.func,
+  submit: PropTypes.func
+};
+
 
 export default reduxForm({
   form: 'signup',
