@@ -91,10 +91,38 @@ export function getWeekEvents(data, date, linesCount) {
           lines[counter].push(currentOffset);
           currentOffset = undefined;
         }
-
         const difference = (event.dateEnd - day) / DAY + 1;
         size = i + difference >= DAYS_IN_WEEK ? DAYS_IN_WEEK - i : difference;
         event.size = size;
+
+        if (event.periodic) {
+          const weekDay = day.getDay() ? day.getDay() : 7;
+          let daysCounter = 0;
+          let offsetCounter = 0;
+          
+          for(let i = weekDay; i < size + weekDay; i++) {
+            if (event.week[i-1]) {
+              if (offsetCounter) {
+                lines[counter].push({size: offsetCounter, index: i});
+                offsetCounter = 0;
+              }
+              daysCounter++;
+            }
+            if (!event.week[i-1]) {
+              if (daysCounter) {
+                lines[counter].push({...event, size: daysCounter});
+                daysCounter = 0;
+              } 
+              offsetCounter++
+            }
+            if (i === (size + weekDay - 1)) {
+              if (daysCounter) lines[counter].push({...event, size: daysCounter});
+              if (offsetCounter) lines[counter].push({size: offsetCounter, index: i});
+            }
+          }
+          continue;
+        }
+
         lines[counter].push(event);
         continue;
       }
@@ -130,5 +158,5 @@ export function serverRequest(values, address, method, token) {
       'Content-Type': 'application/json; charset=UTF-8'
     },
     body: JSON.stringify(values)
-  }).then(responce => Promise.all([responce, responce.json()]));
+  }).then(response => Promise.all([response, response.json()]));
 }

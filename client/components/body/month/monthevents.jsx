@@ -54,7 +54,9 @@ export default class MonthEvents extends React.Component {
             extra.map((item, ndx) => {
               return item.count === 0 ?
                 <div className={'week-events__offset week-events__offset_1'} key={ndx}></div> :
-                <div className={'week-events__more'} key={ndx}><span className={'week-events__more-text'} onClick={this.moreClick.bind(this, item.date)}>{`+ ${item.count} more`}</span></div>
+                <div className={'week-events__more'} key={ndx}>
+                  <span className={'week-events__more-text'} onClick={this.moreClick.bind(this, item.date)}>{`+ ${item.count} more`}</span>
+                </div>
             })
           }
         </li>

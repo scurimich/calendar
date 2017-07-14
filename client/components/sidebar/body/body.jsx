@@ -26,41 +26,47 @@ class SidebarBody extends React.Component {
     });
   }
 
-  renderEvents() {
-    const { user, date, events, eventWindowShow, groupWindowShow, fetchEvents, eventsStatus, fetchGroups, groupsStatus } = this.props;
-    return (
-      <div className='side-events'>
-        <AddItem addEvent={eventWindowShow} addGroup={groupWindowShow} />
-        <Events
-          date={date}
-          events={events}
-          auth={user.authenticated}
-          fetchEvents={fetchEvents}
-          eventsStatus={eventsStatus}
-          fetchGroups={fetchGroups}
-          groupsStatus={groupsStatus}
-        />
-      </div>
-    );
-  }
-
-  getContent() {
-    const { search, groups, eventWindowShow } = this.props;
-    if (search) return (
-      <SearchResult
-        search={search}
-        events={this.searchEvents()}
-        groups={groups}
-        eventWindowShow={eventWindowShow}
-      />
-    );
-    return this.renderEvents();
-  }
-
   render() {
+    const {
+      search,
+      groups,
+      user,
+      date,
+      events,
+      eventWindowShow,
+      groupWindowShow,
+      fetchEvents,
+      fetchGroups,
+      eventsStatus,
+      groupsStatus
+    } = this.props;
+
     return (
       <div className='sidebar__body'>
-        {this.getContent()}
+        {search ?
+          (
+            <SearchResult
+              search={search}
+              events={this.searchEvents()}
+              groups={groups}
+              eventWindowShow={eventWindowShow}
+            />
+          ) :
+          (
+            <div className='side-events'>
+              <AddItem addEvent={eventWindowShow} addGroup={groupWindowShow} />
+              <Events
+                date={date}
+                events={events}
+                auth={user.authenticated}
+                fetchEvents={fetchEvents}
+                eventsStatus={eventsStatus}
+                fetchGroups={fetchGroups}
+                groupsStatus={groupsStatus}
+              />
+            </div>
+          )
+        }
       </div>
     );
   }

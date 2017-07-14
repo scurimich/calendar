@@ -9,11 +9,13 @@ const eventSchema = mongoose.Schema({
   title: {
     type: String,
     required: true,
-    match: /^(\w\s?){1,50}$/i
+    match: [/^(\w[.,!\?-_*\$@\s]?)+$/gi, 'Invalid title'],
+    maxlength: [50, 'Title must be less than 50 characters']
   },
   description: {
     type: String,
-    match: /^(\w\s?){1,200}$/i
+    match: [/^(\w[.,!\?-_*\$@\s]?)+$/gi, 'Invalid description'],
+    maxlength: [200, 'Title must be less than 200 characters']
   },
   dateBegin: {
     type: Date,
@@ -21,37 +23,61 @@ const eventSchema = mongoose.Schema({
   },
   dateEnd: {
     type: Date,
-    required: true
+    required: true,
+    validate: [dateValidate, 'Ends date must be greater than begins date']
   },
   allDay: {
     type: Boolean,
-    required: true
+    required: true,
+    default: true
   },
-  timeBegin: Date,
-  timeEnd: Date,
+  timeBegin: {
+    type: Date,
+    default: null,
+    validate: [timeRequire, 'Required']
+  },
+  timeEnd: {
+    type: Date,
+    default: null,
+    validate: [
+      {validator: timeRequire, msg: 'Required'},
+      {validator: timeEndValidate, msg: 'Ends time must be greater than begins time'}
+    ]
+  },
   duration: {
     type: Number,
-    required: true
+    required: true,
+    default: 0
   },
   periodic: {
     type: Boolean,
-    required: true
+    required: true,
+    default: false
   },
-  days: [String],
+  week: [Boolean],
   hidden: Boolean,
   group: mongoose.Schema.Types.ObjectId,
   notification: {
     type: Boolean,
-    required: true
-  },
-  parent: mongoose.Schema.Types.ObjectId
+    required: true,
+    default: false
+  }
 });
+
+function dateValidate(value) {
+  return value - this.dateBegin >= 0;
+}
+
+function timeRequire(value) {
+  return this.allDay || value;
+}
+
+function timeEndValidate(value) {
+  return value - this.timeBegin >= 0;
+}
 
 eventSchema.pre('save', function (next) {
   var event = this;
-  const dateBegin = event.dateBegin;
-  const dateEnd = event.dateEnd;
-  if (dateEnd - dateBegin < 0) return next(new Error('Begins date must be less than ends date'));
   next();
 });
 

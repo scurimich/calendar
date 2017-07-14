@@ -107,7 +107,6 @@ export default class Body extends React.Component {
 		const {
 			eventWindow,
 			eventWindowHide,
-			addEvent,
 			groupWindow,
 			groupWindowShow,
 			groupWindowHide,
@@ -117,7 +116,7 @@ export default class Body extends React.Component {
 			<div className="body">
 				{this.setCurrentView()}
 				<EventWindow
-					sendData={addEvent}
+					addEvent={addEvent}
 					eventWindow={eventWindow}
 					onWindowClose={eventWindowHide}
 					addGroup={groupWindowShow}
@@ -149,7 +148,6 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 	eventWindowShow,
 	eventWindowHide,
 	selectEvent,
-	addEvent,
 	changeEvent,
 	groupWindowShow,
 	groupWindowHide,

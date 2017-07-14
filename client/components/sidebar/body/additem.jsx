@@ -4,10 +4,10 @@ import './additem.scss';
 const AddItem = ({ addEvent, addGroup }) => (
   <div className='add'>
     <div className='add-event'>
-      <a className='add-event__button' href='#' onClick={addEvent}>add event</a>
+      <a className='add-event__button' onClick={addEvent}>add event</a>
     </div>
     <div className='add-group'>
-      <a className='add-group__button' href='#' onClick={addGroup}>add group</a>
+      <a className='add-group__button' onClick={addGroup}>add group</a>
     </div>
   </div>
 );

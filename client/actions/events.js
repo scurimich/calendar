@@ -9,6 +9,7 @@ import {
   EVENT_CHANGE,
   EVENT_WINDOW_HIDE
 } from '../constants/actions.js';
+import { DAY, DAYS_IN_WEEK } from '../constants/calendar.js';
 import { serverRequest } from '../utils';
 
 
@@ -36,7 +37,6 @@ export function fetchEvents() {
             if (prop === 'timeBegin' || prop === 'timeEnd') {
               event[prop] = new Date(event[prop]);
             }
-            
           }
         }
         return event;
@@ -51,15 +51,47 @@ export function fetchEvents() {
   };
 }
 
-export function addEvent(data) {
+export function addEvent(windowState, data, dispatch) {
+  const {allDay, periodic, notification} = windowState;
+  data = {...data, allDay, periodic, notification};
+  if (data.dateBegin) data.dateBegin = new Date(data.dateBegin);
+  if (data.dateEnd) data.dateEnd = new Date(data.dateEnd);
+  if (data.timeBegin) data.timeBegin = new Date(1970, 0, 1, data.timeBegin.substr(0, 2), data.timeBegin.substr(3, 2));
+  if (data.timeEnd) data.timeEnd = new Date(1970, 0, 1, data.timeEnd.substr(0, 2), data.timeEnd.substr(3, 2));
+  data.duration = (data.dateEnd - data.dateBegin) / DAY;
+  if (data.week && data.week.length !== DAYS_IN_WEEK) {
+    data.week = data.week.concat(new Array(DAYS_IN_WEEK - data.week.length).fill(null));
+  }
+
   const token = localStorage.getItem('token');
   return serverRequest(data, '/event', 'POST', token)
-    .then(([responce, json]) => {
-      if (responce.status !== 200) throw new SubmissionError({_error: 'Adding failed'});
-      if(json.error) throw new SubmissionError({_error: json.error});
+    .then(([response, json]) => {
+      if (response.status === 403) throw new SubmissionError({_error: 'Adding failed'});
+      if (json.errors) {
+        const jsonErr = json.errors;
+        const errors = {};
+        for (let prop in json.errors) {
+          if (jsonErr.hasOwnProperty(prop)) {
+            errors[prop] = jsonErr[prop].message;
+          }
+        }
+        throw new SubmissionError(errors);
+      }
+      console.log(json)
       dispatch({ type: EVENT_WINDOW_HIDE });
       dispatch(reset('event'));
-      dispatch({ type: EVENT_ADD, json });
+      for (let prop in json) {
+        if (json[prop]) {
+          if (prop === 'dateBegin' || prop === 'dateEnd') {
+            json[prop] = new Date(json[prop]);
+            json[prop].setHours(0);
+          }
+          if (prop === 'timeBegin' || prop === 'timeEnd') {
+            json[prop] = new Date(json[prop]);
+          }
+        }
+      }
+      dispatch({ type: EVENT_ADD, event: json });
       resolve();
     });
 }

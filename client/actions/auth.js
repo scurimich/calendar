@@ -4,8 +4,8 @@ import { serverRequest } from '../utils';
 
 export function login(user, dispatch) {
   return serverRequest(user, '/login', 'POST')
-    .then(([responce, json]) => {
-      if (responce.status !== 200) throw new SubmissionError({_error: 'Login Failed'}); 
+    .then(([response, json]) => {
+      if (response.status !== 200) throw new SubmissionError({_error: 'Login Failed'}); 
       if (json.errors) throw new SubmissionError(json.errors);
       else {
         localStorageSave(json);
@@ -18,15 +18,16 @@ export function login(user, dispatch) {
 
 export function register(user, dispatch) {
   return serverRequest(user, '/register', 'POST')
-    .then(([responce, json]) => {
-      if (responce.status !== 200) throw new SubmissionError({_error: 'Login Failed'});
+    .then(([response, json]) => {
+      if (response.status !== 200) throw new SubmissionError({_error: 'Login Failed'});
       if (json.errors) {
+        const jsonErr = json.errors;
         const errors = {};
-          for (let prop in json.errors) {
-            if (err.hasOwnProperty(prop) ) {
-              errors[prop] = err[prop] instanceof Object ?
-                errors[prop] = err[prop].message :
-                errors[prop] = err[prop];
+          for (let prop in jsonErr) {
+            if (jsonErr.hasOwnProperty(prop)) {
+              errors[prop] = jsonErr[prop] instanceof Object ?
+                errors[prop] = jsonErr[prop].message :
+                errors[prop] = jsonErr[prop];
             }
           }
         throw new SubmissionError(errors);

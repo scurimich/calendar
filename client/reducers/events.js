@@ -6,7 +6,6 @@ import {
 } from '../constants/actions.js';
 
 export default function events(state = [], action) {
-	// console.log(action.type)
 	switch (action.type) {
 		case EVENTS_ADD:
 			return action.events;

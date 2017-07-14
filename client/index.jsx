@@ -22,24 +22,12 @@ const store = createStore(reducer,
 //   // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   applyMiddleware(thunk, middleware));
 
-const def = () => {
-  const authenticated = store.getState().user.authenticated;
-  // return authenticated ? <App /> : <Redirect to='/login' />;
-  return <App />;
-};
-
-const login = () => {
-  const authenticated = store.getState().user.authenticated;
-  // return authenticated ? <Redirect to='/' /> : <Auth />;
-  return <Auth />;
-};
-
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
       <div className='app'>
-        <Route exact path='/' render={def} />
-        <Route exact path='/login' render={login} />
+        <Route exact path='/' component={App} />
+        <Route exact path='/login' component={Auth} />
       </div>
     </ConnectedRouter>
 	</Provider>,

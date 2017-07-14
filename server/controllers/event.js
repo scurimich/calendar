@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import eachSeries from 'async/eachSeries';
 import Event from '../models/event';
 import config from '../config';
 import { DAY } from '../../client/constants/calendar.js';
@@ -21,8 +22,7 @@ export function addEvent(req, res) {
     if (err) return res.status(403).end();
     const newEvent = new Event({...req.body, user: decoded._doc._id});
     newEvent.save((err, event) => {
-      console.log(err, event)
-      if (err) return res.send({error: err.message});
+      if (err) return res.json(err);
       res.send(event);
     });
   });

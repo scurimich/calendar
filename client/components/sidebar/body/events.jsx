@@ -11,12 +11,6 @@ export default class Events extends React.Component {
 		super(props);
 	}
 
-	componentWillMount() {
-		const { auth, fetchEvents, eventsStatus, fetchGroups, groupsStatus } = this.props;
-		// if (!eventsStatus.status) fetchEvents();
-		// if (!groupsStatus.status) fetchGroups();
-	}
-
   formatDate(date) {
     return `${date === TODAY ? 'Today' : FULL_WEEKDAYS[date.getDay()].toUpperCase()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   }
@@ -31,8 +25,10 @@ export default class Events extends React.Component {
 
 	renderContent() {
 		const { eventsStatus, date, events } = this.props;
-		events.sort(sortEvents);
+		if (events) events.sort(sortEvents);
+
 		if (eventsStatus.status === 'fetching') return <span className='spinner'></span>;
+
 		if (!events.length) return <span className='side-events__empty'>There are no events, add one'</span>;
 		else return (
 			<GeminiScrollbar>
@@ -44,7 +40,7 @@ export default class Events extends React.Component {
 					}
 				</ul>
 			</GeminiScrollbar>
-			);
+		);
 	}
 
 	render() {

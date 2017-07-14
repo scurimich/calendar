@@ -6,8 +6,6 @@ import { WEEKDAYS, DAY } from '../../constants/calendar';
 import 'react-select/dist/react-select.css';
 import './eventwindow.scss';
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
 const inputText = ({ input, label, type, required, meta: { touched, error } }) => {
 	const req = required ? (<span className='event-window__required'>*</span>) : '';
 	return (
@@ -40,39 +38,28 @@ const inputTime = ({ input, label, type, disabled, required, meta: { touched, er
 	);
 }
 
-const selectGroup = (field) => {
-	// console.log(field)
-	const { group, name, onChange, optionRenderer, options, resetValue, valueRenderer } = field;
+const selectGroup = ({ input, options, optionRenderer, valueRenderer }) => {
 	return (
-		<Select 
+		<Select
+			{...input}
 			className='event-window__select event-window__select_groups group-select'
 			placeholder='Select type(group) of event'
-			name={name}
 			searchable={false}
 			options={options}
-			onChange={onChange}
 			optionRenderer={optionRenderer}
 			valueRenderer={valueRenderer}
-			resetValue={resetValue}
-			value={group}
+			value={input.value || ''}
 		/>
 	);
 }
 
 const validate = values => {
-	// console.log(values)
 	const dateBegin = new Date(values.dateBegin);
 	const dateEnd = new Date(values.dateEnd);
+
 	let timeBegin;
 	let timeEnd;
-	if (values.timeBegin) {
-		const separator = values.timeBegin.indexOf(':');
-		timeBegin = new Date(1970, 0, 1, values.timeBegin.substring(0, separator), values.timeBegin.substring(separator + 1));
-	}
-	if (values.timeEnd) {
-		const separator = values.timeEnd.indexOf(':');
-		timeEnd = new Date(1970, 0, 1, values.timeEnd.substring(0, separator), values.timeEnd.substring(separator + 1));
-	}
+
 	const errors = {};
 
 	if (!values.title) errors.title = 'Required';
@@ -84,6 +71,15 @@ const validate = values => {
 	if (!values.dateEnd) errors.dateEnd = 'Required';
 	if (dateEnd - dateBegin < 0) errors.dateEnd = 'Value must not be less than begin date';
 
+
+	if (values.timeBegin) {
+		const separator = values.timeBegin.indexOf(':');
+		timeBegin = new Date(1970, 0, 1, values.timeBegin.substring(0, separator), values.timeBegin.substring(separator + 1));
+	}
+	if (values.timeEnd) {
+		const separator = values.timeEnd.indexOf(':');
+		timeEnd = new Date(1970, 0, 1, values.timeEnd.substring(0, separator), values.timeEnd.substring(separator + 1));
+	}
 	if (values.allDay === false && !values.timeBegin) errors.timeBegin = 'Required';
 	if (values.allDay === false && !values.timeEnd) errors.timeEnd = 'Required';
 	if (timeEnd - timeBegin < 0) errors.timeEnd = 'Value must not be less than begin time';
@@ -103,20 +99,15 @@ class EventWindow extends React.Component {
 	constructor(props) {
 		super(props);
 		const { allDay, periodic, notification } = this.props.eventWindow.data;
-		// console.log(this.props)
 		this.state = {
 			allDay: allDay,
 			periodic: periodic,
-			notification: notification,
-			group: null
+			notification: notification
 		};
 
 		this.changeState = this.changeState.bind(this);
-		this.submit = this.submit.bind(this);
-		this.selectChange = this.selectChange.bind(this);
 		this.selectRender = this.selectRender.bind(this);
 		this.selectLabelRender = this.selectLabelRender.bind(this);
-		this.selectClear = this.selectClear.bind(this);
 	}
 
 	popupClasses() {
@@ -132,28 +123,6 @@ class EventWindow extends React.Component {
 		this.setState(data);
 	}
 
-	submit(values) {
-		console.log(values)
-		return sleep(0)
-		.then(() => {
-			const {allDay, periodic, notification} = this.state;
-			values = {...values, allDay, periodic, notification};
-			const error = validate(values);
-			if (Object.keys(error).length) throw new SubmissionError(error);
-			const dateBegin = values.dateBegin;
-			const dateEnd = values.dateEnd;
-			const timeBegin = values.timeBegin;
-			const timeEnd = values.timeEnd;
-			// console.log(dateBegin, dateEnd, timeBegin, timeEnd)
-			if (dateBegin) values.dateBegin = new Date(dateBegin);
-			if (dateEnd) values.dateEnd = new Date(dateEnd);
-			if (timeBegin) values.timeBegin = new Date(1970, 0, 1, timeBegin.substr(0, 2), timeBegin.substr(3, 2));
-			if (timeEnd) values.timeEnd = new Date(1970, 0, 1, timeEnd.substr(0, 2), timeEnd.substr(3, 2));
-			values.duration = (values.dateEnd - values.dateBegin) / DAY;
-			this.props.sendData(values);
-		});
-	}
-
 	selectRender({ label, value, color }, index) {
 		return (
 			<div className='group-select__option'>
@@ -164,7 +133,6 @@ class EventWindow extends React.Component {
 	}
 
 	selectLabelRender({ color, label, value }) {
-		console.log(arguments)
 		return (
 			<div className='group-select__label'>
 				<span className='group-select__color' style={ {backgroundColor: color} }></span>
@@ -173,19 +141,10 @@ class EventWindow extends React.Component {
 		);
 	}
 
-	selectChange(group) {
-		this.setState({ group: group.value });
-	}
-
-	selectClear() {
-		this.selectChange.bind(this, null);
-	}
-
 	render() {
-		const { handleSubmit, onWindowClose, eventWindow, addGroup } = this.props;
+		const { handleSubmit, onWindowClose, eventWindow, addGroup, addEvent } = this.props;
 		const { dateBegin, dateEnd, timeBegin, timeEnd } = eventWindow.data;
-		const { allDay, periodic, notification, group } = this.state;
-		console.log(group)
+		const { allDay, periodic, notification } = this.state;
 		return (
 			<div className={this.popupClasses()} id='event-window'>
 				<div className='event-window__popup'>
@@ -193,7 +152,7 @@ class EventWindow extends React.Component {
 						<i className="fa fa-times" aria-hidden="true"></i>
 					</span>
 					<h2 className='event-window__head'>Add Event</h2>
-					<form className='event-window__form' onSubmit={handleSubmit(this.submit)}>
+					<form className='event-window__form' onSubmit={handleSubmit(addEvent.bind(this, this.state))}>
 						<Field component={inputText} type='text' name='title' label='Event title' required={true}/>
 						<Field component={inputText} type='text' name='description' label='Event description' required={false}/>
 						<h3 className='event-window__subtitle'>Dates</h3>
@@ -236,11 +195,9 @@ class EventWindow extends React.Component {
 								name='group'
 								component={selectGroup}
 								options={options}
-								onChange={this.selectChange}
 								optionRenderer={this.selectRender}
 								valueRenderer={this.selectLabelRender}
-								resetValue={this.selectClear}
-								group={group}
+								resetVal={this.selectClear}
 							/>
 						</div>
 						<div className='event-window__notification'>
