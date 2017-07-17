@@ -57,11 +57,7 @@ const eventSchema = mongoose.Schema({
   week: [Boolean],
   hidden: Boolean,
   group: mongoose.Schema.Types.ObjectId,
-  notification: {
-    type: Boolean,
-    required: true,
-    default: false
-  }
+  notification: Boolean
 });
 
 function dateValidate(value) {
@@ -75,10 +71,5 @@ function timeRequire(value) {
 function timeEndValidate(value) {
   return value - this.timeBegin >= 0;
 }
-
-eventSchema.pre('save', function (next) {
-  var event = this;
-  next();
-});
 
 export default mongoose.model('event', eventSchema);

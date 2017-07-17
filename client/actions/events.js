@@ -100,6 +100,37 @@ export function removeEvent(event) {
 	return { type: EVENT_REMOVE, event}
 }
 
-export function changeEvent(event) {
-	return { type: EVENT_CHANGE, event}
+export function changeEvent(data) {
+  const token = localStorage.getItem('token');
+  return dispatch => {
+    return  fetch(`/event/${data.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': localStorage.getItem('token')
+      },
+      body: JSON.stringify(data.event)
+    })
+    .then(res => {
+      return res.json();
+    })
+    .then(event => {
+      console.log(event)
+      for (let prop in event) {
+        if (event[prop]) {
+          if (prop === 'dateBegin' || prop === 'dateEnd') {
+            event[prop] = new Date(event[prop]);
+            event[prop].setHours(0);
+          }
+          if (prop === 'timeBegin' || prop === 'timeEnd') {
+            event[prop] = new Date(event[prop]);
+          }
+        }
+      }
+      dispatch({ type: EVENT_CHANGE, event});
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
 }

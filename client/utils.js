@@ -93,8 +93,6 @@ export function getWeekEvents(data, date, linesCount) {
         }
         const difference = (event.dateEnd - day) / DAY + 1;
         size = i + difference >= DAYS_IN_WEEK ? DAYS_IN_WEEK - i : difference;
-        event.size = size;
-
         if (event.periodic) {
           const weekDay = day.getDay() ? day.getDay() : 7;
           let daysCounter = 0;
@@ -123,6 +121,7 @@ export function getWeekEvents(data, date, linesCount) {
           continue;
         }
 
+        event.size = size;
         lines[counter].push(event);
         continue;
       }

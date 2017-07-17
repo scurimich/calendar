@@ -17,6 +17,7 @@
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
+    "prop-types": "^15.5.10",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-gemini-scrollbar": "^2.1.5",

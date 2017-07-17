@@ -28,17 +28,34 @@ export function addEvent(req, res) {
   });
 }
 
+// export function updateEvent(req, res) {
+//   const token = req.headers.authorization.substr(4);
+//   jwt.verify(token, config.secret, (err, decoded) => {
+//     if (err) return res.status(403).end();
+//     const _id = req.params.id;
+//     Event.findById(_id, (err, event) => {
+//       if (err) return res.send({error: err.message});
+//       event = { ...event };
+//       console.log(event)
+//       event.update((err, updatedEvent) => {
+//         res.send(updatedEvent);
+//       });
+//     });
+//   });
+// }
+
 export function updateEvent(req, res) {
   const token = req.headers.authorization.substr(4);
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) return res.status(403).end();
-    const id = req.body._id;
-    Event.findById(id, (err, event) => {
+    const _id = req.params.id;
+    const options = {
+      runValidators: true,
+      new: true
+    };
+    Event.findOneAndUpdate({_id}, req.body, options, (err, updatedEvent) => {
       if (err) return res.send({error: err.message});
-      event = {...event, ...req.body};
-      event.save((err, updatedEvent) => {
-        res.send(updatedEvent);
-      });
+      res.send(updatedEvent);
     });
   });
 }
@@ -53,3 +70,16 @@ export function deleteEvent(req, res) {
     });
   });
 }
+
+// export function updateEvent(req, res) {
+//   const token = req.headers.authorization.substr(4);
+//   jwt.verify(token, config.secret, (err, decoded) => {
+//     if (err) return res.status(403).end();
+//     const _id = req.params.id;
+//     Event.findOneAndUpdate(_id, {$set: req.body}, {upsert: false, new: true}, (err, updatedEvent) => {
+//       console.log(err, updatedEvent)
+//       if (err) return res.send({error: err.message});
+//       res.send(updatedEvent);
+//     });
+//   });
+// }
