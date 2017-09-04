@@ -2,14 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { groupWindowShow } from '../../../actions/groupwindow';
-import { eventWindowShow } from '../../../actions/eventwindow';
-import { fetchEvents } from '../../../actions/events';
-import { fetchGroups } from '../../../actions/groups';
+import { groupWindowShow } from '../../../actions/groupwindow.js';
+import { eventWindowShow } from '../../../actions/eventwindow.js';
+import { fetchEvents } from '../../../actions/events.js';
+import { fetchGroups } from '../../../actions/groups.js';
 
-import SearchResult from './searchresults';
-import AddItem from './additem';
-import Events from './events';
+import SearchResult from './searchresults.jsx';
+import AddItem from './additem.jsx';
+import Events from './events.jsx';
 
 class SidebarBody extends React.Component {
   constructor(props) {

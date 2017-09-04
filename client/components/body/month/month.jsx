@@ -1,20 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import MonthWeek from './monthweek';
+import MonthWeek from './monthweek.jsx';
 import { WEEKDAYS, WEEKS_COUNT, DAYS_IN_WEEK} from '../../../constants/calendar.js';
 
-import { eventWindowShow } from '../../../actions/eventwindow';
+import { eventWindowShow } from '../../../actions/eventwindow.js';
 import {
 	setDate,
 	setSpace,
 	setMiniSpace
-} from '../../../actions/space';
-import { setView, changeViewInfo } from '../../../actions/view';
+} from '../../../actions/space.js';
+import { setView, changeViewInfo } from '../../../actions/view.js';
 
 import './month.scss';
 
-export default class Month extends React.Component {
+class Month extends React.Component {
 	constructor(props) {
 		super(props);
 	}

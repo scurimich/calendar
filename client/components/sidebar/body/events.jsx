@@ -1,8 +1,8 @@
 import React from 'react';
-import { addNull, sortEvents } from '../../../utils'
-import { FULL_WEEKDAYS, TODAY } from '../../../constants/calendar';
 import GeminiScrollbar from 'react-gemini-scrollbar';
 import Event from './event.jsx';
+import { addNull, sortEvents } from '../../../utils.js';
+import { FULL_WEEKDAYS, TODAY } from '../../../constants/calendar.js';
 
 import './Events.scss';
 

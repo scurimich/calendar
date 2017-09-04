@@ -5,8 +5,8 @@ const windowState = {
   showed: false,
   action: 'add',
   data: {
-    // title: null,
-    // description: null,
+    title: 'hi',
+    description: '',
     dateBegin: null,
     dateEnd: null,
     allDay: true,

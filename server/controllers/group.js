@@ -21,7 +21,7 @@ export function addGroup(req, res) {
     if (err) return res.status(403).end();
     const newGroup = new Group({...req.body, user: decoded._doc._id});
     newGroup.save((err, group) => {
-      if (err) return res.send({error: err.message});
+      if (err) return res.send(err);
       res.send(group);
     });
   });
@@ -31,13 +31,14 @@ export function updateGroup(req, res) {
   const token = req.headers.authorization.substr(4);
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) return res.status(403).end();
-    const id = req.body._id;
-    Group.findById(id, (err, group) => {
+    const _id = req.params.id;
+    const options = {
+      runValidators: true,
+      new: true
+    };
+    Group.findOneAndUpdate({_id}, req.body, (err, updatedGroup) => {
       if (err) return res.send({error: err.message});
-      group = {...group, ...req.body};
-      group.save((err, updatedGroup) => {
-        res.send(updatedGroup);
-      });
+      res.send(updatedGroup);
     });
   });
 }
@@ -46,7 +47,7 @@ export function deleteGroup(req, res) {
   const token = req.headers.authorization.substr(4);
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) return res.status(403).end();
-    const id = req.body.id;
+    const id = req.params.id;
     Group.findByIdAndRemove(id, (err, group) => {
       if (err) return res.send(err);
     });

@@ -2,29 +2,21 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import Year from './year/year';
-import Month from './month/month';
-import Week from './week/week';
-import Day from './day/day';
-import EventWindow from './eventwindow';
-import GroupWindow from './groupwindow';
+import Year from './year/year.jsx';
+import Month from './month/month.jsx';
+import Week from './week/week.jsx';
+import Day from './day/day.jsx';
+import EventWindow from './dialogs/eventwindow.jsx';
+import GroupWindow from './dialogs/groupwindow.jsx';
 
 import {
-	setDate,
-	setSpace,
-	setMiniSpace
-} from '../../actions/space';
-import { setView } from '../../actions/view';
-import { selectEvent } from '../../actions/selectedevent';
-import {
-	fetchEvents,
 	addEvent,
 	changeEvent,
 	removeEvent
-} from '../../actions/events';
-import { eventWindowShow, eventWindowHide } from '../../actions/eventwindow';
-import { groupWindowShow, groupWindowHide } from '../../actions/groupwindow';
-import { addGroup } from '../../actions/groups';
+} from '../../actions/events.js';
+import { eventWindowShow, eventWindowHide } from '../../actions/eventwindow.js';
+import { groupWindowShow, groupWindowHide } from '../../actions/groupwindow.js';
+import { addGroup } from '../../actions/groups.js';
 
 import {
 	WEEKDAYS,
@@ -36,11 +28,11 @@ import {
 	DAYS_IN_MONTH_SPACE,
 	DAY
 } from '../../constants/calendar';
-import {getMonthInfo, addNull} from '../../utils';
+import {getMonthInfo} from '../../utils';
 
 import './body.scss';
 
-export default class Body extends React.Component {
+class Body extends React.Component {
 	constructor(props) {
 		super(props);
 	}
@@ -107,6 +99,7 @@ export default class Body extends React.Component {
 		const {
 			eventWindow,
 			eventWindowHide,
+			groups,
 			groupWindow,
 			groupWindowShow,
 			groupWindowHide,
@@ -120,6 +113,7 @@ export default class Body extends React.Component {
 					eventWindow={eventWindow}
 					onWindowClose={eventWindowHide}
 					addGroup={groupWindowShow}
+					groups={groups}
 				/>
 				<GroupWindow
 					sendData={addGroup}
@@ -139,6 +133,7 @@ const mapStateToProps = state => ({
 	date: state.date,
 	events: state.events,
 	eventWindow: state.eventWindow,
+	groups: state.groups,
 	groupWindow: state.groupWindow,
 	space: state.space,
 	selectedEvent: state.selected
@@ -147,7 +142,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => bindActionCreators({
 	eventWindowShow,
 	eventWindowHide,
-	selectEvent,
 	changeEvent,
 	groupWindowShow,
 	groupWindowHide,

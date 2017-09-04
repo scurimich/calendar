@@ -1,4 +1,4 @@
-import { CHANGE_VIEW, CHANGE_VIEWINFO } from '../constants/actions';
+import { CHANGE_VIEW, CHANGE_VIEWINFO } from '../constants/actions.js';
 
 export function setView(view) {
 	return { type: CHANGE_VIEW, view };

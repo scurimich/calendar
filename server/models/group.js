@@ -5,7 +5,7 @@ const groupSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
-  name: {
+  label: {
     type: String,
     required: true,
     trim: true,

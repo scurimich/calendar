@@ -151,7 +151,8 @@
 	&__item {
 		box-sizing: border-box;
 		display: flex;
-		flex-direction: column;
+		justify-content: space-between;
+		padding: 0 4px;
 		overflow: hidden;
 		background-color: #eee;
 		border: 1px solid darken(#eee, 25%);

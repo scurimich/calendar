@@ -2,24 +2,24 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import View from './view/view';
-import Search from './search/search';
-import CurrentSpace from './currentspace/currentspace';
+import View from './view/view.jsx';
+import Search from './search/search.jsx';
+import CurrentSpace from './currentspace/currentspace.jsx';
 
 import {
 	setSpace,
 	setMiniSpace
-} from '../../actions/space';
-import { setView } from '../../actions/view';
-import { changeSearchStr } from '../../actions/search';
+} from '../../actions/space.js';
+import { setView } from '../../actions/view.js';
+import { changeSearchStr } from '../../actions/search.js';
 
-import { MONTH_NAMES, DAYS_IN_WEEK } from '../../constants/calendar';
+import { MONTH_NAMES, DAYS_IN_WEEK } from '../../constants/calendar.js';
 
 import './controls.scss';
 
 const viewList = ['Day', 'Week', 'Month', 'Year'];
 
-export default class Controls extends React.Component {
+class Controls extends React.Component {
 	constructor(props) {
 		super(props);
 		this.prevClick = this.arrowClick.bind(this, false);

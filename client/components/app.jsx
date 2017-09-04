@@ -3,25 +3,19 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router';
 
-import Sidebar from './sidebar/sidebar';
-import Controls from './controls/controls';
-import Body from './body/body';
-import NotificationContainer from './notification/notifictaioncontainer';
+import Sidebar from './sidebar/sidebar.jsx';
+import Controls from './controls/controls.jsx';
+import Body from './body/body.jsx';
+import NotificationContainer from './notification/notifictaioncontainer.jsx';
 
-import { login, register, auth } from '../actions/auth';
-import { fetchEvents, changeEvent } from '../actions/events';
+import { login, register, auth } from '../actions/auth.js';
+import { fetchEvents, changeEvent } from '../actions/events.js';
+import { fetchGroups } from '../actions/groups.js';
 import './app.scss';
 
-export default class App extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
-
-    const { auth, user, events, eventsStatus, fetchEvents } = this.props;
-    const { authenticated } = user;
-    const token = localStorage.getItem('token');
-    if (!token) return <Redirect to='/login' />;
-    if (token && !authenticated) auth(token);
-    if (!events.length && !eventsStatus) fetchEvents();
 
     this.removeNotification = this.removeNotification.bind(this);
     this.getNotifications = this.getNotifications.bind(this);
@@ -51,8 +45,16 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { events } = this.props;
     const { getNotifications, removeNotification } = this;
+    const { auth, user, events, eventsStatus, fetchEvents, groups, fetchGroups, groupsStatus } = this.props;
+    const { authenticated } = user;
+
+    const token = localStorage.getItem('token');
+    if (!token) return <Redirect to='/login' />;
+    if (token && !authenticated) auth(token);
+    if (!events.length && !eventsStatus) fetchEvents();
+    if (!groups.length && !groupsStatus) fetchGroups();
+
     return (
       <div className="container">
         <Sidebar />
@@ -70,13 +72,16 @@ export default class App extends React.Component {
 const mapStateToProps = state => ({
   user: state.user,
   events: state.events,
-  eventsStatus: state.eventsStatus.status
+  eventsStatus: state.eventsStatus.status,
+  groups: state.groups,
+  groupsStatus: state.groupsStatus.status
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   auth,
   fetchEvents,
-  changeEvent
+  changeEvent,
+  fetchGroups
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -1,3 +1,4 @@
+import { reset, SubmissionError } from 'redux-form';
 import {
   GROUPS_ADD,
   GROUP_ADD,
@@ -5,18 +6,18 @@ import {
   GROUP_CHANGE,
   GROUPS_FETCHING,
   GROUPS_FETCH_ERROR,
-  GROUPS_FETCH_OK
+  GROUPS_FETCH_OK,
+  GROUP_WINDOW_HIDE
 } from '../constants/actions.js';
 
 export function fetchGroups() {
-  const token = localStorage.getItem('token');
   return dispatch => {
     dispatch({ type: GROUPS_FETCHING });
     return fetch('/group', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': token
+        'Authorization': localStorage.getItem('token')
       }
     })
     .then(res => {
@@ -33,25 +34,24 @@ export function fetchGroups() {
   };
 }
 
-export function addGroup(group) {
+export function addGroup(group, dispatch) {
   const token = localStorage.getItem('token');
-  return dispatch => {
-    return fetch('/group', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify(group)
-    })
-    .then(res => {
-      return res.json();
-    })
-    .then(data => {
-      console.log(data);
-    })
-    .catch(err => {
-      console.log(err);
-    })
-  };
+  return serverRequest(group, '/group', 'POST', token)
+    .then(([response, json]) => {
+      if (response.status === 403) throw new SubmissionError({_error: 'Adding failed'});
+      if (json.errors) {
+        const jsonErr = json.errors;
+        const errors = {};
+        for (let prop in json.errors) {
+          if (jsonErr.hasOwnProperty(prop)) {
+            errors[prop] = jsonErr[prop].message;
+          }
+        }
+        throw new SubmissionError(errors);
+      }
+      dispatch({ type: GROUP_WINDOW_HIDE });
+      dispatch({ type: GROUP_ADD, group });
+      dispatch(reset('group'));
+      resolve();
+    });
 }

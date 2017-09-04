@@ -1,8 +1,8 @@
 import React from 'react';
-import MonthDay from './monthday';
-import MonthEvents from './monthevents';
-import { DAYS_IN_WEEK, TODAY } from '../../../constants/calendar';
-import { addNull } from '../../../utils';
+import MonthDay from './monthday.jsx';
+import MonthEvents from './monthevents.jsx';
+import { DAYS_IN_WEEK, TODAY } from '../../../constants/calendar.js';
+import { addNull } from '../../../utils.js';
 
 export default class MonthWeek extends React.Component {
   constructor(props) {

@@ -4,7 +4,7 @@ import {
   CHANGE_MINI_SPACE,
   INCR_MINI_SPACE,
   DECR_MINI_SPACE
-} from '../constants/actions';
+} from '../constants/actions.js';
 
 export function setDate(date) {
   return { type: CHANGE_DATE, date}

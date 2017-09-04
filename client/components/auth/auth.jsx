@@ -2,10 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router';
-import Signup from './signup';
-import Signin from './signin';
+import Signup from './signup.jsx';
+import Signin from './signin.jsx';
 
-import { login, register, auth } from '../../actions/auth';
+import { auth } from '../../actions/auth.js';
 import './auth.scss';
 
 class Auth extends React.Component {
@@ -17,6 +17,7 @@ class Auth extends React.Component {
     const { auth, user } = this.props;
     const { authenticated } = user;
     const token = localStorage.getItem('token');
+
     if (token && !authenticated) {
       auth(token);
       return (
@@ -30,11 +31,11 @@ class Auth extends React.Component {
     if (authenticated) return <Redirect to='/' />;
     return (
       <div className='auth'>
-        <Signin submit={login} />
+        <Signin />
         <div className='auth__splitter'>
           <span className='auth__split-text'>or</span>
         </div>
-        <Signup submit={register} />
+        <Signup />
       </div>
     );
   }

@@ -1,9 +1,9 @@
 import React from 'react';
 import GeminiScrollbar from 'react-gemini-scrollbar';
 
-import Event from './event';
-import { addNull } from '../../../utils';
-import { MONTH_NAMES } from '../../../constants/calendar';
+import Event from './event.jsx';
+import { addNull } from '../../../utils.js';
+import { MONTH_NAMES } from '../../../constants/calendar.js';
 
 import './SearchResults.scss';
 

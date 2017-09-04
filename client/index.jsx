@@ -9,10 +9,10 @@ import { Route, Redirect } from 'react-router';
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
 
 import thunk from 'redux-thunk';
-import reducer from './reducers/index';
-import Auth from './components/auth/auth';
-import App from './components/app';
-import { auth } from './actions/auth';
+import reducer from './reducers/index.js';
+import Auth from './components/auth/auth.jsx';
+import App from './components/app.jsx';
+import { auth } from './actions/auth.js';
 
 const history = createHistory();
 

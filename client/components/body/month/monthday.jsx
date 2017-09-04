@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { MONTH_NAMES } from '../../../constants/calendar';
+import { MONTH_NAMES } from '../../../constants/calendar.js';
 
 class MonthDay extends React.Component {
   constructor(props) {

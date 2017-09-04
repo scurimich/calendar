@@ -1,6 +1,6 @@
 import { SubmissionError } from 'redux-form';
-import { LOGIN, LOGIN_ERROR, LOGOUT, REGISTER, REGISTER_ERROR } from '../constants/actions';
-import { serverRequest } from '../utils';
+import { LOGIN, LOGIN_ERROR, LOGOUT, REGISTER, REGISTER_ERROR } from '../constants/actions.js';
+import { serverRequest } from '../utils.js';
 
 export function login(user, dispatch) {
   return serverRequest(user, '/login', 'POST')

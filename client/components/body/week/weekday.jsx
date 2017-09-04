@@ -1,5 +1,5 @@
 import React from 'react';
-import {TODAY} from '../../../constants/calendar';
+import {TODAY} from '../../../constants/calendar.js';
 
 export default class WeekDay extends React.Component {
   constructor(props) {

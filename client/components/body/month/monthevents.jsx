@@ -1,6 +1,6 @@
 import React from 'react';
-import { DAYS_IN_WEEK, DAY, WEEKS_COUNT } from '../../../constants/calendar';
-import { getWeekEvents } from '../../../utils';
+import { DAYS_IN_WEEK, DAY, WEEKS_COUNT } from '../../../constants/calendar.js';
+import { getWeekEvents } from '../../../utils.js';
 
 export default class MonthEvents extends React.Component {
   constructor(props) {

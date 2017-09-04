@@ -1,16 +1,17 @@
 'user strict';
 
 const webpack = require('webpack');
+const path = require('path');
 const NODE_ENV = process.env.NODE_ENV || 'dev';
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+
 module.exports = {
-	context: __dirname,
-	entry: './client/index',
+	entry: './client/index.jsx',
 	output: {
 		filename: 'build.js',
-		publicPath: 'build/',
-		path: './public/build/'
+		path: path.resolve(__dirname, './public/build/'),
+		publicPath: 'build/'
 	},
 	devtool: NODE_ENV == 'dev' ? 'inline-source-map' : null,
 	watch: NODE_ENV == 'dev',
@@ -18,46 +19,46 @@ module.exports = {
 		aggregateTimeout: 100
 	},
 	resolve: {
-		moduleDirectories: ['node_modules'],
-		extensions: ['', '.js', '.jsx']
+		modules: ['node_modules'],
+		extensions: ['.js', '.jsx']
 	},
-	resolveLoader: {
-		moduleDirectories: ['node_modules'],
-		moduleTemplates: ['*-loader', '*'],
-		extensions: ['', '.js']
-	},
-	// watch: true,
-	// watchOptions: {
-	// 	aggregateTimeout: 100
-	// },
 	devServer: {
 		host: 'localhost',
-		port: 3000,
+		hot: true,
+		port: 9000,
+		contentBase: './public/',
 		proxy: {
 			'*': 'http://localhost:3000'
 		}
 	},
 	plugins: [
-		new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('style.css', {
-        allChunks: true
-    })
+		new webpack.NoEmitOnErrorsPlugin(),
+		new ExtractTextPlugin({
+			filename: 'style.css',
+			allChunks: true
+		})
 	],
 	module: {
-		loaders: [
+		rules: [
 			{
 				test: /\.jsx?$/,
-				loader: 'babel',
+				use: 'babel-loader',
 				exclude: [/node_modules/, /public/]
 			},
 			{
 				test: /\.scss/,
-				loader: ExtractTextPlugin.extract('css!sass'),
+				loader: ExtractTextPlugin.extract({
+					fallback: 'style-loader',
+					use: ['css-loader', 'sass-loader']
+				}),
 				exclude: [/node_modules/, /public/]
 			},
 			{
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract('css'),
+				loader: ExtractTextPlugin.extract({
+					fallback: 'style-loader',
+					use: ['css-loader']
+				}),
 				exclude: [/public/]
 			}
 		]

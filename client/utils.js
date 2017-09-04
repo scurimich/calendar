@@ -91,8 +91,10 @@ export function getWeekEvents(data, date, linesCount) {
           lines[counter].push(currentOffset);
           currentOffset = undefined;
         }
+
         const difference = (event.dateEnd - day) / DAY + 1;
         size = i + difference >= DAYS_IN_WEEK ? DAYS_IN_WEEK - i : difference;
+
         if (event.periodic) {
           const weekDay = day.getDay() ? day.getDay() : 7;
           let daysCounter = 0;
@@ -114,6 +116,10 @@ export function getWeekEvents(data, date, linesCount) {
               offsetCounter++
             }
             if (i === (size + weekDay - 1)) {
+              console.log('event: ' + event.title)
+              console.log(daysCounter);
+              console.log(offsetCounter);
+              console.log(size)
               if (daysCounter) lines[counter].push({...event, size: daysCounter});
               if (offsetCounter) lines[counter].push({size: offsetCounter, index: i});
             }

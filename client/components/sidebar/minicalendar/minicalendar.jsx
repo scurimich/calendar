@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import MiniMonth from './minimonth';
-import CurrentMonth from './currentmonth';
-import { getMonthInfo } from '../../../utils';
-import { MONTH_NAMES } from '../../../constants/calendar';
+import MiniMonth from './minimonth.jsx';
+import CurrentMonth from './currentmonth.jsx';
+import { getMonthInfo } from '../../../utils.js';
+import { MONTH_NAMES } from '../../../constants/calendar.js';
 
 import {
 	setDate,

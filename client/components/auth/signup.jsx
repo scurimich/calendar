@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import { reduxForm, Field } from 'redux-form';
 
+import { register } from '../../actions/auth.js';
+
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const input = ({ input, name, label, type, meta: { touched, error } }) => {
@@ -32,9 +34,9 @@ const validate = values => {
   return errors;
 }
 
-const Signup = ({ handleSubmit, submit }) => {
+const Signup = ({ handleSubmit }) => {
   return (
-    <form id='signup' className='auth__form auth__form_signup' onSubmit={handleSubmit(submit)}>
+    <form id='signup' className='auth__form auth__form_signup' onSubmit={handleSubmit(register)}>
       <h2 className='auth__title'>Create new account</h2>
       <Field component={input} label='Email' type='text' name='email' />
       <Field component={input} label='Password' type='text' name='password' />

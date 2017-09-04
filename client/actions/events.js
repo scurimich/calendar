@@ -10,7 +10,7 @@ import {
   EVENT_WINDOW_HIDE
 } from '../constants/actions.js';
 import { DAY, DAYS_IN_WEEK } from '../constants/calendar.js';
-import { serverRequest } from '../utils';
+import { serverRequest } from '../utils.js';
 
 
 export function fetchEvents() {

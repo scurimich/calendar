@@ -1,7 +1,7 @@
 import React from 'react';
-import MiniDay from './miniday';
-import { getMonthInfo, getFirstDays, getWeek } from '../../../utils';
-import { WEEKDAYS } from '../../../constants/calendar'
+import MiniDay from './miniday.jsx';
+import { getMonthInfo, getFirstDays, getWeek } from '../../../utils.js';
+import { WEEKDAYS } from '../../../constants/calendar.js'
 
 export default class MiniMonth extends React.Component {
   constructor(props) {

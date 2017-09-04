@@ -30,7 +30,7 @@ class Year extends React.Component {
 
   onMonthClick(val) {
     const space = new Date(val.year, val.month);
-    const { setDaySpace, setWeekSpace, setMonthSpace, setMiniSpace, setView } = this.props;
+    const { setSpace, setMiniSpace, setView } = this.props;
     setSpace(space);
     setMiniSpace(space);
     setView('Month');

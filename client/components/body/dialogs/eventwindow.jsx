@@ -1,7 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { reduxForm, Field, SubmissionError } from 'redux-form';
 import Select from 'react-select';
-import { WEEKDAYS, DAY } from '../../constants/calendar';
+import { WEEKDAYS, DAY } from '../../../constants/calendar.js';
 
 import 'react-select/dist/react-select.css';
 import './eventwindow.scss';
@@ -86,15 +87,6 @@ const validate = values => {
 	return errors;
 }
 
-const options = [
-	{ value: 'one', label: 'One', color: '#000000' },
-	{ value: 'two', label: 'Two', color: '#eeeeee' }
-];
-
-function logChange(val) {
-  console.log("Selected: ", val);
-}
-
 class EventWindow extends React.Component {
 	constructor(props) {
 		super(props);
@@ -142,7 +134,7 @@ class EventWindow extends React.Component {
 	}
 
 	render() {
-		const { handleSubmit, onWindowClose, eventWindow, addGroup, addEvent } = this.props;
+		const { handleSubmit, onWindowClose, eventWindow, addGroup, addEvent, groups } = this.props;
 		const { dateBegin, dateEnd, timeBegin, timeEnd } = eventWindow.data;
 		const { allDay, periodic, notification } = this.state;
 		return (
@@ -189,12 +181,12 @@ class EventWindow extends React.Component {
 						<h3 className='event-window__subtitle'>Groups</h3>
 						<div className='event-window__groups'>
 							<div className='event-window__link-cont'>
-								<a href='#' className='event-window__add' onClick={addGroup}>Add Group</a>
+								<a className='event-window__add' onClick={addGroup}>Add Group</a>
 							</div>
 							<Field
 								name='group'
 								component={selectGroup}
-								options={options}
+								options={groups}
 								optionRenderer={this.selectRender}
 								valueRenderer={this.selectLabelRender}
 								resetVal={this.selectClear}
@@ -214,8 +206,9 @@ class EventWindow extends React.Component {
 	}
 }
 
-export default reduxForm({
+export default connect(state => ({initialValues: state.eventWindow}), null)(reduxForm({
 	form: 'event',
 	enableReinitialize: true,
 	validate
-})(EventWindow);
+})(EventWindow));
+

@@ -14,9 +14,8 @@ const textInput = ({ input, label, type, required, meta: { touched, error } }) =
 };
 
 const validate = values => {
-  // console.log(values)
   const errors = {};
-  if (!values.name) errors.name = 'Required';
+  if (!values.label) errors.label = 'Required';
   return errors;
 }
 
@@ -61,7 +60,7 @@ class GroupWindow extends React.Component {
           <form className='group-window__form' onSubmit={handleSubmit(this.submit)}>
             <label className='group-window__text-label'>Name and Color</label>
             <div className='group-window__inputs'>
-              <Field component={textInput} type='text' name='name' label='Name'/>
+              <Field component={textInput} type='text' name='label' label='Name'/>
               <Field component='input' className='group-window__color' type='color' name='color'/>
             </div>
             <div className='group-window__control'>

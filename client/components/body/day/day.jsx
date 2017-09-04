@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import GeminiScrollbar from 'react-gemini-scrollbar';
 
-import { selectEvent } from '../../../actions/selectedevent';
+import { selectEvent } from '../../../actions/selectedevent.js';
 
 import {TODAY, MONTH_NAMES} from '../../../constants/calendar.js';
-import dragAndDrop from '../../../hoc/dragndrop';
+import dragAndDrop from '../../../hoc/dragndrop.jsx';
 
 import './day.scss';
 
