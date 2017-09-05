@@ -82,7 +82,8 @@ class Week extends React.Component {
     const { space } = this.props;
     const day = space.getDay() == 0 ? 6 : space.getDay() - 1;
     const firstDay = day == 1 ? space : new Date(space.getFullYear(), space.getMonth(), space.getDate() - day);
-    const lines = getWeekEvents(this.weekEvents(), firstDay).lines || [];
+    const weekEvents = getWeekEvents(this.weekEvents(), firstDay);
+    const lines = (weekEvents && weekEvents.lines) || [];
     return lines.map((line, ndx) => {
       return (
         <li key={ndx} className='week-events__line'>

@@ -116,10 +116,6 @@ export function getWeekEvents(data, date, linesCount) {
               offsetCounter++
             }
             if (i === (size + weekDay - 1)) {
-              console.log('event: ' + event.title)
-              console.log(daysCounter);
-              console.log(offsetCounter);
-              console.log(size)
               if (daysCounter) lines[counter].push({...event, size: daysCounter});
               if (offsetCounter) lines[counter].push({size: offsetCounter, index: i});
             }

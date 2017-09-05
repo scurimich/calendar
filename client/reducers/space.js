@@ -7,8 +7,8 @@ import {
 import { TODAY } from '../constants/calendar';
 
 const initialSpace = {
-  main: new Date('2017 04 17'),
-  mini: new Date('2017 04 17')
+  main: TODAY,
+  mini: TODAY
 }
 
 export default function space(state = initialSpace, action) {

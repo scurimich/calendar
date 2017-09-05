@@ -67,7 +67,8 @@ class Body extends React.Component {
 			}),
 			day: events.filter(val => {
 				if (val.dateBegin - date === 0
-					|| (val.dateBegin <= date && val.dateEnd > date) )
+					|| (val.dateBegin <= date && val.dateEnd >= date)
+					&& (val.periodic ? val.week[day] : true))
 					return val;
 			})
 		};
