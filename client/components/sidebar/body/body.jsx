@@ -5,11 +5,13 @@ import { bindActionCreators } from 'redux';
 import { groupWindowShow } from '../../../actions/groupwindow.js';
 import { eventWindowShow } from '../../../actions/eventwindow.js';
 import { fetchEvents } from '../../../actions/events.js';
-import { fetchGroups } from '../../../actions/groups.js';
+import { fetchGroups, removeGroup } from '../../../actions/groups.js';
+import { selectGroup } from '../../../actions/filter.js';
 
 import SearchResult from './searchresults.jsx';
 import AddItem from './additem.jsx';
 import Events from './events.jsx';
+import Groups from './groups.jsx';
 
 class SidebarBody extends React.Component {
   constructor(props) {
@@ -38,7 +40,10 @@ class SidebarBody extends React.Component {
       fetchEvents,
       fetchGroups,
       eventsStatus,
-      groupsStatus
+      groupsStatus,
+      currentGroup,
+      selectGroup,
+      removeGroup
     } = this.props;
 
     return (
@@ -54,10 +59,18 @@ class SidebarBody extends React.Component {
           ) :
           (
             <div className='side-events'>
-              <AddItem addEvent={eventWindowShow} addGroup={groupWindowShow} />
+              <AddItem addEvent={eventWindowShow.bind(null, null)} addGroup={groupWindowShow.bind(null, null)} />
+              <Groups 
+                selectedGroup={currentGroup}
+                groups={groups}
+                selectGroup={selectGroup}
+                groupWindowShow={groupWindowShow}
+                removeGroup={removeGroup}
+              />
               <Events
                 date={date}
                 events={events}
+                groups={groups}
                 auth={user.authenticated}
                 fetchEvents={fetchEvents}
                 eventsStatus={eventsStatus}
@@ -79,14 +92,17 @@ const mapStateToProps = (state) => ({
   user: state.user,
   search: state.search,
   eventsStatus: state.eventsStatus,
-  groupsStatus: state.groupsStatus
+  groupsStatus: state.groupsStatus,
+  currentGroup: state.currentGroup
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   eventWindowShow,
   groupWindowShow,
   fetchEvents,
-  fetchGroups
+  fetchGroups,
+  selectGroup,
+  removeGroup
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SidebarBody);

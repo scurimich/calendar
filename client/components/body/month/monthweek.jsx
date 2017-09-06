@@ -58,8 +58,8 @@ export default class MonthWeek extends React.Component {
     e.stopPropagation();
     const { eventWindowShow } = this.props;
     const data = {
-      dateBegin: date,
-      dateEnd: date
+      dateBegin: `${date.getFullYear()}-${addNull(date.getMonth() + 1)}-${addNull(date.getDate())}`,
+      dateEnd: `${date.getFullYear()}-${addNull(date.getMonth() + 1)}-${addNull(date.getDate())}`
     };
     eventWindowShow(data);
   }

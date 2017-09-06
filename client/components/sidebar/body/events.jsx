@@ -23,8 +23,13 @@ export default class Events extends React.Component {
   	return `${begin} - ${end}`;
   }
 
+  getGroup(id) {
+    const { groups } = this.props;
+    return groups.find(group => group._id === id);
+  }
+
 	renderContent() {
-		const { eventsStatus, date, events } = this.props;
+		const { eventsStatus, date, events, groups } = this.props;
 		if (events) events.sort(sortEvents);
 
 		if (eventsStatus.status === 'fetching') return <span className='spinner'></span>;
@@ -35,8 +40,8 @@ export default class Events extends React.Component {
     		<h3 className='side-events__date'>{this.formatDate(date)}</h3>
     		<ul className='side-events__list'>
 					{
-						events.filter(event => event.dateBegin <= date && event.dateEnd >= date)
-							.map((event, key) => <Event {...event} key={key} time={this.formatTime(event)} />)
+						events.filter(event => event.dateBegin <= date && event.dateEnd >= date && (!event.periodic || event.week[date.getDay() ? date.getDay() - 1 : 6]))
+							.map((event, key) => <Event {...event} key={key} time={this.formatTime(event)} group={this.getGroup(event.group)} />)
 					}
 				</ul>
 			</GeminiScrollbar>

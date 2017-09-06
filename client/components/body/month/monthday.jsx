@@ -39,7 +39,9 @@ class MonthDay extends React.Component {
           <span className='month-day__close' onClick={removeSelectedDate}><i className="fa fa-times" aria-hidden="true"></i></span>
           {
             events.map(event => {
-              return <span className='week-events__item' key={event._id}>{event.title}</span>;
+              return ((event.periodic && event.week[date.getDay() ? date.getDay() - 1 : 6])
+                || !event.periodic)
+                && <span className='week-events__item' key={event._id}>{event.title}</span>;
             })
           }
         </div>

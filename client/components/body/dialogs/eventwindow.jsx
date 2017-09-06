@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field, SubmissionError } from 'redux-form';
 import Select from 'react-select';
-import { WEEKDAYS, DAY } from '../../../constants/calendar.js';
+import { WEEKDAYS, DAY, DAYS_IN_WEEK, WEEK } from '../../../constants/calendar.js';
 
 import 'react-select/dist/react-select.css';
 import './eventwindow.scss';
@@ -26,7 +26,7 @@ const inputDate = ({ input, label, type, required, meta: { touched, error } }) =
 			{touched && (error && <span className='message message_error'>{error}</span>)}
 		</div>
 	);
-}
+};
 
 const inputTime = ({ input, label, type, disabled, required, meta: { touched, error } }) => {
 	const req = required ? (<span className='event-window__required'>*</span>) : '';
@@ -37,7 +37,25 @@ const inputTime = ({ input, label, type, disabled, required, meta: { touched, er
 			{touched && (error && <span className='message message_error'>{error}</span>)}
 		</div>
 	);
-}
+};
+
+const periodicField = ({ input, type, disabled, required, meta: { touched, error } }) => {
+	return (
+		<div className='event-window__days'>
+			{
+				WEEKDAYS.map((val, ndx) => {
+					return (
+						<div key={ndx}>
+							<Field className='event-window__checkbox' component='input' type={type} id={val} name={`${input.name}[${ndx}]`} disabled={disabled}/>
+							<label className='event-window__check-label' htmlFor={val}>{val}</label>
+						</div>
+					);
+				})
+			}
+			{error && <span className='message message_error'>{error}</span>}
+		</div>
+	);
+};
 
 const selectGroup = ({ input, options, optionRenderer, valueRenderer }) => {
 	return (
@@ -49,10 +67,10 @@ const selectGroup = ({ input, options, optionRenderer, valueRenderer }) => {
 			options={options}
 			optionRenderer={optionRenderer}
 			valueRenderer={valueRenderer}
-			value={input.value || ''}
+			value={(input.value) || ''}
 		/>
 	);
-}
+};
 
 const validate = values => {
 	const dateBegin = new Date(values.dateBegin);
@@ -84,6 +102,14 @@ const validate = values => {
 	if (values.allDay === false && !values.timeBegin) errors.timeBegin = 'Required';
 	if (values.allDay === false && !values.timeEnd) errors.timeEnd = 'Required';
 	if (timeEnd - timeBegin < 0) errors.timeEnd = 'Value must not be less than begin time';
+	if (values.periodic && values.week && (Date.parse(dateBegin) + WEEK - Date.parse(dateEnd) > 0)) {
+		let daysCounter;
+		for (let i = dateBegin; i <= dateEnd; i.setDate(i.getDate() + 1)) {
+			const day = i.getDay() - 1;
+			daysCounter = daysCounter || values.week[day];
+		}
+		if (!daysCounter) errors.week = 'There aren\'t any days with events';
+	}
 	return errors;
 }
 
@@ -115,7 +141,7 @@ class EventWindow extends React.Component {
 		this.setState(data);
 	}
 
-	selectRender({ label, value, color }, index) {
+	selectRender({ label, value, color }) {
 		return (
 			<div className='group-select__option'>
 				<span className='group-select__color' style={ {backgroundColor: color} }></span>
@@ -124,7 +150,7 @@ class EventWindow extends React.Component {
 		);
 	}
 
-	selectLabelRender({ color, label, value }) {
+	selectLabelRender({ color, label }) {
 		return (
 			<div className='group-select__label'>
 				<span className='group-select__color' style={ {backgroundColor: color} }></span>
@@ -166,18 +192,7 @@ class EventWindow extends React.Component {
 							<Field className='event-window__checkbox' component='input' type='checkbox' id='periodic' name='periodic' value='periodic' onClick={this.changeState} checked={periodic}/>
 							<label className='event-window__check-label event-window__check-label_bg' htmlFor='periodic'>Repeating</label>
 						</div>
-						<div className='event-window__days'>
-							{
-								WEEKDAYS.map((val, ndx) => {
-									return (
-										<div key={ndx}>
-											<Field className='event-window__checkbox' component='input' type='checkbox' id={val} name={`week[${ndx}]`} disabled={!periodic}/>
-											<label className='event-window__check-label' htmlFor={val}>{val}</label>
-										</div>
-									);
-								})
-							}
-						</div>
+						<Field component={periodicField} type='checkbox' name='week' disabled={!periodic}/>
 						<h3 className='event-window__subtitle'>Groups</h3>
 						<div className='event-window__groups'>
 							<div className='event-window__link-cont'>
@@ -206,7 +221,7 @@ class EventWindow extends React.Component {
 	}
 }
 
-export default connect(state => ({initialValues: state.eventWindow}), null)(reduxForm({
+export default connect(state => ({initialValues: state.eventWindow.data}), null)(reduxForm({
 	form: 'event',
 	enableReinitialize: true,
 	validate

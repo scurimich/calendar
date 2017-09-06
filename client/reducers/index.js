@@ -15,6 +15,7 @@ import groupWindow from './groupwindow.js';
 import sidebar from './sidebar.js';
 import space from './space.js';
 import viewInfo from './viewinfo.js';
+import currentGroup from './filter.js';
 
 const reducer = combineReducers({
 	form,
@@ -32,6 +33,7 @@ const reducer = combineReducers({
 	groupWindow,
 	sidebar,
 	space,
+	currentGroup,
 	router: routerReducer
 });
 

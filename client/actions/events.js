@@ -62,8 +62,10 @@ export function addEvent(windowState, data, dispatch) {
   if (data.week && data.week.length !== DAYS_IN_WEEK) {
     data.week = data.week.concat(new Array(DAYS_IN_WEEK - data.week.length).fill(null));
   }
+  if (data.group) data.group = data.group._id;
 
   const token = localStorage.getItem('token');
+  console.log(data)
   return serverRequest(data, '/event', 'POST', token)
     .then(([response, json]) => {
       if (response.status === 403) throw new SubmissionError({_error: 'Adding failed'});

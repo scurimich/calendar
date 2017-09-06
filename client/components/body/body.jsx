@@ -103,9 +103,9 @@ class Body extends React.Component {
 			groups,
 			groupWindow,
 			groupWindowShow,
-			groupWindowHide,
-			addGroup
+			groupWindowHide
 		} = this.props;
+
 		return (
 			<div className="body">
 				{this.setCurrentView()}
@@ -117,8 +117,8 @@ class Body extends React.Component {
 					groups={groups}
 				/>
 				<GroupWindow
-					sendData={addGroup}
-					window={groupWindow}
+					addGroup={addGroup}
+					groupWindow={groupWindow}
 					onWindowClose={groupWindowHide}
 				/>
 			</div>
@@ -145,8 +145,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 	eventWindowHide,
 	changeEvent,
 	groupWindowShow,
-	groupWindowHide,
-	addGroup
+	groupWindowHide
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Body);

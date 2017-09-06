@@ -5,21 +5,20 @@ const windowState = {
   showed: false,
   action: 'add',
   data: {
-    title: 'hi',
+    title: '',
     description: '',
     dateBegin: null,
     dateEnd: null,
     allDay: true,
-    // timeBegin: null,
-    // timeEnd: null,
+    timeBegin: null,
+    timeEnd: null,
     periodic: false,
-    // group: null,
+    group: null,
     notification: true
   }
 };
 
 export default function eventWindow(state = windowState, action) {
-  // console.log(action.type)
   switch (action.type) {
     case EVENT_WINDOW_SHOW:
       return {...state, showed: true, data: {...state.data, ...action.data} };

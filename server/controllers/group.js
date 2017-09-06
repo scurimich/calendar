@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import Group from '../models/group';
+import Event from '../models/event.js';
 import config from '../config';
 import { DAY } from '../../client/constants/calendar.js';
 
@@ -50,6 +51,10 @@ export function deleteGroup(req, res) {
     const id = req.params.id;
     Group.findByIdAndRemove(id, (err, group) => {
       if (err) return res.send(err);
+      Event.remove({ group: id }, (err) => {
+        if (err) return res.send(err);
+        res.json({id:id});
+      });
     });
   });
 }

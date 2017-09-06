@@ -8,3 +8,4 @@ export const TODAY = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate());
 export const MONTH_IN_YEAR = 12;
 export const DAY = 86400000;
 export const DAYS_IN_MONTH_SPACE = 42;
+export const WEEK = DAY * DAYS_IN_WEEK;

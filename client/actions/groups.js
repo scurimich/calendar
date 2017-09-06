@@ -9,6 +9,7 @@ import {
   GROUPS_FETCH_OK,
   GROUP_WINDOW_HIDE
 } from '../constants/actions.js';
+import { serverRequest } from '../utils.js';
 
 export function fetchGroups() {
   return dispatch => {
@@ -20,9 +21,7 @@ export function fetchGroups() {
         'Authorization': localStorage.getItem('token')
       }
     })
-    .then(res => {
-      return res.json();
-    })
+    .then(res => res.json())
     .then(groups => {
       dispatch({ type: GROUPS_FETCH_OK });
       dispatch({ type: GROUPS_ADD, groups });
@@ -54,4 +53,44 @@ export function addGroup(group, dispatch) {
       dispatch(reset('group'));
       resolve();
     });
+}
+
+export function removeGroup(group) {
+  console.log(group);
+  return dispatch => {
+    return fetch(`/group/${group._id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': localStorage.getItem('token')
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+    })
+  }
+}
+
+export function changeGroup(data) {
+  const token = localStorage.getItem('token');
+  return dispatch => {
+    return  fetch(`/group/${data._id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': localStorage.getItem('token')
+      },
+      body: JSON.stringify(data.group)
+    })
+    .then(res => {
+      return res.json();
+    })
+    .then(group => {
+      dispatch({ type: EVENT_CHANGE, group});
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
 }

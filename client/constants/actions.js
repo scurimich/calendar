@@ -29,8 +29,9 @@ export const DECR_MINI_SPACE = 'DECR_MINI_SPACE';
 export const CHANGE_SPACE = 'CHANGE_SPACE';
 //selected date
 export const CHANGE_DATE = 'CHANGE_CURRENT_DATE';
-//selected event
+//selected items
 export const SELECT_EVENT = 'SELECT_EVENT';
+export const SELECT_GROUP = 'SELECT_GROUP';
 //view
 export const CHANGE_VIEW = 'CHANGE_VIEW';
 export const CHANGE_VIEWINFO = 'CHANGE_VIEWINFO';

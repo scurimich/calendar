@@ -34,9 +34,9 @@ class Month extends React.Component {
 		const { events } = this.props;
 		const weekEnd = new Date(weekBegin.getFullYear(), weekBegin.getMonth(), weekBegin.getDate() + 7);
 		return events.filter(event => {
-			if ((event.dateBegin >= weekBegin && event.dateBegin < weekEnd)
-					|| (event.dateEnd > weekBegin && event.dateEnd < weekEnd)
-					|| (event.dateBegin < weekBegin && event.dateEnd > weekEnd))
+			if ((event.dateBegin >= weekBegin && event.dateBegin <= weekEnd)
+					|| (event.dateEnd >= weekBegin && event.dateEnd <= weekEnd)
+					|| (event.dateBegin <= weekBegin && event.dateEnd >= weekEnd))
 				return event;
 		});
 	}

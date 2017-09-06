@@ -9,12 +9,13 @@ const eventSchema = mongoose.Schema({
   title: {
     type: String,
     required: true,
-    match: [/^(\w[.,!\?-_*\$@\s]?)+$/gi, 'Invalid title'],
+    validate: [textValidate, 'Invalid title'],
     maxlength: [50, 'Title must be less than 50 characters']
   },
   description: {
     type: String,
-    match: [/^(\w[.,!\?-_*\$@\s]?)+$/gi, 'Invalid description'],
+    required: false,
+    validate: [textValidate, 'Invalid description'],
     maxlength: [200, 'Title must be less than 200 characters']
   },
   dateBegin: {
@@ -59,6 +60,10 @@ const eventSchema = mongoose.Schema({
   group: mongoose.Schema.Types.ObjectId,
   notification: Boolean
 });
+
+function textValidate(value) {
+  return !value || value.match(/^[\w.,!\?-_*\$@\s]+$/gi)[0] === value;
+}
 
 function dateValidate(value) {
   return value - this.dateBegin >= 0;
