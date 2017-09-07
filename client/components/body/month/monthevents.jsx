@@ -1,8 +1,9 @@
 import React from 'react';
 import { DAYS_IN_WEEK, DAY, WEEKS_COUNT } from '../../../constants/calendar.js';
 import { getWeekEvents } from '../../../utils.js';
+import DragAndDrop from '../../../hoc/dragndrop.jsx';
 
-export default class MonthEvents extends React.Component {
+class MonthEvents extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -31,13 +32,14 @@ export default class MonthEvents extends React.Component {
 
   render() {
     const currentEvents = this.getEvents();
-    const { lines, extra, changeSelectedDate } = currentEvents;
+    const { lines, extra, changeSelectedDate, selectedEvent } = currentEvents;
+    const { eventDragAndDrop } = this.props;
     return (
       <ul className='month__week-events week-events'>
         {
           lines.map((line, ndx) => {
             return (
-              <li key={ndx} className='week-events__line'>
+              <li key={ndx} className='week-events__line' onMouseDown={eventDragAndDrop} >
               {
                 line.map((item, ndx) => {
                   return !item._id ?
@@ -64,3 +66,9 @@ export default class MonthEvents extends React.Component {
     );
   }
 }
+
+const options = {
+  type: 'week'
+}
+
+export default DragAndDrop(MonthEvents, options);

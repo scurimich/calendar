@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import MonthWeek from './monthweek.jsx';
 import { WEEKDAYS, WEEKS_COUNT, DAYS_IN_WEEK} from '../../../constants/calendar.js';
 
+import { updateEvent } from '../../../actions/events.js';
 import { eventWindowShow } from '../../../actions/eventwindow.js';
 import {
 	setDate,
@@ -11,6 +12,7 @@ import {
 	setMiniSpace
 } from '../../../actions/space.js';
 import { setView, changeViewInfo } from '../../../actions/view.js';
+import { selectEvent, changeSelectedEvent, removeEventSelection } from '../../../actions/selectedevent.js';
 
 import './month.scss';
 
@@ -41,20 +43,11 @@ class Month extends React.Component {
 		});
 	}
 
-	getSelectedEventDates() {
-		const { selectedEvent } = this.props;
-		if(selectedEvent && selectedEvent.newDateBegin) {
-			const selected = selectedEvent;
-			const begin = selected.newDateBegin;
-			selected.newDateEnd = new Date(begin.getFullYear(), begin.getMonth(), begin.getDate() + selected.duration);
-			return selected;
-		}
-	}
-
 	render() {
 		const {
 			date,
 			space,
+			selectedEvent,
 			monthInfo,
 			viewInfo,
 			eventDragAndDrop,
@@ -63,7 +56,11 @@ class Month extends React.Component {
 			changeViewInfo,
 			setDate,
 			setSpace,
-			setMiniSpace
+			setMiniSpace,
+			updateEvent,
+			selectEvent,
+			changeSelectedEvent,
+			removeEventSelection
 		} = this.props;
 		return (
 			<div className='month'>
@@ -88,7 +85,7 @@ class Month extends React.Component {
 									key={ndx} 
 									weekNdx={ndx}
 									viewInfo={viewInfo}
-									selectedEvent={this.getSelectedEventDates()}
+									selectedEvent={selectedEvent}
 									setDate={setDate}
 									setSpace={setSpace}
 									setMiniSpace={setMiniSpace}
@@ -96,6 +93,10 @@ class Month extends React.Component {
 									eventWindowShow={eventWindowShow}
 									eventDragAndDrop={eventDragAndDrop}
 									changeViewInfo={changeViewInfo}
+									selectEvent={selectEvent}
+									updateEvent={updateEvent}
+									changeSelectedEvent={changeSelectedEvent}
+									removeEventSelection={removeEventSelection}
 								/>
 							})
 						}
@@ -119,7 +120,11 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 	setSpace,
 	setMiniSpace,
 	setView,
-	changeViewInfo
+	changeViewInfo,
+	selectEvent,
+	updateEvent,
+	changeSelectedEvent,
+	removeEventSelection
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Month);

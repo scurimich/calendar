@@ -6,35 +6,34 @@ const dragAndDrop = (Component, options) => {
   class dndComponent extends React.Component {
     constructor(props) {
       super(props);
-      // console.log(props)
+      this.eventDragAndDrop = this.eventDragAndDrop.bind(this);
+      this.event = {};
     }
 
     eventDragAndDrop(e) {
       e.preventDefault();
-      const { events } = this.props;
+      const { events, selectedEvent } = this.props;
+      const element = e.target;
+      const event = selectedEvent || events.find(event => event._id === element.id);
       const baseElement = document.querySelector('[data-dd]')
       // const baseElementWidth = baseElement.offsetWidth;
-      const element = e.currentTarget;
-      const elementHeight = element.offsetHeight;
+      // const elementHeight = element.offsetHeight;
 
-      document.onmousemove = this.eventOnMove.bind(this, element, elementHeight, event);
+      document.onmousemove = this.eventOnMove.bind(this, element, event);
       window.onmouseup = this.eventOnDrop.bind(this, event);
     }
 
-    eventOnMove(element, elementHeight, event, e) {
+    eventOnMove(element, event, e) {
+      const { selectEvent, changeSelectedEvent } = this.props;
       if (!event.hidden) {
-        const { changeEvent } = this.props;
         event.hidden = true;
-        changeEvent(event);
+        selectEvent(event);
 
         this.newElement = element.cloneNode(true);
-        this.newElement = className = 'week-events__item week-events__item_absolute';
-        this.newElement = classList.add('mouse-events-off');
+        this.newElement.className = 'week-events__item week-events__item_absolute mouse-events-off';
         Array.from(document.querySelectorAll('.week-events')).map(event => {
           event.classList.add('mouse-events-off');
         });
-        // this.newElement.style.width = `${baseElementWidth}px`;
-        // this.newElement.style.height = `${elementHeight}px`;
 
         document.body.appendChild(this.newElement);
       }
@@ -46,19 +45,17 @@ const dragAndDrop = (Component, options) => {
           dd = dd.parentNode;
         }
         const date = dd.getAttribute('data-date');
-        const time = dd.getAttribute('data-time');
-        if (date) this.newDateBegin = new Date(date);
-        if (time) this.newTimeBegin = new Date(time);
+        if (date) {
+          this.event.dateBegin = new Date(date);
+          this.event.dateEnd = new Date(new Date(date).setDate(this.event.dateBegin.getDate() + event.duration));
+        }
+
+        // const time = dd.getAttribute('data-time');
+        // if (time) this.newTimeBegin = new Date(time);
       };
 
-      this.eventMove(e, this.newElement);
-      const { selectEvent } = this.props;
-      selectEvent({
-        id: event.id,
-        duration: event.duration,
-        newDateBegin: this.newDateBegin,
-        newTimeBegin: this.newTimeBegin
-      });
+      changeSelectedEvent(this.event);
+      this.eventMove(this.newElement, e);
     }
 
     eventOnDrop(event) {
@@ -66,51 +63,52 @@ const dragAndDrop = (Component, options) => {
       window.onmouseup = null;
 
       if (!this.newElement) {
-        this.props.onEventClick();
+        this.props.onEventClick(event);
         return;
       }
 
       if (event.hidden) {
-
+        const { selectedEvent, removeEventSelection, updateEvent } = this.props;
         document.querySelector('.body [class*="__main"]').onmouseover = null;
         Array.from(document.querySelectorAll('.week-events')).map(event => {
           event.classList.remove('mouse-events-off');
         });
-        this.newElement.classList.remove('mouse-events-off');
         this.newElement.remove();
         delete this.newElement;
 
-        event.hidden = false;
+        // let dateDifference = selectedEvent.newDateBegin - event.dateBegin;
+        // let timeDifference = selectedEvent.newTimeBegin - event.timeBegin;
 
-        const selected = this.props.selectedEvent;
-        let dateDifference = selected.newDateBegin - event.dateBegin;
-        let timeDifference = selected.newTimeBegin - event.timeBegin;
-
-        dateDifference /= DAY;
-        timeDifference /= 60000;
-        for(let key in event) {
-          if (key.indexOf('date') + 1 && dateDifference !== 0 && !isNaN(dateDifference)) {
-            const date = event[key];
-            event[key] = new Date(date.getFullYear(), date.getMonth(), date.getDate() + dateDifference);
-          }
-          if (key.indexOf('time') + 1 && timeDifference !== 0 && !isNaN(timeDifference)) {
-            const time = event[key];
-            event[key] = new Date(time.getFullYear(), time.getMonth(), time.getDate(), time.getHours(), time.getMinutes() + timeDifference);
-          }
-        }
-
-        this.props.changeEvent(event);
-        this.props.changeSelectedEvent(null);
+      //   dateDifference /= DAY;
+      //   timeDifference /= 60000;
+      //   for(let key in event) {
+      //     if (key.indexOf('date') + 1 && dateDifference !== 0 && !isNaN(dateDifference)) {
+      //       const date = event[key];
+      //       event[key] = new Date(date.getFullYear(), date.getMonth(), date.getDate() + dateDifference);
+      //     }
+      //     if (key.indexOf('time') + 1 && timeDifference !== 0 && !isNaN(timeDifference)) {
+      //       const time = event[key];
+      //       event[key] = new Date(time.getFullYear(), time.getMonth(), time.getDate(), time.getHours(), time.getMinutes() + timeDifference);
+      //     }
+      //   }
+        console.log(selectedEvent)
+        delete selectedEvent.size;
+        delete selectedEvent.hidden;
+        updateEvent(selectedEvent);
+        removeEventSelection();
       }
     }
 
-    eventMove() {
+    eventMove(element, e) {
       element.style.left = `${e.pageX - element.offsetWidth / 2}px`;
       element.style.top = `${e.pageY - element.offsetHeight / 2}px`;
     }
 
     render() {
-      return <Component {...this.props} />
+      return <Component
+        {...this.props}
+        eventDragAndDrop={this.eventDragAndDrop}
+        />
     }
   };
 

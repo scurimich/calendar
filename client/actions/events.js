@@ -101,7 +101,8 @@ export function removeEvent(event) {
 }
 
 export function updateEvent(event, dispatch) {
-  console.log(arguments)
+  console.log(event)
+  if (dispatch) {
   const token = localStorage.getItem('token');
   return serverRequest(event, `/event/${event._id}`, 'PUT', token)
     .then(([response, json]) => {
@@ -121,4 +122,19 @@ export function updateEvent(event, dispatch) {
       dispatch(reset('event'));
       resolve();
     });
+  }
+
+  return dispatch => {
+    return fetch(`/event/${event._id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': localStorage.getItem('token')
+      }
+    })
+    .then(res => res.json())
+    .then(() => {
+      dispatch({ type: EVENT_CHANGE, event });
+    });
+  };
 }

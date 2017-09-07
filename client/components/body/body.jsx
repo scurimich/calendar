@@ -130,9 +130,6 @@ class Body extends React.Component {
 	}
 }
 
-
-
-
 const mapStateToProps = state => ({
 	active: state.view,
 	date: state.date,

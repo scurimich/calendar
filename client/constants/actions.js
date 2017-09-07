@@ -31,6 +31,8 @@ export const CHANGE_SPACE = 'CHANGE_SPACE';
 export const CHANGE_DATE = 'CHANGE_CURRENT_DATE';
 //selected items
 export const SELECT_EVENT = 'SELECT_EVENT';
+export const CHANGE_SELECTED_EVENT = 'CHANGE_SELECTED_EVENT';
+export const REMOVE_EVENT_SELECTION = 'REMOVE_EVENT_SELECTION';
 export const SELECT_GROUP = 'SELECT_GROUP';
 //view
 export const CHANGE_VIEW = 'CHANGE_VIEW';
