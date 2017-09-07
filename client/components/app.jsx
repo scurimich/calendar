@@ -52,8 +52,8 @@ class App extends React.Component {
     const token = localStorage.getItem('token');
     if (!token) return <Redirect to='/login' />;
     if (token && !authenticated) auth(token);
-    if (!events.length && !eventsStatus) fetchEvents();
     if (!groups.length && !groupsStatus) fetchGroups();
+    if (!events.length && !eventsStatus) fetchEvents();
 
     return (
       <div className="container">

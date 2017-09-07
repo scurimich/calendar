@@ -56,7 +56,6 @@ export function addGroup(group, dispatch) {
 }
 
 export function removeGroup(group) {
-  console.log(group);
   return dispatch => {
     return fetch(`/group/${group._id}`, {
       method: 'DELETE',
@@ -67,30 +66,29 @@ export function removeGroup(group) {
     })
     .then(res => res.json())
     .then(data => {
-      console.log(data);
+      dispatch({ type: GROUP_REMOVE, group});
     })
   }
 }
 
-export function changeGroup(data) {
+export function updateGroup(group, dispatch) {
   const token = localStorage.getItem('token');
-  return dispatch => {
-    return  fetch(`/group/${data._id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': localStorage.getItem('token')
-      },
-      body: JSON.stringify(data.group)
-    })
-    .then(res => {
-      return res.json();
-    })
-    .then(group => {
-      dispatch({ type: EVENT_CHANGE, group});
-    })
-    .catch((err) => {
-      console.log(err);
+  return serverRequest(group, `/group/${group._id}`, 'PUT', token)
+    .then(([response, json]) => {
+      if (response.status === 403) throw new SubmissionError({_error: 'Updating failed'});
+      if (json.errors) {
+        const jsonErr = json.errors;
+        const errors = {};
+        for (let prop in json.errors) {
+          if (jsonErr.hasOwnProperty(prop)) {
+            errors[prop] = jsonErr[prop].message;
+          }
+        }
+        throw new SubmissionError(errors);
+      }
+      dispatch({ type: GROUP_WINDOW_HIDE });
+      dispatch({ type: GROUP_CHANGE, group });
+      dispatch(reset('group'));
+      resolve();
     });
-  };
 }

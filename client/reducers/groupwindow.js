@@ -2,10 +2,9 @@ import { GROUP_WINDOW_SHOW, GROUP_WINDOW_HIDE } from '../constants/actions.js';
 
 const windowState = {
   showed: false,
-  action: 'add',
   data: {
-    name: null,
-    color: null
+    label: '',
+    color: '#000000'
   }
 };
 

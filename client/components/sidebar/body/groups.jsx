@@ -51,7 +51,7 @@ class Groups extends React.Component {
     return (
       <Select 
         className='group-select'
-        placeholder='Group filter'
+        placeholder='Groups'
         clearable={true}
         options={groups}
         optionRenderer={this.optionRenderer}

@@ -51,9 +51,7 @@ export function fetchEvents() {
   };
 }
 
-export function addEvent(windowState, data, dispatch) {
-  const {allDay, periodic, notification} = windowState;
-  data = {...data, allDay, periodic, notification};
+export function addEvent(data, dispatch) {
   if (data.dateBegin) data.dateBegin = new Date(data.dateBegin);
   if (data.dateEnd) data.dateEnd = new Date(data.dateEnd);
   if (data.timeBegin) data.timeBegin = new Date(1970, 0, 1, data.timeBegin.substr(0, 2), data.timeBegin.substr(3, 2));
@@ -102,37 +100,25 @@ export function removeEvent(event) {
 	return { type: EVENT_REMOVE, event}
 }
 
-export function changeEvent(data) {
+export function updateEvent(event, dispatch) {
+  console.log(arguments)
   const token = localStorage.getItem('token');
-  return dispatch => {
-    return  fetch(`/event/${data.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': localStorage.getItem('token')
-      },
-      body: JSON.stringify(data.event)
-    })
-    .then(res => {
-      return res.json();
-    })
-    .then(event => {
-      console.log(event)
-      for (let prop in event) {
-        if (event[prop]) {
-          if (prop === 'dateBegin' || prop === 'dateEnd') {
-            event[prop] = new Date(event[prop]);
-            event[prop].setHours(0);
-          }
-          if (prop === 'timeBegin' || prop === 'timeEnd') {
-            event[prop] = new Date(event[prop]);
+  return serverRequest(event, `/event/${event._id}`, 'PUT', token)
+    .then(([response, json]) => {
+      if (response.status === 403) throw new SubmissionError({_error: 'Updating failed'});
+      if (json.errors) {
+        const jsonErr = json.errors;
+        const errors = {};
+        for (let prop in json.errors) {
+          if (jsonErr.hasOwnProperty(prop)) {
+            errors[prop] = jsonErr[prop].message;
           }
         }
+        throw new SubmissionError(errors);
       }
-      dispatch({ type: EVENT_CHANGE, event});
-    })
-    .catch((err) => {
-      console.log(err);
+      dispatch({ type: EVENT_WINDOW_HIDE });
+      dispatch({ type: EVENT_CHANGE, event });
+      dispatch(reset('event'));
+      resolve();
     });
-  };
 }

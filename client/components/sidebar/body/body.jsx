@@ -66,6 +66,7 @@ class SidebarBody extends React.Component {
                 selectGroup={selectGroup}
                 groupWindowShow={groupWindowShow}
                 removeGroup={removeGroup}
+                groupWindowShow={groupWindowShow}
               />
               <Events
                 date={date}
@@ -76,6 +77,8 @@ class SidebarBody extends React.Component {
                 eventsStatus={eventsStatus}
                 fetchGroups={fetchGroups}
                 groupsStatus={groupsStatus}
+                eventWindowShow={eventWindowShow}
+                currentGroup={currentGroup}
               />
             </div>
           )

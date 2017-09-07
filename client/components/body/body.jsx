@@ -11,12 +11,12 @@ import GroupWindow from './dialogs/groupwindow.jsx';
 
 import {
 	addEvent,
-	changeEvent,
+	updateEvent,
 	removeEvent
 } from '../../actions/events.js';
 import { eventWindowShow, eventWindowHide } from '../../actions/eventwindow.js';
 import { groupWindowShow, groupWindowHide } from '../../actions/groupwindow.js';
-import { addGroup } from '../../actions/groups.js';
+import { addGroup, updateGroup } from '../../actions/groups.js';
 
 import {
 	WEEKDAYS,
@@ -100,6 +100,7 @@ class Body extends React.Component {
 		const {
 			eventWindow,
 			eventWindowHide,
+			eventWindowShow,
 			groups,
 			groupWindow,
 			groupWindowShow,
@@ -111,15 +112,18 @@ class Body extends React.Component {
 				{this.setCurrentView()}
 				<EventWindow
 					addEvent={addEvent}
+					updateEvent={updateEvent}
 					eventWindow={eventWindow}
 					onWindowClose={eventWindowHide}
 					addGroup={groupWindowShow}
 					groups={groups}
+					eventWindowShow={eventWindowShow}
 				/>
 				<GroupWindow
 					addGroup={addGroup}
 					groupWindow={groupWindow}
 					onWindowClose={groupWindowHide}
+					updateGroup={updateGroup}
 				/>
 			</div>
 		);
@@ -143,7 +147,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => bindActionCreators({
 	eventWindowShow,
 	eventWindowHide,
-	changeEvent,
 	groupWindowShow,
 	groupWindowHide
 }, dispatch);

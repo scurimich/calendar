@@ -3,7 +3,6 @@ import { TODAY } from '../constants/calendar.js';
 
 const windowState = {
   showed: false,
-  action: 'add',
   data: {
     title: '',
     description: '',
