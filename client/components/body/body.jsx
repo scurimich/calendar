@@ -106,7 +106,6 @@ class Body extends React.Component {
 			groupWindowShow,
 			groupWindowHide
 		} = this.props;
-
 		return (
 			<div className="body">
 				{this.setCurrentView()}

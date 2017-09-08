@@ -63,7 +63,6 @@ export function addEvent(data, dispatch) {
   if (data.group) data.group = data.group._id;
 
   const token = localStorage.getItem('token');
-  console.log(data)
   return serverRequest(data, '/event', 'POST', token)
     .then(([response, json]) => {
       if (response.status === 403) throw new SubmissionError({_error: 'Adding failed'});
@@ -77,7 +76,6 @@ export function addEvent(data, dispatch) {
         }
         throw new SubmissionError(errors);
       }
-      console.log(json)
       dispatch({ type: EVENT_WINDOW_HIDE });
       dispatch(reset('event'));
       for (let prop in json) {
@@ -101,7 +99,21 @@ export function removeEvent(event) {
 }
 
 export function updateEvent(event, dispatch) {
-  console.log(event)
+  if (event.dateBegin)
+    event.dateBegin = new Date(new Date(event.dateBegin).setHours(0));
+  if (event.dateEnd)
+    event.dateEnd = new Date(new Date(event.dateEnd).setHours(0));
+
+  if (event.timeBegin && typeof event.timeBegin === 'string')
+    event.timeBegin = new Date(1970, 0, 1, event.timeBegin.substr(0, 2), event.timeBegin.substr(3, 2));
+  if (event.timeEnd && typeof event.timeBegin === 'string')
+    event.timeEnd = new Date(1970, 0, 1, event.timeEnd.substr(0, 2), event.timeEnd.substr(3, 2));
+
+  event.duration = (event.dateEnd - event.dateBegin) / DAY;
+  if (event.week && event.week.length !== DAYS_IN_WEEK) 
+    event.week = event.week.concat(new Array(DAYS_IN_WEEK - event.week.length).fill(null));
+  if (event.group) event.group = event.group._id;
+
   if (dispatch) {
   const token = localStorage.getItem('token');
   return serverRequest(event, `/event/${event._id}`, 'PUT', token)
@@ -130,7 +142,8 @@ export function updateEvent(event, dispatch) {
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': localStorage.getItem('token')
-      }
+      },
+      body: JSON.stringify(event)
     })
     .then(res => res.json())
     .then(() => {

@@ -1,7 +1,9 @@
 import React from 'react';
 import {TODAY} from '../../../constants/calendar.js';
 
-export default class WeekDay extends React.Component {
+import DragAndDrop from '../../../hoc/dragndrop.jsx';
+
+class WeekDay extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -100,7 +102,7 @@ export default class WeekDay extends React.Component {
   }
 
   getCurrentEvents(events) {
-    // console.log(events)
+    const { eventDragAndDrop } = this.props;
     return events.map(event => {
       const timeDifference = event.timeEnd - event.timeBegin;
       const height = (timeDifference / 1000 / 60 / 60) * 100;
@@ -116,7 +118,7 @@ export default class WeekDay extends React.Component {
         className='hour__event'
         key={event._id} id={event._id}
         style={ {'height': height + '%','width': width + '%', 'top': top + '%', 'left': left + '%', 'zIndex': zIndex} } 
-        onMouseDown={this.props.onMouseDown}
+        onMouseDown={eventDragAndDrop}
         >
           {event.title}
         </div>
@@ -135,3 +137,9 @@ export default class WeekDay extends React.Component {
   }
   
 }
+
+const options = {
+  type: 'day'
+};
+
+export default DragAndDrop(WeekDay, options);

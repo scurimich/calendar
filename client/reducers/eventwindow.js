@@ -22,7 +22,7 @@ export default function eventWindow(state = windowState, action) {
     case EVENT_WINDOW_SHOW:
       return {...state, showed: true, data: {...state.data, ...action.data} };
     case EVENT_WINDOW_HIDE:
-      return {...state, showed: false};
+      return {...state, showed: false, data: {allDay: true, periodic: false, notification: true}};
     default:
       return state;
   }

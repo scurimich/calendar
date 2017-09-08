@@ -20,12 +20,14 @@ const eventSchema = mongoose.Schema({
   },
   dateBegin: {
     type: Date,
-    required: true
+    required: true,
+    default: new Date()
   },
   dateEnd: {
     type: Date,
     required: true,
-    validate: [dateValidate, 'Ends date must be greater than begins date']
+    validate: [dateValidate, 'Ends date must be greater than begins date'],
+    default: new Date()
   },
   allDay: {
     type: Boolean,

@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import MonthWeek from './monthweek.jsx';
 import { WEEKDAYS, WEEKS_COUNT, DAYS_IN_WEEK} from '../../../constants/calendar.js';
 
-import { updateEvent } from '../../../actions/events.js';
 import { eventWindowShow } from '../../../actions/eventwindow.js';
 import {
 	setDate,
@@ -50,17 +49,12 @@ class Month extends React.Component {
 			selectedEvent,
 			monthInfo,
 			viewInfo,
-			eventDragAndDrop,
 			eventWindowShow,
 			setView,
 			changeViewInfo,
 			setDate,
 			setSpace,
-			setMiniSpace,
-			updateEvent,
-			selectEvent,
-			changeSelectedEvent,
-			removeEventSelection
+			setMiniSpace
 		} = this.props;
 		return (
 			<div className='month'>
@@ -91,12 +85,7 @@ class Month extends React.Component {
 									setMiniSpace={setMiniSpace}
 									setView={setView}
 									eventWindowShow={eventWindowShow}
-									eventDragAndDrop={eventDragAndDrop}
 									changeViewInfo={changeViewInfo}
-									selectEvent={selectEvent}
-									updateEvent={updateEvent}
-									changeSelectedEvent={changeSelectedEvent}
-									removeEventSelection={removeEventSelection}
 								/>
 							})
 						}
@@ -121,10 +110,6 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 	setMiniSpace,
 	setView,
 	changeViewInfo,
-	selectEvent,
-	updateEvent,
-	changeSelectedEvent,
-	removeEventSelection
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Month);

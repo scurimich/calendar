@@ -1,7 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { selectEvent, changeSelectedEvent, removeEventSelection } from '../actions/selectedevent.js';
+import { updateEvent } from '../actions/events.js';
+import { eventWindowShow } from '../actions/eventwindow.js';
+
 
 const dragAndDrop = (Component, options) => {
-  // console.log(options);
 
   class dndComponent extends React.Component {
     constructor(props) {
@@ -16,11 +21,11 @@ const dragAndDrop = (Component, options) => {
       const element = e.target;
       const event = selectedEvent || events.find(event => event._id === element.id);
       const baseElement = document.querySelector('[data-dd]')
-      // const baseElementWidth = baseElement.offsetWidth;
-      // const elementHeight = element.offsetHeight;
 
-      document.onmousemove = this.eventOnMove.bind(this, element, event);
       window.onmouseup = this.eventOnDrop.bind(this, event);
+      this.timeout = setTimeout(function() {
+        document.onmousemove = this.eventOnMove.bind(this, element, event);
+      }.bind(this), 50);
     }
 
     eventOnMove(element, event, e) {
@@ -29,13 +34,9 @@ const dragAndDrop = (Component, options) => {
         event.hidden = true;
         selectEvent(event);
 
-        this.newElement = element.cloneNode(true);
-        this.newElement.className = 'week-events__item week-events__item_absolute mouse-events-off';
         Array.from(document.querySelectorAll('.week-events')).map(event => {
           event.classList.add('mouse-events-off');
         });
-
-        document.body.appendChild(this.newElement);
       }
 
       document.querySelector('.body [class*="_main"]').onmouseover = e => {
@@ -50,20 +51,24 @@ const dragAndDrop = (Component, options) => {
           this.event.dateEnd = new Date(new Date(date).setDate(this.event.dateBegin.getDate() + event.duration));
         }
 
-        // const time = dd.getAttribute('data-time');
-        // if (time) this.newTimeBegin = new Date(time);
+        const time = dd.getAttribute('data-time');
+        if (time) {
+          this.event.timeBegin = new Date(time);
+          const timeDifference = this.event.timeBegin - event.timeBegin;
+          this.event.timeEnd = new Date(Date.parse(event.timeEnd) + timeDifference);
+        }
       };
 
       changeSelectedEvent(this.event);
-      this.eventMove(this.newElement, e);
     }
 
     eventOnDrop(event) {
+      clearTimeout(this.timeout);
       document.onmousemove = null;
       window.onmouseup = null;
 
-      if (!this.newElement) {
-        this.props.onEventClick(event);
+      if (!event.hidden) {
+        this.props.eventWindowShow(event);
         return;
       }
 
@@ -73,35 +78,12 @@ const dragAndDrop = (Component, options) => {
         Array.from(document.querySelectorAll('.week-events')).map(event => {
           event.classList.remove('mouse-events-off');
         });
-        this.newElement.remove();
-        delete this.newElement;
 
-        // let dateDifference = selectedEvent.newDateBegin - event.dateBegin;
-        // let timeDifference = selectedEvent.newTimeBegin - event.timeBegin;
-
-      //   dateDifference /= DAY;
-      //   timeDifference /= 60000;
-      //   for(let key in event) {
-      //     if (key.indexOf('date') + 1 && dateDifference !== 0 && !isNaN(dateDifference)) {
-      //       const date = event[key];
-      //       event[key] = new Date(date.getFullYear(), date.getMonth(), date.getDate() + dateDifference);
-      //     }
-      //     if (key.indexOf('time') + 1 && timeDifference !== 0 && !isNaN(timeDifference)) {
-      //       const time = event[key];
-      //       event[key] = new Date(time.getFullYear(), time.getMonth(), time.getDate(), time.getHours(), time.getMinutes() + timeDifference);
-      //     }
-      //   }
-        console.log(selectedEvent)
         delete selectedEvent.size;
         delete selectedEvent.hidden;
         updateEvent(selectedEvent);
         removeEventSelection();
       }
-    }
-
-    eventMove(element, e) {
-      element.style.left = `${e.pageX - element.offsetWidth / 2}px`;
-      element.style.top = `${e.pageY - element.offsetHeight / 2}px`;
     }
 
     render() {
@@ -112,7 +94,19 @@ const dragAndDrop = (Component, options) => {
     }
   };
 
-  return dndComponent;
+  const mapStateToProps = state => ({
+    selectedEvent: state.selected
+  });
+
+  const mapDispatchToProps = dispatch => bindActionCreators({
+    selectEvent,
+    updateEvent,
+    changeSelectedEvent,
+    removeEventSelection,
+    eventWindowShow
+  }, dispatch);
+
+  return connect(mapStateToProps, mapDispatchToProps)(dndComponent);
 };
 
 export default dragAndDrop;

@@ -11,7 +11,6 @@ export default class MonthWeek extends React.Component {
       selected: null
     };
     this.changeSelectedDate = this.changeSelectedDate.bind(this);
-    this.onEventClick = this.onEventClick.bind(this);
   }
 
   changeSelectedDate(date, e) {
@@ -96,23 +95,12 @@ export default class MonthWeek extends React.Component {
     changeViewInfo({ cellSize: Math.floor(height / LINE_HEIGHT) });
   }
 
-  onEventClick(event) {
-    const { eventWindowShow } = this.props;
-    eventWindowShow(event);
-  }
-
   render() {
     const {
       firstDay,
       events,
       weekNdx,
-      viewInfo,
-      selectedEvent,
-      changeEvent,
-      selectEvent,
-      updateEvent,
-      changeSelectedEvent,
-      removeEventSelection
+      viewInfo
     } = this.props;
     return (
       <li className='month__item' onClick={this.onWeekClick}>
@@ -121,14 +109,7 @@ export default class MonthWeek extends React.Component {
           events={events}
           linesCount={viewInfo.cellSize}
           ndx={weekNdx}
-          selectedEvent={selectedEvent}
-          changeEvent={changeEvent}
           changeSelectedDate={this.changeSelectedDate}
-          selectEvent={selectEvent}
-          updateEvent={updateEvent}
-          changeSelectedEvent={changeSelectedEvent}
-          removeEventSelection={removeEventSelection}
-          onEventClick={this.onEventClick}
         />
         <ul className='month__week'>
           {

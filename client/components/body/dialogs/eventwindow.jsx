@@ -111,8 +111,8 @@ class EventWindow extends React.Component {
 		this.selectGroup = this.selectGroup.bind(this);
 	}
 
-	popupClasses() {
-		const { showed } = this.props.eventWindow;
+	active() {
+		const { showed, resetForm } = this.props.eventWindow;
 		let classes = 'event-window';
 		return showed ? classes += ' opened' : classes;
 	}
@@ -168,7 +168,7 @@ class EventWindow extends React.Component {
 		const id = initialValues._id;
 		const submit = id ? updateEvent : addEvent;
 		return (
-			<div className={this.popupClasses()} id='event-window'>
+			<div className={this.active()} id='event-window'>
 				<div className='event-window__popup'>
 					<span className='event-window__close' onClick={onWindowClose}>
 						<i className="fa fa-times" aria-hidden="true"></i>

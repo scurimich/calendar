@@ -5,6 +5,8 @@ import GeminiScrollbar from 'react-gemini-scrollbar';
 import WeekDay from './weekday.jsx';
 import {DAYS_IN_WEEK, WEEKDAYS} from '../../../constants/calendar.js';
 import {addNull, getWeekEvents} from '../../../utils.js';
+import { selectEvent, changeSelectedEvent, removeEventSelection } from '../../../actions/selectedevent.js';
+import { updateEvent } from '../../../actions/events.js';
 
 import './Week.scss';
 
@@ -140,7 +142,7 @@ class Week extends React.Component {
   }
 
   render() {
-    const { selectedEvent } = this.props;
+    const { selectedEvent, selectEvent, updateEvent, changeSelectedEvent, removeEventSelection } = this.props;
     return (
       <div className='week'>
         <header className='week__head weekdays'>
@@ -171,8 +173,7 @@ class Week extends React.Component {
                     key={ndx}
                     date={day.date}
                     id={day.id}
-                    selectedEvent={this.props.selectedEvent}
-                    onMouseDown={this.props.eventDragAndDrop}
+                    selectedEvent={selectedEvent}
                   />);
                 })
               }
@@ -186,11 +187,8 @@ class Week extends React.Component {
 
 const mapStateToProps = state => ({
   date: state.date,
-  space: state.space.main
+  space: state.space.main,
+  selectedEvent: state.selected
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(Week);
+export default connect(mapStateToProps, null)(Week);
