@@ -6,7 +6,7 @@ import { updateEvent } from '../actions/events.js';
 import { eventWindowShow } from '../actions/eventwindow.js';
 
 
-const dragAndDrop = (Component, options) => {
+const dragAndDrop = (Component) => {
 
   class dndComponent extends React.Component {
     constructor(props) {
@@ -20,7 +20,8 @@ const dragAndDrop = (Component, options) => {
       const { events, selectedEvent } = this.props;
       const element = e.target;
       const event = selectedEvent || events.find(event => event._id === element.id);
-      const baseElement = document.querySelector('[data-dd]')
+      const baseElement = document.querySelector('[data-dd]');
+      this.mainElement = document.querySelector('.body [class*="_main"]');
 
       window.onmouseup = this.eventOnDrop.bind(this, event);
       this.timeout = setTimeout(function() {
@@ -39,7 +40,7 @@ const dragAndDrop = (Component, options) => {
         });
       }
 
-      document.querySelector('.body [class*="_main"]').onmouseover = e => {
+      this.mainElement.onmouseover = e => {
         let dd = e.target;
         while(true) {
           if (dd.hasAttribute('data-dd')) break;
@@ -74,7 +75,7 @@ const dragAndDrop = (Component, options) => {
 
       if (event.hidden) {
         const { selectedEvent, removeEventSelection, updateEvent } = this.props;
-        document.querySelector('.body [class*="__main"]').onmouseover = null;
+        this.mainElement.onmouseover = null;
         Array.from(document.querySelectorAll('.week-events')).map(event => {
           event.classList.remove('mouse-events-off');
         });
@@ -87,10 +88,12 @@ const dragAndDrop = (Component, options) => {
     }
 
     render() {
-      return <Component
-        {...this.props}
-        eventDragAndDrop={this.eventDragAndDrop}
+      return (
+        <Component
+          {...this.props}
+          eventDragAndDrop={this.eventDragAndDrop}
         />
+      );
     }
   };
 

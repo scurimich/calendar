@@ -1,9 +1,8 @@
 import React from 'react';
 import { DAYS_IN_WEEK, DAY, WEEKS_COUNT } from '../../../constants/calendar.js';
 import { getWeekEvents } from '../../../utils.js';
-import DragAndDrop from '../../../hoc/dragndrop.jsx';
 
-class MonthEvents extends React.Component {
+export default class MonthEvents extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -66,9 +65,3 @@ class MonthEvents extends React.Component {
     );
   }
 }
-
-const options = {
-  type: 'week'
-}
-
-export default DragAndDrop(MonthEvents, options);

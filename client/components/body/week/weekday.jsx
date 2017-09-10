@@ -137,9 +137,4 @@ class WeekDay extends React.Component {
   }
   
 }
-
-const options = {
-  type: 'day'
-};
-
-export default DragAndDrop(WeekDay, options);
+export default DragAndDrop(WeekDay);

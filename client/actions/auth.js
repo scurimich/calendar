@@ -10,7 +10,6 @@ export function login(user, dispatch) {
       else {
         localStorageSave(json);
         dispatch({type: LOGIN, email: json.user});
-        window.location.href='/';
         resolve();
       }
     });
@@ -35,18 +34,10 @@ export function register(user, dispatch) {
       else {
         localStorageSave(json);
         dispatch({type: LOGIN, email: json.user});
-        window.location.href='/';
         resolve();
       }
     })
 }
-
-export function logout() {
-  return dispatch => {
-    dispatch({type: LOGOUT});
-    localStorageClear();
-  }
-};
 
 export function auth(token) {
   return dispatch => {
@@ -63,12 +54,20 @@ export function auth(token) {
     .then(data => {
       if (data.errors) throw new Error();
       const user = localStorage.getItem('user');
+      localStorageSave(data);
       dispatch({type: LOGIN, email: user});
     })
     .catch((err) => {
       dispatch({type: LOGOUT});
       localStorageClear();
     });
+  }
+};
+
+export function logout() {
+  return dispatch => {
+    dispatch({type: LOGOUT});
+    localStorageClear();
   }
 };
 

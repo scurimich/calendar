@@ -175,17 +175,10 @@ class Day extends React.Component {
   }
 }
 
-const dndOptions = {
-};
-
 const mapStateToProps = state => ({
   date: state.date,
   space: state.space.main,
   selectedEvent: state.selected
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  selectEvent
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(dragAndDrop(Day, dndOptions));
+export default connect(mapStateToProps, null)(dragAndDrop(Day));

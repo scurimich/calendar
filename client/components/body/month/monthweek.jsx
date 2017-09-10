@@ -1,10 +1,11 @@
 import React from 'react';
 import MonthDay from './monthday.jsx';
 import MonthEvents from './monthevents.jsx';
+import DragAndDrop from '../../../hoc/dragndrop.jsx';
 import { DAYS_IN_WEEK, TODAY } from '../../../constants/calendar.js';
 import { addNull } from '../../../utils.js';
 
-export default class MonthWeek extends React.Component {
+class MonthWeek extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,7 +19,7 @@ export default class MonthWeek extends React.Component {
   }
 
   getWeek() {
-    const { firstDay, activeDate, prevDays, curNumber, selectedEvent, events } = this.props;
+    const { firstDay, activeDate, space, selectedEvent, events } = this.props;
     const week = [];
     const year = firstDay.getFullYear();
     const month = firstDay.getMonth();
@@ -29,9 +30,9 @@ export default class MonthWeek extends React.Component {
     for (let i = 1; i <= DAYS_IN_WEEK; oneDay = new Date(oneDay.getFullYear(), oneDay.getMonth(), oneDay.getDate() + 1), i++) {
       const currentEvents = events.filter(event => (event.dateBegin <= oneDay && event.dateEnd >= oneDay));
       const currentYear = oneDay.getFullYear();
-      const currentMonth = addNull(oneDay.getMonth() + 1);
-      const currentDate = addNull(oneDay.getDate());
-      let currentDay = `${currentYear},${currentMonth},${currentDate}`;
+      const currentMonth = oneDay.getMonth() + 1;
+      const currentDate = oneDay.getDate();
+      let currentDay = `${currentYear},${addNull(currentMonth)},${addNull(currentDate)}`;
 
       week.push({
         date: oneDay,
@@ -40,9 +41,11 @@ export default class MonthWeek extends React.Component {
         id: currentDay,
         current: !Boolean(activeDate - oneDay),
         today: !Boolean(TODAY - oneDay),
+        prevMonth: currentMonth < space.getMonth() + 1,
+        nextMonth: currentMonth > space.getMonth() + 1,
         hover: selectedEvent ?
-          Boolean(oneDay >= selectedEvent.newDateBegin
-            && selectedEvent.newDateEnd> oneDay)
+          Boolean(oneDay >= selectedEvent.dateBegin
+            && selectedEvent.dateEnd> oneDay)
           : null,
         onDateClick: this.onDateClick.bind(this, oneDay),
         onAddClick: this.onAddClick.bind(this, oneDay),
@@ -100,7 +103,8 @@ export default class MonthWeek extends React.Component {
       firstDay,
       events,
       weekNdx,
-      viewInfo
+      viewInfo,
+      eventDragAndDrop
     } = this.props;
     return (
       <li className='month__item' onClick={this.onWeekClick}>
@@ -110,6 +114,7 @@ export default class MonthWeek extends React.Component {
           linesCount={viewInfo.cellSize}
           ndx={weekNdx}
           changeSelectedDate={this.changeSelectedDate}
+          eventDragAndDrop={eventDragAndDrop}
         />
         <ul className='month__week'>
           {
@@ -117,6 +122,7 @@ export default class MonthWeek extends React.Component {
               return (<MonthDay
                 {...day}
                 key={dayNdx}
+                eventDragAndDrop={eventDragAndDrop}
               />);
             })
           }
@@ -125,3 +131,5 @@ export default class MonthWeek extends React.Component {
     );
   }
 }
+
+export default DragAndDrop(MonthWeek);

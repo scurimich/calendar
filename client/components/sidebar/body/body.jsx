@@ -22,9 +22,9 @@ class SidebarBody extends React.Component {
     const { search, events } = this.props;
     return events.filter(event => {
       const title = event.title.toLowerCase();
-      const description = event.description.toLowerCase();
-      if ((title.indexOf(search) + 1) ||
-        (description.indexOf(search) + 1)) return event;
+      const description = event.description && event.description.toLowerCase();
+      if ((title && title.indexOf(search) + 1) ||
+        (description && description.indexOf(search) + 1)) return event;
     });
   }
 

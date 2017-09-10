@@ -19,7 +19,21 @@ class MonthDay extends React.Component {
   }
 
   render() {
-    const { date, selected, events, current, today, hover, id, onDateClick, onAddClick, onDayClick, changeSelectedDate } = this.props;
+    const {
+      date,
+      selected,
+      events,
+      current,
+      today,
+      hover,
+      id,
+      onDateClick,
+      onAddClick,
+      onDayClick,
+      changeSelectedDate,
+      eventDragAndDrop
+    } = this.props;
+    
     const { removeSelectedDate } = this;
     return (
       <li
@@ -41,7 +55,7 @@ class MonthDay extends React.Component {
             events.map(event => {
               return ((event.periodic && event.week[date.getDay() ? date.getDay() - 1 : 6])
                 || !event.periodic)
-                && <span className='week-events__item' key={event._id}>{event.title}</span>;
+                && <span className='week-events__item' key={event._id} id={event._id} onMouseDown={eventDragAndDrop}>{event.title}</span>;
             })
           }
         </div>
