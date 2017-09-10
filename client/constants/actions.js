@@ -2,8 +2,6 @@
 export const REGISTER = 'REGISTER';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
-// export const REGISTER_ERROR = 'REGISTER_ERROR';
-// export const LOGIN_ERROR = 'LOGIN_ERROR';
 //events array
 export const EVENTS_ADD = 'EVENTS_ADD';
 export const EVENT_ADD = 'EVENT_ADD';

@@ -27,7 +27,6 @@ export function fetchGroups() {
       dispatch({ type: GROUPS_ADD, groups });
     })
     .catch(err => {
-      console.log(err);
       dispatch({ type: GROUPS_FETCH_ERROR });
     })
   };

@@ -45,21 +45,25 @@ export function fetchEvents() {
       dispatch({ type: EVENTS_FETCH_OK });
     })
     .catch((err) => {
-      console.log(err);
       dispatch({ type: EVENTS_FETCH_ERROR, error: err.message});
     });
   };
 }
 
 export function addEvent(data, dispatch) {
-  if (data.dateBegin) data.dateBegin = new Date(data.dateBegin);
-  if (data.dateEnd) data.dateEnd = new Date(data.dateEnd);
-  if (data.timeBegin) data.timeBegin = new Date(1970, 0, 1, data.timeBegin.substr(0, 2), data.timeBegin.substr(3, 2));
-  if (data.timeEnd) data.timeEnd = new Date(1970, 0, 1, data.timeEnd.substr(0, 2), data.timeEnd.substr(3, 2));
+  if (data.dateBegin)
+    data.dateBegin = new Date(data.dateBegin);
+  if (data.dateEnd)
+    data.dateEnd = new Date(data.dateEnd);
+
+  if (data.timeBegin)
+    data.timeBegin = new Date(1970, 0, 1, data.timeBegin.substr(0, 2), data.timeBegin.substr(3, 2));
+  if (data.timeEnd)
+    data.timeEnd = new Date(1970, 0, 1, data.timeEnd.substr(0, 2), data.timeEnd.substr(3, 2));
+
   data.duration = (data.dateEnd - data.dateBegin) / DAY;
-  if (data.week && data.week.length !== DAYS_IN_WEEK) {
+  if (data.week && data.week.length !== DAYS_IN_WEEK)
     data.week = data.week.concat(new Array(DAYS_IN_WEEK - data.week.length).fill(null));
-  }
   if (data.group) data.group = data.group._id;
 
   const token = localStorage.getItem('token');
