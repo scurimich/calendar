@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router';
+import moment from 'moment';
 
 import Sidebar from './sidebar/sidebar.jsx';
 import Controls from './controls/controls.jsx';
@@ -23,16 +24,16 @@ class App extends React.Component {
 
   getNotifications() {
     const { events } = this.props;
-    const now = new Date();
+    const now = moment();
     return events.reduce((prev, event, ndx) => {
       const date = event.dateBegin;
       const time = event.timeBegin || new Date(1970, 0, 1, 0, 0);
-      const begin = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes() - 5);
-      const end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes());
+      const begin = date.clone().hours(time.hours()).minutes(time.minutes() - 5);
+      const end = date.clone().hours(time.hours()).minutes(time.minutes());
       if (now - end > 0 || !event.notification) return prev;
       prev.push({
-        begin: new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes() - 5),
-        end: new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes()),
+        begin: begin,
+        end: end,
         id: event._id
       });
       return prev;
@@ -45,12 +46,12 @@ class App extends React.Component {
   }
 
   render() {
+    const token = localStorage.getItem('token');
+    if (!token) return <Redirect to='/login' />;
     const { getNotifications, removeNotification } = this;
     const { auth, user, events, eventsStatus, fetchEvents, groups, fetchGroups, groupsStatus } = this.props;
     const { authenticated } = user;
 
-    const token = localStorage.getItem('token');
-    if (!token) return <Redirect to='/login' />;
     if (token && !authenticated) auth(token);
     if (!groups.length && !groupsStatus) fetchGroups();
     if (!events.length && !eventsStatus) fetchEvents();

@@ -44,16 +44,16 @@ class MonthDay extends React.Component {
         onClick={onDayClick}
       >
         <div className='month-day__head'>
-          <span id='day-date' className='month-day__num' onClick={onDateClick}>{date.getDate()}</span>
+          <span id='day-date' className='month-day__num' onClick={onDateClick}>{date.date()}</span>
           <span id='add-event' className='month-day__add' onClick={onAddClick}>+</span>
         </div>
         <div className='month-day__body' ref={(body) => {this.body = body;}}></div>
         <div className={`month-day__all-events ${selected ? '' : 'month-day__all-events_hidden'}`}>
-          <span className='month-day__full-date'>{`${date.getDate()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`}</span>
+          <span className='month-day__full-date'>{date.format('DD MMMM YYYY')}</span>
           <span className='month-day__close' onClick={removeSelectedDate}><i className="fa fa-times" aria-hidden="true"></i></span>
           {
             events.map(event => {
-              return ((event.periodic && event.week[date.getDay() ? date.getDay() - 1 : 6])
+              return ((event.periodic && event.week[date.day() ? date.day() - 1 : 6])
                 || !event.periodic)
                 && <span className='week-events__item' key={event._id} id={event._id} onMouseDown={eventDragAndDrop}>{event.title}</span>;
             })

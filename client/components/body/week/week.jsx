@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import GeminiScrollbar from 'react-gemini-scrollbar';
+import moment from 'moment';
+
 import WeekDay from './weekday.jsx';
 import {DAYS_IN_WEEK, WEEKDAYS} from '../../../constants/calendar.js';
 import {addNull, getWeekEvents} from '../../../utils.js';
@@ -22,16 +24,13 @@ class Week extends React.Component {
     const { space, date } = this.props;
     const { prevDays, curNumber } = this;
     const week = [];
-    const year = space.getFullYear();
-    const month = space.getMonth();
-    const day = space.getDay() == 0 ? 6 : space.getDay() - 1;
-    let oneDay = day == 1 ? space : new Date(space.getFullYear(), space.getMonth(), space.getDate() - day);
+    const year = space.year();
+    const month = space.month();
+    const day = space.day() == 0 ? 6 : space.day() - 1;
+    let oneDay = day == 1 ? space : space.clone().subtract(day, 'days');
 
-    for (let i = 1; i <= DAYS_IN_WEEK; oneDay = new Date(oneDay.getFullYear(), oneDay.getMonth(), oneDay.getDate() + 1), i++) {
-      const currentYear = oneDay.getFullYear();
-      const currentMonth = addNull(oneDay.getMonth() + 1);
-      const currentDate = addNull(oneDay.getDate());
-      const currentDay = `${currentYear},${currentMonth},${currentDate}`;
+    for (let i = 1; i <= DAYS_IN_WEEK; oneDay.clone().add(1, 'days'), i++) {
+      const currentDay = oneDay.format('YYYY,MM,DD');
       let currentHover;
       const current = oneDay - date === 0;
 
@@ -60,18 +59,6 @@ class Week extends React.Component {
     });
   }
 
-  // // weekClasses() {
-  // //   const { date, curDate } = this.props;
-  // //   const nextDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + DAYS_IN_WEEK);
-  // //   const currentDate = curDate;
-  // //   const active = currentDate >= date && currentDate < nextDate;
-  // //   const classArray = [
-  // //     'week__week',
-  // //     active ? 'week__week_active' : ''
-  // //   ];
-  // //   return classArray.join(' ');
-  // // }
-
   renderAllDayDays() {
     return this.getWeek().map((day, ndx) => {
       return (
@@ -82,8 +69,8 @@ class Week extends React.Component {
 
   renderAllDayEvents() {
     const { space } = this.props;
-    const day = space.getDay() == 0 ? 6 : space.getDay() - 1;
-    const firstDay = day == 1 ? space : new Date(space.getFullYear(), space.getMonth(), space.getDate() - day);
+    const day = space.day() == 0 ? 6 : space.day() - 1;
+    const firstDay = day == 1 ? space : space.clone().subtract(day, 'days');
     const weekEvents = getWeekEvents(this.weekEvents(), firstDay);
     const lines = (weekEvents && weekEvents.lines) || [];
     return lines.map((line, ndx) => {
@@ -120,22 +107,21 @@ class Week extends React.Component {
 
   renderSidebar() {
     const { space } = this.props;
-    const nextDay = new Date(space.getFullYear(), space.getMonth(), space.getDate() + 1);
+    const nextDay = space.clone().add(1, 'days');
     const halfHours = [];
     let currentTime = space;
 
     while(currentTime - nextDay < 0) {
 
-      const currentHour = currentTime.getHours() > 12 ? currentTime.getHours() - 12 : currentTime.getHours();
-
       halfHours.push(
-        <li className='week__sb-hour sb-hour' key={`${currentTime.getHours()}${currentTime.getMinutes()}`}>
+        <li className='week__sb-hour sb-hour' key={currentTime.format('HHmm')}>
           <div className='sb-hour__time'>
-            {`${currentTime.getHours() ? currentHour : 12}${currentTime.getHours() <= 12 ? 'AM' : 'PM'}`}
+            {currentTime.format('h:00 A')}
           </div>
         </li>
       );
-      currentTime = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), currentTime.getHours(), currentTime.getMinutes() + 60);
+
+      currentTime = currentTime.clone().add(60, 'minutes');
     }
 
     return halfHours;

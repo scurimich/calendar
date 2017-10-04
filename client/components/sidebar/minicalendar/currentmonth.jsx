@@ -2,9 +2,9 @@ import React, { PropTypes } from 'react';
 
 import './currentmonth.scss';
 
-const CurrentMonth = ({ title, onPrevClick, onNextClick }) => (
+const CurrentMonth = ({ space, onPrevClick, onNextClick }) => (
 	<div className='cur-month'>
-		<h2 className="cur-month__title">{title}</h2>
+		<h2 className="cur-month__title">{space.format('MMMM YYYY')}</h2>
 		<div className='cur-month__control'>
 			<a className="cur-month__arrow" onClick={onPrevClick}>
 				<i className="fa fa-angle-left"></i>
@@ -17,7 +17,7 @@ const CurrentMonth = ({ title, onPrevClick, onNextClick }) => (
 );
 
 CurrentMonth.propTypes = {
-	title: PropTypes.string,
+	space: PropTypes.object,
 	onPrevClick: PropTypes.func,
 	onNextClick: PropTypes.func
 };

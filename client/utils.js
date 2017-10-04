@@ -1,17 +1,18 @@
-import { DAYS_IN_WEEK, DAY, WEEKS_COUNT } from './constants/calendar.js';
+import { DAYS_IN_WEEK, DAY, WEEKS_COUNT, MONTH_IN_YEAR } from './constants/calendar.js';
+import moment from 'moment';
 
 export function getMonthInfo(date) {
   const current = {
-    number: date.getMonth(),
-    days: new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(),
-    firstDay: new Date(date.getFullYear(), date.getMonth(), 1).getDay() || 7,
-    year: date.getFullYear()
+    number: date.month(),
+    days: date.clone().add(1, 'month').date(0).date(),
+    firstDay: date.clone().date(1).day() || 7,
+    year: date.year()
   }
   const previous = {
-    number: date.getMonth() - 1,
-    days: new Date(date.getFullYear(), date.getMonth(), 0).getDate(),
-    extraDays: current.firstDay -1,
-    year: date.getFullYear()
+    number: date.clone().subtract(1, 'month').month(),
+    days: date.clone().date(0).date(),
+    extraDays: current.firstDay - 1,
+    year: (date.month() == (MONTH_IN_YEAR - 1) && date.year() - 1) || date.year()
   }
   return {
     current,
@@ -21,14 +22,14 @@ export function getMonthInfo(date) {
 
 export function getFirstDays(monthInfo) {
   const extraDays = monthInfo.previous.extraDays;
-  const year = monthInfo.current.year;
-  const month = extraDays ? monthInfo.current.number - 1 : monthInfo.current.number;
-  const date = monthInfo.previous.days - (extraDays - 1);
-  let firstDay = new Date(year, month, date);
+  const year = extraDays ? monthInfo.previous.year : monthInfo.current.year;
+  const month = extraDays ? monthInfo.previous.number : monthInfo.current.number;
+  const date = extraDays ? monthInfo.previous.days - (extraDays - 1) : monthInfo.current.days;
+  let firstDay = moment([year, month, date]);
   const firstDays = [];
   for (let i = 0; i < WEEKS_COUNT; i++) {
     firstDays.push(firstDay);
-    firstDay = new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate() + DAYS_IN_WEEK);
+    firstDay = firstDay.clone().add(DAYS_IN_WEEK, 'days');
   }
   return firstDays;
 }
@@ -42,7 +43,7 @@ export function getWeek({ firstDay, date }) {
       date: oneDay,
       currentDate: date - oneDay === 0
     });
-    oneDay = new Date(oneDay.getFullYear(), oneDay.getMonth(), oneDay.getDate() + 1);
+    oneDay = oneDay.clone().add(1, 'days');
   }
 
   return week;

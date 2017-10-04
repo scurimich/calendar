@@ -29,7 +29,7 @@ export default class NotificationContainer extends React.Component {
     const { notifications, events } = this.props;
     if (ignore || !notifications.length) return;
     const nextNotif = notifications[notifications.length - 1];
-    const now = Date.now();
+    const now = moment();
     if (now - nextNotif.begin >= 0 && now - nextNotif.end < 0) {
       const event = events.find(val => val._id === nextNotif.id);
       const options = {
@@ -39,7 +39,7 @@ export default class NotificationContainer extends React.Component {
         dir: 'ltr'
       }
       this.setState({
-        title: `${event.title} begins in ${event.timeBegin.getHours()}:${event.timeBegin.getMinutes()}`,
+        title: `${event.title} begins in ${event.timeBegin.hours()}:${event.timeBegin.minutes()}`,
         options
       });
     }

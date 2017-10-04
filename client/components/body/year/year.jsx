@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {MONTH_NAMES, MONTH_IN_YEAR, TODAY} from '../../../constants/calendar.js';
+import moment from 'moment';
+
+import { MONTH_NAMES, MONTHS_IN_YEAR, TODAY } from '../../../constants/calendar.js';
 
 import {
   setDate,
@@ -25,11 +27,11 @@ class Year extends React.Component {
 
   onArrowClick(type) {
     const { space, setSpace } = this.props;
-    type ? setSpace(new Date(`${space.getFullYear() + 1}`)) : setSpace(new Date(`${space.getFullYear() - 1}`));
+    type ? setSpace(space.clone().add(1, 'years')) : setSpace(space.clone().subtract(1, 'years'));
   }
 
   onMonthClick(val) {
-    const space = new Date(val.year, val.month);
+    const space = moment([val.year, val.month]);
     const { setSpace, setMiniSpace, setView } = this.props;
     setSpace(space);
     setMiniSpace(space);
@@ -39,13 +41,13 @@ class Year extends React.Component {
   getEventsCount(monthInfo) {
     let count = 0;
     const { events } = this.props;
-    const month = new Date(monthInfo.year, monthInfo.month);
-    const nextMonth = new Date(monthInfo.year, monthInfo.month + 1);
+    const month = moment([monthInfo.year, monthInfo.month]);
+    const nextMonth = moment([monthInfo.year, monthInfo.month + 1]);
     events.map(event => {
-      if ((event.dateBegin - month >= 0 
-          && event.dateBegin - nextMonth < 0) 
-        || (event.dateEnd - month >= 0 
-          && event.dateEnd - nextMonth < 0)) count++;
+      if ((event.dateBegin.isSameOrAfter(month)
+          && event.dateBegin.isBefore(nextMonth))
+        || (event.dateEnd.isSameOrAfter(month)
+          && event.dateEnd.isBefore(nextMonth))) count++;
     });
     return (count > 0 ? 
       <span className='y-month__events'>
@@ -58,15 +60,12 @@ class Year extends React.Component {
 
   getYear(date) {
     const { space } = this.props;
-    const yearNumber = space.getFullYear();
-    const curYear = TODAY.getFullYear();
-    const curMonth = yearNumber === curYear ? TODAY.getMonth() : null;
+    const yearNumber = space.year();
+    const curYear = TODAY.year();
+    const curMonth = yearNumber === curYear ? TODAY.month() : null;
     const yearArray = [];
-    for (let i = 0; i < MONTH_IN_YEAR; i++) {
+    for (let i = 0; i < MONTHS_IN_YEAR; i++) {
       const oneMonth = {
-        number: new Date(yearNumber, i + 1, 0).getDate(),
-        title: MONTH_NAMES[i],
-        current: curMonth === i,
         month: i,
         year: yearNumber
       }
@@ -75,7 +74,7 @@ class Year extends React.Component {
     return yearArray.map((val, ndx) => {
       return (
         <li className={this.monthClasses(val)} key={ndx} onClick={this.onMonthClick.bind(this, val)}>
-          <h3 className='y-month__title'>{val.title}</h3>
+          <h3 className='y-month__title'>{MONTH_NAMES[ndx]}</h3>
           <span className='y-month__year'>{val.year}</span>
           {this.getEventsCount(val)}
         </li>

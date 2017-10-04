@@ -2,10 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import GeminiScrollbar from 'react-gemini-scrollbar';
+import moment from 'moment';
 
 import { selectEvent } from '../../../actions/selectedevent.js';
 
-import {TODAY, MONTH_NAMES} from '../../../constants/calendar.js';
 import dragAndDrop from '../../../hoc/dragndrop.jsx';
 
 import './day.scss';
@@ -35,25 +35,25 @@ class Day extends React.Component {
 
     return this.getTimeEvents().sort((a, b) => {
       return a.timeBegin - b.timeBegin || b.timeEnd - a.timeEnd;
-    }).reduce((res, event, ndx, arr) => {
+    }).reduce((result, event, ndx, arr) => {
       event = {...event};
       if (ndx === 0) {
         groups.push(event.timeEnd);
         event.horizontal = 0;
-        res.push(event);
-        return res;
+        result.push(event);
+        return result;
       }
 
       const find = groups.find((groupTime, groupNdx, groupArr) => {
-        if (event.timeBegin >= groupTime) {
+        if (event.timeBegin.isSameOrAfter(groupTime)) {
           event.horizontal = groupNdx;
           if (groupNdx === 0) {
             const find = groupArr.find(val => {
-              return event.timeBegin < val;
+              return event.timeBegin.isBefore(val);
             });
             if (!find) {
-              res.push(event);
-              res.map(resEvent => {
+              result.push(event);
+              result.map(resEvent => {
                 if (!resEvent.horizontalSize) resEvent.horizontalSize = groupArr.length;
                 return resEvent;
               });
@@ -62,9 +62,9 @@ class Day extends React.Component {
             }
           }
           groupArr[groupNdx] = Math.max(groupArr[groupNdx], event.timeEnd);
-          res.push(event);
+          result.push(event);
           if (ndx === arr.length - 1) {
-            res.map(resEvent => {
+            result.map(resEvent => {
               if (!resEvent.horizontalSize) resEvent.horizontalSize = groupArr.length;
               return resEvent;
             });
@@ -74,9 +74,9 @@ class Day extends React.Component {
         if (groupNdx === groupArr.length - 1) {
           event.horizontal = groupNdx + 1;
           groupArr.push(event.timeEnd);
-          res.push(event);
+          result.push(event);
           if (ndx === arr.length - 1) {
-            res.map(resEvent => {
+            result.map(resEvent => {
               if (!resEvent.horizontalSize) resEvent.horizontalSize = groupArr.length;
               return resEvent;
             });
@@ -85,42 +85,39 @@ class Day extends React.Component {
         }
       });
 
-      return res;
+      return result;
     }, []);
   }
 
   renderHalfHours() {
     const eventsWithTime = this.modifiedTimeEvents();
     const halfHours = [];
-    const nextDay = new Date(1970, 0, 2);
-    let currentTime = new Date(1970, 0, 1, 0);
-    let nextTime = new Date(1970, 0, 1, currentTime.getHours() + 1);
+    const nextDay = moment(0, 'HH').add(1, 'days');
+    let currentTime = moment(0, 'HH');
+    let nextTime = currentTime.clone().add(1, 'hours');
 
-    while(currentTime - nextDay < 0) {
-
+    while(currentTime.isBefore(nextDay)) {
       const currentEvents = eventsWithTime.filter(event => {
-        return event.timeBegin >= currentTime && event.timeBegin < nextTime;
+        return event.timeBegin.isSameOrAfter(currentTime) && event.timeBegin.isBefore(nextTime);
       });
 
-      const currentHour = currentTime.getHours() > 12 ? currentTime.getHours() - 12 : currentTime.getHours();
-
       halfHours.push(
-        <li className='day__hour hour' key={`${currentTime.getHours()}${currentTime.getMinutes()}`}>
+        <li className='day__hour hour' key={currentTime.format('HHmm')} data-key={currentTime.format('HHmm')}>
           <div className='hour__time'>
-            {`${currentTime.getHours() ? currentHour : 12}${currentTime.getHours() <= 12 ? 'AM' : 'PM'}`}
+            {currentTime.format('h:00 A')}
           </div>
           <div 
             className='hour__body'
             data-dd='true'
-            data-time={`${currentTime.getMonth()+1} ${currentTime.getDate()} ${currentTime.getFullYear()} ${currentTime.getHours()}:00`}
+            data-time={currentTime.format('MM DD YYYYY HH:mm')}
           >
             {currentEvents ? this.getCurrentEvents(currentEvents) : ''}
           </div>
         </li>
       );
 
-      currentTime = nextTime;
-      nextTime = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), currentTime.getHours() + 1);
+      currentTime = nextTime.clone();
+      nextTime.add(1, 'hours');
     }
     return halfHours;
   }
@@ -130,7 +127,7 @@ class Day extends React.Component {
       const { eventDragAndDrop } = this.props;
       const timeDifference = event.timeEnd - event.timeBegin;
       const height = (timeDifference / 1000 / 60 / 60) * 100;
-      const top = event.timeBegin.getMinutes() /60 * 100;
+      const top = event.timeBegin.minutes() /60 * 100;
       const position = event.horizontal;
       const horizontalSize = event.horizontalSize;
       const onePiece = 100 / horizontalSize;
@@ -150,7 +147,7 @@ class Day extends React.Component {
     return (
       <div className='day' id='day' data-date={id}>
         <div className='day__head'>
-          <span className='day__num'>{`${space.getDate()} ${MONTH_NAMES[space.getMonth()]} ${space.getFullYear()}`}</span>
+          <span className='day__num'>{space.format('DD MMM YYYY')}</span>
         </div>
           <div className='day__main'>
             <GeminiScrollbar>

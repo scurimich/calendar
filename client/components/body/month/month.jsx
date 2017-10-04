@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import moment from 'moment';
+
 import MonthWeek from './monthweek.jsx';
 import { WEEKDAYS, WEEKS_COUNT, DAYS_IN_WEEK} from '../../../constants/calendar.js';
 
@@ -22,10 +24,10 @@ class Month extends React.Component {
 
 	getMonth() {
 		const { space, monthInfo } = this.props;
-		let firstDay = new Date(monthInfo.current.year, monthInfo.current.number, 1 - (monthInfo.previous.extraDays));
+		let firstDay = moment([monthInfo.current.year, monthInfo.current.number]).date(1 - (monthInfo.previous.extraDays));
 		const monthArray = [];
 
-		for (let i = 0; i < WEEKS_COUNT; i++, firstDay = new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate() + DAYS_IN_WEEK)) {
+		for (let i = 0; i < WEEKS_COUNT; i++, firstDay = firstDay.clone().add(DAYS_IN_WEEK, 'days')) {
 			monthArray.push(firstDay);
 		}
 		return monthArray;
@@ -33,12 +35,12 @@ class Month extends React.Component {
 
 	weekEvents(weekBegin) {
 		const { events } = this.props;
-		const weekEnd = new Date(weekBegin.getFullYear(), weekBegin.getMonth(), weekBegin.getDate() + 7);
+		const weekEnd = weekBegin.clone().add(7, 'days');
 		return events.filter(event => {
-			if ((event.dateBegin >= weekBegin && event.dateBegin <= weekEnd)
-					|| (event.dateEnd >= weekBegin && event.dateEnd <= weekEnd)
-					|| (event.dateBegin <= weekBegin && event.dateEnd >= weekEnd))
-				return event;
+			return ((event.dateBegin.isSameOrAfter(weekBegin) && event.dateBegin.isSameOrBefore(weekEnd))
+				|| (event.dateEnd.isSameOrAfter(weekBegin) && event.dateEnd.isSameOrBefore(weekEnd))
+				|| (event.dateBegin.isSameOrBefore(weekBegin) && event.dateEnd.isSameOrAfter(weekEnd)))
+				&& event;
 		});
 	}
 

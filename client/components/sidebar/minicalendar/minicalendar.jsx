@@ -23,11 +23,6 @@ class MiniCalendar extends React.Component {
 		this.setCurrentDate = this.setCurrentDate.bind(this);
 	}
 
-	getTitle() {
-		const mini = this.props.space.mini;
-		return `${MONTH_NAMES[mini.getMonth()]} ${mini.getFullYear()}`;
-	}
-
 	setCurrentDate(date) {
 		const { setSpace, setMiniSpace, setDate } = this.props;
 		setDate(date);
@@ -41,7 +36,7 @@ class MiniCalendar extends React.Component {
 		return (
 			<div className="sidebar__calendar">
 				<CurrentMonth
-					title={this.getTitle()}
+					space={space.mini}
 					onPrevClick={decrMiniSpace}
 					onNextClick={incrMiniSpace}
 				/>

@@ -18,10 +18,10 @@ export default function space(state = initialSpace, action) {
     case CHANGE_MINI_SPACE:
       return { ...state, mini: action.date };
     case INCR_MINI_SPACE:
-      const incrDate = new Date(state.mini.getFullYear(), state.mini.getMonth() + 1);
+      const incrDate = state.mini.clone().add(1, 'month');
       return { ...state, mini: incrDate };
     case DECR_MINI_SPACE:
-      const decrDate = new Date(state.mini.getFullYear(), state.mini.getMonth() - 1);
+      const decrDate = state.mini.clone().subtract(1, 'month');
       return { ...state, mini: decrDate };
     default: 
       return state;

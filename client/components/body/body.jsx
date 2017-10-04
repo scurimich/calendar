@@ -18,17 +18,8 @@ import { eventWindowShow, eventWindowHide } from '../../actions/eventwindow.js';
 import { groupWindowShow, groupWindowHide } from '../../actions/groupwindow.js';
 import { addGroup, updateGroup } from '../../actions/groups.js';
 
-import {
-	WEEKDAYS,
-	MONTH_NAMES,
-	WEEKS_COUNT,
-	DAYS_IN_WEEK,
-	MONTH_IN_YEAR,
-	TODAY,
-	DAYS_IN_MONTH_SPACE,
-	DAY
-} from '../../constants/calendar';
-import {getMonthInfo} from '../../utils';
+import { DAYS_IN_MONTH_SPACE } from '../../constants/calendar';
+import { getMonthInfo } from '../../utils';
 
 import './body.scss';
 
@@ -40,36 +31,36 @@ class Body extends React.Component {
 	eventsFilter(info) {
 		const { events, space } = this.props;
 		const date = space.main;
-		const day = date.getDay() === 0 ? 6 : date.getDay() - 1;
-		const next = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+		const day = !date.day() ? 6 : date.day() - 1;
+		const next = date.clone().add(1, 'days');
 		const prevDays = this.monthInfo.previous.extraDays;
 		const nextDays = DAYS_IN_MONTH_SPACE - (this.monthInfo.current.days + prevDays);
-		const monthBegin = new Date(date.getFullYear(), date.getMonth(), 1 - prevDays);
-		const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 1 + nextDays);
-		const weekBegin = new Date(date.getFullYear(), date.getMonth(), date.getDate() - day);
-		const weekEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate() - day + 7);
+		const monthBegin = date.clone().date(1 - prevDays);
+		const monthEnd = date.clone().add(1, 'months').date(1 + nextDays);
+		const weekBegin = date.clone().subtract(day, 'days');
+		const weekEnd = date.clone().add(7 - day, 'days');
 
 		return {
-			year: events.filter(val => {
-				if (val.dateBegin.getFullYear() == info.current.year
-					|| val.dateEnd.getFullYear() == info.current.year)
-					return val;
+			year: events.filter(event => {
+				return (event.dateBegin.year() == info.current.year
+					|| event.dateEnd.year() == info.current.year)
+					&& event;
 			}),
-			month: events.filter(val => {
-				if ((val.dateBegin >= monthBegin && val.dateBegin < monthEnd)
-					|| (val.dateEnd >= monthBegin && val.dateEnd < monthEnd))
-					return val;
+			month: events.filter(event => {
+				return ((event.dateBegin.isSameOrAfter(monthBegin) && event.dateBegin.isBefore(monthEnd))
+					|| (event.dateEnd.isSameOrAfter(monthBegin) && event.dateEnd.isBefore(monthEnd)))
+					&& event;
 			}),
-			week: events.filter(val => {
-				if ((val.dateBegin >= weekBegin && val.dateBegin < weekEnd)
-					|| (val.dateEnd >= weekBegin && val.dateEnd < weekEnd))
-					return val;
+			week: events.filter(event => {
+				return ((event.dateBegin.isSameOrAfter(weekBegin) && event.dateBegin.isBefore(weekEnd))
+					|| (event.dateEnd.isSameOrAfter(weekBegin) && event.dateEnd.isBefore(weekEnd)))
+					&& event;
 			}),
-			day: events.filter(val => {
-				if (val.dateBegin - date === 0
-					|| (val.dateBegin <= date && val.dateEnd >= date)
-					&& (val.periodic ? val.week[day] : true))
-					return val;
+			day: events.filter(event => {
+				return (event.dateBegin.isSame(date)
+					|| (event.dateBegin.isSameOrBefore(date) && event.dateEnd.isSameOrAfter(date))
+					&& (event.periodic ? event.week[day] : true))
+					&& event;
 			})
 		};
 	}
@@ -83,8 +74,7 @@ class Body extends React.Component {
 			onAddClick,
 			onMonthDayClick
 		} = this.props;
-		const monthSpace = space.main;
-		const spaceDate = new Date(monthSpace.getFullYear(), monthSpace.getMonth());
+		const spaceDate = space.main.clone();
 		this.monthInfo = getMonthInfo(spaceDate);
 		const events = this.eventsFilter(this.monthInfo);
 		switch(active) {

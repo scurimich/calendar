@@ -14,7 +14,7 @@ export default class MiniMonth extends React.Component {
     const firstDays = getFirstDays(monthInfo);
     let activeWeek;
     const dates = firstDays.reduce((array, firstDay, ndx, firstDays) => {
-      if (array.length && (firstDays[ndx - 1] <= date && firstDay > date))
+      if (array.length && (firstDays[ndx - 1].isSameOrBefore(date) && firstDay.isAfter(date)))
         activeWeek = ndx - 1;
       array.push(getWeek({ firstDay, date }));
       return array;
@@ -44,6 +44,7 @@ export default class MiniMonth extends React.Component {
                 <ul className={`mini__week ${month.activeWeek === ndx ? 'mini__week_active' : ''}`}>
                 {
                   week.map((day, key) => {
+                    // console.log(day.date.date())
                     return (<MiniDay {...day} key={key} onDayClick={setCurrentDate.bind(null, day.date)} />);
                   })
                 }

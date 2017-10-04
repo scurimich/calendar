@@ -21,18 +21,16 @@ class MonthWeek extends React.Component {
   getWeek() {
     const { firstDay, activeDate, space, selectedEvent, events } = this.props;
     const week = [];
-    const year = firstDay.getFullYear();
-    const month = firstDay.getMonth();
-    const day = firstDay.getDay() == 0 ? 6 : firstDay.getDay() - 1;
+    const year = firstDay.year();
+    const month = firstDay.month();
+    const day = firstDay.day() == 0 ? 6 : firstDay.day() - 1;
     let oneDay = day == 1 ? firstDay
-      : new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate() - day);
+      : firstDay.clone().subtract(day, 'days');
 
-    for (let i = 1; i <= DAYS_IN_WEEK; oneDay = new Date(oneDay.getFullYear(), oneDay.getMonth(), oneDay.getDate() + 1), i++) {
+    for (let i = 1; i <= DAYS_IN_WEEK; oneDay = oneDay.clone().add(1, 'days'), i++) {
       const currentEvents = events.filter(event => (event.dateBegin <= oneDay && event.dateEnd >= oneDay));
-      const currentYear = oneDay.getFullYear();
-      const currentMonth = oneDay.getMonth() + 1;
-      const currentDate = oneDay.getDate();
-      let currentDay = `${currentYear},${addNull(currentMonth)},${addNull(currentDate)}`;
+      const currentMonth = oneDay.month() + 1;
+      let currentDay = oneDay.format('YYYY,MM,DD');
 
       week.push({
         date: oneDay,
@@ -41,11 +39,11 @@ class MonthWeek extends React.Component {
         id: currentDay,
         current: !Boolean(activeDate - oneDay),
         today: !Boolean(TODAY - oneDay),
-        prevMonth: currentMonth < space.getMonth() + 1,
-        nextMonth: currentMonth > space.getMonth() + 1,
+        prevMonth: currentMonth < space.month() + 1,
+        nextMonth: currentMonth > space.month() + 1,
         hover: selectedEvent ?
-          Boolean(oneDay >= selectedEvent.dateBegin
-            && selectedEvent.dateEnd> oneDay)
+          Boolean(oneDay.isSameOrAfter(selectedEvent.dateBegin)
+            && selectedEvent.dateEnd.isAfter(oneDay))
           : null,
         onDateClick: this.onDateClick.bind(this, oneDay),
         onAddClick: this.onAddClick.bind(this, oneDay),

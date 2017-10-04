@@ -2,8 +2,6 @@ import React from 'react';
 import GeminiScrollbar from 'react-gemini-scrollbar';
 
 import Event from './event.jsx';
-import { addNull } from '../../../utils.js';
-import { MONTH_NAMES } from '../../../constants/calendar.js';
 
 import './SearchResults.scss';
 
@@ -31,25 +29,6 @@ export default class SearchResults extends React.Component {
 		return groups.find(group => (id === group.id));
 	}
 
-	getTime(begin, end) {
-		if (!begin) return 'all day';
-		const beginHours = begin.getHours();
-		const beginMinutes = addNull(begin.getMinutes());
-		const endHours = end.getHours();
-		const endMinutes = addNull(end.getMinutes());
-		return `${beginHours}:${beginMinutes} - ${endHours}:${endMinutes}`;
-	}
-
-	getDate(begin, end) {
-		const beginDate = begin.getDate();
-		const beginMonth = MONTH_NAMES[begin.getMonth()].substr(0, 3);
-		const beginYear = begin.getFullYear();
-		const endDate = end.getDate();
-		const endMonth = MONTH_NAMES[begin.getMonth()].substr(0, 3);
-		const endYear = end.getFullYear();
-		return `${beginDate} ${beginMonth} ${beginYear} - ${endDate} ${endMonth} ${endYear}`;
-	}
-
 	render() {
 		const { events, eventWindowShow } = this.props;
 		return (
@@ -62,8 +41,6 @@ export default class SearchResults extends React.Component {
 							<Event
 								title={event.title}
 								description={event.description}
-								time={this.getTime(event.timeBegin, event.timeEnd)}
-								date={this.getDate(event.dateBegin, event.dateEnd)}
 								group={this.getGroup(event.group)}
 								onEventClick={eventWindowShow.bind(null, event)}
 								key={key}

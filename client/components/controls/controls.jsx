@@ -47,14 +47,14 @@ class Controls extends React.Component {
 		const { setSpaces } = this;
 		switch(activeView) {
 			case 'Day':
-				return type ? setSpaces(new Date(space.setDate(space.getDate() + 1))) : setSpaces(new Date(space.setDate(space.getDate() - 1)));
+				return type ? setSpaces(space.clone().add(1, 'days')) : setSpaces(space.clone().subtract(1, 'days'));
 			case 'Week':
-			const day = space.getDay() ? space.getDay() - 1 : 6;
-				return type ? setSpaces(new Date(space.setDate(space.getDate() + DAYS_IN_WEEK - day))) : setSpaces(new Date(space.setDate(space.getDate() - DAYS_IN_WEEK + day)));
+			const day = space.day() ? space.day() - 1 : 6;
+				return type ? setSpaces(space.clone().add(DAYS_IN_WEEK - day, 'days')) : setSpaces(space.clone().subtract(DAYS_IN_WEEK - day, 'days'));
 			case 'Month':
-				return type ? setSpaces(new Date(space.getFullYear(), space.getMonth() + 1)) : setSpaces(new Date(space.getFullYear(), space.getMonth() - 1));
+				return type ? setSpaces(space.clone().add(1, 'months')) : setSpaces(space.clone().subtract(1, 'months'));
 			case 'Year':
-				return type ? setSpaces(new Date(space.getFullYear() + 1)) : setSpaces(new Date(space.getFullYear() - 1));
+				return type ? setSpaces(space.clone().add(1, 'years')) : setSpaces(space.clone().subtract(1, 'months'));
 		}
 	}
 
@@ -68,16 +68,17 @@ class Controls extends React.Component {
 		const { space, activeView } = this.props;
 		switch(activeView) {
 			case 'Day':
-				return `${space.getDate()} ${MONTH_NAMES[space.getMonth()]} ${space.getFullYear()}`;
+				return space.format('DD MMMM YYYY');
 			case 'Week': 
-				const weekDay = space.getDay() ? space.getDay() - 1 : DAYS_IN_WEEK;
-				const weekBegin = new Date(space.getFullYear(), space.getMonth(), space.getDate() - weekDay);
-				const weekEnd = new Date(space.getFullYear(), space.getMonth(), space.getDate() + (DAYS_IN_WEEK - weekDay) - 1);
-				return `${weekBegin.getDate()}.${weekBegin.getMonth() + 1}.${weekBegin.getFullYear()} - ${weekEnd.getDate()}.${weekEnd.getMonth() + 1}.${weekEnd.getFullYear()}`;
-			case 'Month':
-				return `${MONTH_NAMES[space.getMonth()]} ${space.getFullYear()}`;
+				const weekDay = space.day() ? space.day() - 1 : DAYS_IN_WEEK;
+				const weekBegin = space.clone().subtract(weekDay, 'days');
+				const weekEnd = space.clone().add(DAYS_IN_WEEK - weekDay - 1, 'days');
+				return `${weekBegin.format('DD.MM.YYYY')} - ${weekEnd.format('DD.MM.YYYY')}`;
 			case 'Year':
-				return space.getFullYear().toString();
+				return space.format('YYYY');
+			case 'MONTH':
+			default:
+				return space.format('MMMM YYYY');
 		}
 	}
 

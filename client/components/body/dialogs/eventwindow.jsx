@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
+import moment from 'moment';
+
 import Select from 'react-select';
-import { WEEKDAYS, DAY, DAYS_IN_WEEK, WEEK } from '../../../constants/calendar.js';
-import { addNull } from '../../../utils.js';
+import { WEEKDAYS } from '../../../constants/calendar.js';
 
 import 'react-select/dist/react-select.css';
 import './eventwindow.scss';
@@ -19,7 +20,7 @@ const inputText = ({ input, label, type, required, meta: { touched, error } }) =
 };
 
 const inputDate = ({ input, label, type, required, meta: { touched, error } }) => {
-	if (typeof input.value === 'object') input.value = `${input.value.getFullYear()}-${addNull(input.value.getMonth() + 1)}-${addNull(input.value.getDate())}`;
+	if (typeof input.value === 'object') input.value = input.value.format('YYYY-MM-D');
 	const req = required ? (<span className='event-window__required'>*</span>) : '';
 	return (
 		<div className='event-window__date-cont'>
@@ -31,7 +32,7 @@ const inputDate = ({ input, label, type, required, meta: { touched, error } }) =
 };
 
 const inputTime = ({ input, label, type, disabled, required, meta: { touched, error } }) => {
-	if (typeof input.value === 'object') input.value = `${addNull(input.value.getHours())}:${addNull(input.value.getMinutes())}`;
+	if (typeof input.value === 'object') input.value = input.value.format('HH:mm');
 	const req = required ? (<span className='event-window__required'>*</span>) : '';
 	return (
 		<div className='event-window__time-cont event-window__time-cont_left'>
@@ -61,13 +62,11 @@ const periodicField = ({ input, type, disabled, required, meta: { touched, error
 };
 
 const validate = values => {
-	const dateBegin = new Date(values.dateBegin);
-	const dateEnd = new Date(values.dateEnd);
-
-	let timeBegin = values.timeBegin;
-	let timeEnd = values.timeBEnd;
-
 	const errors = {};
+	const dateBegin = moment(values.dateBegin);
+	const dateEnd = moment(values.dateEnd);
+	const timeBegin = moment(values.timeBegin, 'HH:mm');
+	const timeEnd = moment(values.timeEnd, 'HH:mm');
 
 	if (!values.title) errors.title = 'Required';
 	else if (values.title.length > 50) errors.title = 'Must be 50 characters or less';
@@ -76,28 +75,22 @@ const validate = values => {
 
 	if (!values.dateBegin) errors.dateBegin = 'Required';
 	if (!values.dateEnd) errors.dateEnd = 'Required';
-	if (dateEnd - dateBegin < 0) errors.dateEnd = 'Value must not be less than begin date';
+	if (dateEnd.isBefore(dateBegin)) errors.dateEnd = 'Value must not be less than begin date';
 
-	if (values.timeBegin && typeof values.timeBegin === 'string') {
-		const separator = values.timeBegin.indexOf(':');
-		timeBegin = new Date(1970, 0, 1, values.timeBegin.substring(0, separator), values.timeBegin.substring(separator + 1));
-	}
-	if (values.timeEnd && typeof values.timeEnd === 'string') {
-		const separator = values.timeEnd.indexOf(':');
-		timeEnd = new Date(1970, 0, 1, values.timeEnd.substring(0, separator), values.timeEnd.substring(separator + 1));
-	}
+	if (timeEnd.isBefore(timeBegin)) errors.timeEnd = 'Value must not be less than begin time';
 
 	if (values.allDay === false && !values.timeBegin) errors.timeBegin = 'Required';
 	if (values.allDay === false && !values.timeEnd) errors.timeEnd = 'Required';
-	if (timeEnd - timeBegin < 0) errors.timeEnd = 'Value must not be less than begin time';
-	if (values.periodic && values.week && (Date.parse(dateBegin) + WEEK - Date.parse(dateEnd) > 0)) {
+
+	if (values.periodic && values.week && (dateBegin.clone().add(1, 'weeks').isAfter(dateEnd))) {
 		let daysCounter;
-		for (let i = dateBegin; i <= dateEnd; i.setDate(i.getDate() + 1)) {
-			const day = i.getDay() - 1;
+		for (let i = dateBegin; i.isSameOrBefore(dateEnd); i.add(1, 'days')) {
+			const day = i.day() - 1;
 			daysCounter = daysCounter || values.week[day];
 		}
 		if (!daysCounter) errors.week = 'There aren\'t any days with events';
 	}
+
 	return errors;
 }
 
@@ -228,6 +221,7 @@ class EventWindow extends React.Component {
 export default connect(state => ({initialValues: state.eventWindow.data}), null)(reduxForm({
 	form: 'event',
 	enableReinitialize: true,
+	keepDirtyOnReinitialize: true,
 	validate
 })(EventWindow));
 

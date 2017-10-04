@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 
-const Event = ({ title, description, time, date, group, onCogClick }) => (
+const Event = ({ title, description, timeBegin, timeEnd, group, onCogClick }) => (
   <li className='side-events__item side-event'>
     <div className='side-event__group'>
       <span className='side-event__group-color' style={{ 'backgroundColor': group && group.color ? group.color :'#fff' }}>{ group && group.name ? group.name : '' }</span>
@@ -14,7 +14,7 @@ const Event = ({ title, description, time, date, group, onCogClick }) => (
       </div>
       <div className='side-event__time-cont'>
         <time className='side-event__time'>
-          {time}
+          {`${timeBegin.format('HH:mm')} - ${timeEnd.format('HH:mm')}`}
         </time>
       </div>
     </div>

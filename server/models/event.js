@@ -19,14 +19,18 @@ const eventSchema = mongoose.Schema({
     maxlength: [200, 'Title must be less than 200 characters']
   },
   dateBegin: {
-    type: Date,
+    type: String,
     required: true,
-    default: new Date()
+    default: new Date(),
+    validate: [dateValidate, 'Invalid date']
   },
   dateEnd: {
-    type: Date,
+    type: String,
     required: true,
-    validate: [dateValidate, 'Ends date must be greater than begins date'],
+    validate: [
+      {validator: datesValidate, msg: 'Ends date must be greater than begins date'},
+      {validator: dateValidate, msg: 'Invalid date'}
+    ],
     default: new Date()
   },
   allDay: {
@@ -35,12 +39,12 @@ const eventSchema = mongoose.Schema({
     default: true
   },
   timeBegin: {
-    type: Date,
+    type: String,
     default: null,
     validate: [timeRequire, 'Required']
   },
   timeEnd: {
-    type: Date,
+    type: String,
     default: null,
     validate: [
       {validator: timeRequire, msg: 'Required'},
@@ -68,7 +72,17 @@ function textValidate(value) {
 }
 
 function dateValidate(value) {
-  return value - this.dateBegin >= 0;
+  const date = value.split('-');
+  const year = date[0];
+  const month = date[1];
+  const day = date[2];
+  return (year >= 1970) && (month >= 0 && month < 12) && (day > 0 && day <  32);
+}
+
+function datesValidate(value) {
+  const date = Date.parse(new Date(value));
+  const begin = Date.parse(new Date(value));
+  return date - begin >= 0;
 }
 
 function timeRequire(value) {
@@ -76,7 +90,9 @@ function timeRequire(value) {
 }
 
 function timeEndValidate(value) {
-  return value - this.timeBegin >= 0;
+  const time = +value.replace(/:/g, '');
+  const begin = +this.timeBegin.replace(/:/g, '');
+  return time - begin >= 0;
 }
 
 export default mongoose.model('event', eventSchema);
