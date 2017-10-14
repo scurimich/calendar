@@ -1,4 +1,6 @@
 import { reset, SubmissionError } from 'redux-form';
+import moment from 'moment';
+
 import {
   EVENTS_FETCHING,
   EVENTS_FETCH_ERROR,
@@ -51,52 +53,43 @@ export function fetchEvents() {
 }
 
 export function addEvent(data, dispatch) {
-  console.log(data)
-  // if (data.dateBegin)
-  //   data.dateBegin = new Date(data.dateBegin);
-  // if (data.dateEnd)
-  //   data.dateEnd = new Date(data.dateEnd);
+  const dateBegin = moment(data.dateBegin, 'YYYY-MM-DD');
+  const dateEnd = moment(data.dateEnd, 'YYYY-MM-DD');
 
-  // if (data.timeBegin)
-  //   data.timeBegin = new Date(1970, 0, 1, data.timeBegin.substr(0, 2), data.timeBegin.substr(3, 2));
-  // if (data.timeEnd)
-  //   data.timeEnd = new Date(1970, 0, 1, data.timeEnd.substr(0, 2), data.timeEnd.substr(3, 2));
+  data.duration = (dateEnd - dateBegin) / DAY;
+  if (data.week && data.week.length !== DAYS_IN_WEEK)
+    data.week = data.week.concat(new Array(DAYS_IN_WEEK - data.week.length).fill(null));
+  if (data.group) data.group = data.group._id;
 
-  // data.duration = (data.dateEnd - data.dateBegin) / DAY;
-  // if (data.week && data.week.length !== DAYS_IN_WEEK)
-  //   data.week = data.week.concat(new Array(DAYS_IN_WEEK - data.week.length).fill(null));
-  // if (data.group) data.group = data.group._id;
-
-  // const token = localStorage.getItem('token');
-  // return serverRequest(data, '/event', 'POST', token)
-  //   .then(([response, json]) => {
-  //     if (response.status === 403) throw new SubmissionError({_error: 'Adding failed'});
-  //     if (json.errors) {
-  //       const jsonErr = json.errors;
-  //       const errors = {};
-  //       for (let prop in json.errors) {
-  //         if (jsonErr.hasOwnProperty(prop)) {
-  //           errors[prop] = jsonErr[prop].message;
-  //         }
-  //       }
-  //       throw new SubmissionError(errors);
-  //     }
-  //     dispatch({ type: EVENT_WINDOW_HIDE });
-  //     dispatch(reset('event'));
-  //     for (let prop in json) {
-  //       if (json[prop]) {
-  //         if (prop === 'dateBegin' || prop === 'dateEnd') {
-  //           json[prop] = new Date(json[prop]);
-  //           json[prop].setHours(0);
-  //         }
-  //         if (prop === 'timeBegin' || prop === 'timeEnd') {
-  //           json[prop] = new Date(json[prop]);
-  //         }
-  //       }
-  //     }
-  //     dispatch({ type: EVENT_ADD, event: json });
-  //     resolve();
-  //   });
+  const token = localStorage.getItem('token');
+  return serverRequest(data, '/event', 'POST', token)
+    .then(([response, json]) => {
+      if (response.status === 403) throw new SubmissionError({_error: 'Adding failed'});
+      if (json.errors) {
+        const jsonErr = json.errors;
+        const errors = {};
+        for (let prop in json.errors) {
+          if (jsonErr.hasOwnProperty(prop)) {
+            errors[prop] = jsonErr[prop].message;
+          }
+        }
+        throw new SubmissionError(errors);
+      }
+      dispatch({ type: EVENT_WINDOW_HIDE });
+      dispatch(reset('event'));
+      for (let prop in json) {
+        if (json[prop]) {
+          if (prop === 'dateBegin' || prop === 'dateEnd') {
+            json[prop] = moment(json[prop], 'YYYY-MM-DD');
+          }
+          if (prop === 'timeBegin' || prop === 'timeEnd') {
+            json[prop] = moment(json[prop], 'HH:mm');
+          }
+        }
+      }
+      dispatch({ type: EVENT_ADD, event: json });
+      resolve();
+    });
 }
 
 export function removeEvent(event) {

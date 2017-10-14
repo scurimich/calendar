@@ -6,8 +6,7 @@
 
 # todos
 
+* ~~moment.js~~
 * react performance
-* tests
-* moment.js
 * client structure
 * deploy

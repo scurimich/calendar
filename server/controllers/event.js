@@ -8,7 +8,7 @@ export function getEvents(req, res) {
   const token = req.headers.authorization.substr(4);
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) return res.status(403).end();
-    const id = decoded._doc._id;
+    const id = decoded.data._id;
     Event.find({user: id}, (err, events) => {
       if(err) return res.status(400).end();
       res.json(events);
@@ -20,7 +20,7 @@ export function addEvent(req, res) {
   const token = req.headers.authorization.substr(4);
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) return res.status(403).end();
-    const newEvent = new Event({...req.body, user: decoded._doc._id});
+    const newEvent = new Event({...req.body, user: decoded.data._id});
     newEvent.save((err, event) => {
       if (err) return res.json(err);
       res.send(event);

@@ -1,11 +1,18 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import './Search.scss';
+import './search.scss';
 
 const Search = ({ str, onChange, onCancel }) => {
+  const cancel = (
+    <span className='search__cancel' onClick={onCancel}>
+      <i className="fa fa-times" aria-hidden="true"></i>
+    </span>
+  );
+
 	return (
-		<form className="search">
-			{str ? <span className='search__cancel' onClick={onCancel}><i className="fa fa-times" aria-hidden="true"></i></span> : ''}
+		<form className="controls__search search">
+			{str ? cancel : ''}
 			<input type="text" className="search__input" placeholder="Search" value={str} onChange={onChange} />
 		</form>
 	);

@@ -1,8 +1,11 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import './miniday.scss';
 
 const MiniDay = ({ date, currentDate, onDayClick }) => (
-  <li className={`mini-day mini__day ${currentDate ? 'mini__day_active' : ''}`} onClick={onDayClick}>
-    <span className={`mini-day__num`}>{date.date()}</span>
+  <li className={`sidebar-week__day sidebar-day${currentDate ? ' sidebar-day_active' : ''}`} onClick={onDayClick}>
+    <span className={`sidebar-day__number`}>{date.date()}</span>
   </li>
 );
 

@@ -1,0 +1,50 @@
+.sidebar-month {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 8px;
+
+  &__weekdays {
+    list-style: none;
+    display: flex;
+    flex-wrap: nowrap;
+    margin-bottom: 8px;
+  }
+
+  &__weekday {
+    flex: 1;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    color: #808080;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  &__weeks {
+    border-radius: 2px;
+    border: 1px solid lighten(#323232, 3%);
+  }
+
+  &__week {
+    &:not(:last-child) {
+      border-bottom: 1px solid lighten(#323232, 3%);
+    }
+  }
+}
+
+.sidebar-week {
+  &__list {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+
+    &_active {
+      .sidebar-day__number {
+        color: #fff;
+        text-shadow: none;
+      }
+    }
+  }
+}

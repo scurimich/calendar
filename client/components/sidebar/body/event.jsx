@@ -1,23 +1,18 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
+import './event.scss';
 
-const Event = ({ title, description, timeBegin, timeEnd, group, onCogClick }) => (
-  <li className='side-events__item side-event'>
-    <div className='side-event__group'>
-      <span className='side-event__group-color' style={{ 'backgroundColor': group && group.color ? group.color :'#fff' }}>{ group && group.name ? group.name : '' }</span>
+const Event = ({ title, description, allDay, timeBegin, timeEnd, group, onEventClick }) => (
+  <li className='events__item event' onClick={onEventClick}>
+    <div className='event__descr'>
+      <span className='event__group' style={{ 'backgroundColor': group && group.color ? group.color :'#fff' }}>{ group && group.name ? group.name : '' }</span>
+      <h4 className='event__title'>{title}</h4>
+      <time className='event__time'>
+        {allDay ? '': `${timeBegin.format('HH:mm')} - ${timeEnd.format('HH:mm')}`}
+      </time>
     </div>
-    <div className='side-event__content'>
-      <div className='side-event__descr'>
-        <h4 className='side-event__title'>{title}</h4>
-        <span className='side-event__change fa fa-cog' onClick={onCogClick}></span>
-        <span className='side-event__text'>{description}</span>
-      </div>
-      <div className='side-event__time-cont'>
-        <time className='side-event__time'>
-          {`${timeBegin.format('HH:mm')} - ${timeEnd.format('HH:mm')}`}
-        </time>
-      </div>
-    </div>
+    <p className='event__text'>{description}</p>
   </li>
 );
 

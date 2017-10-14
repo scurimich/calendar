@@ -24,9 +24,6 @@ import { getMonthInfo } from '../../utils';
 import './body.scss';
 
 class Body extends React.Component {
-	constructor(props) {
-		super(props);
-	}
 
 	eventsFilter(info) {
 		const { events, space } = this.props;
@@ -43,24 +40,20 @@ class Body extends React.Component {
 		return {
 			year: events.filter(event => {
 				return (event.dateBegin.year() == info.current.year
-					|| event.dateEnd.year() == info.current.year)
-					&& event;
+					|| event.dateEnd.year() == info.current.year);
 			}),
 			month: events.filter(event => {
-				return ((event.dateBegin.isSameOrAfter(monthBegin) && event.dateBegin.isBefore(monthEnd))
-					|| (event.dateEnd.isSameOrAfter(monthBegin) && event.dateEnd.isBefore(monthEnd)))
-					&& event;
+				return (event.dateBegin.isSameOrAfter(monthBegin) && event.dateBegin.isBefore(monthEnd))
+					|| (event.dateEnd.isSameOrAfter(monthBegin) && event.dateEnd.isBefore(monthEnd));
 			}),
 			week: events.filter(event => {
-				return ((event.dateBegin.isSameOrAfter(weekBegin) && event.dateBegin.isBefore(weekEnd))
-					|| (event.dateEnd.isSameOrAfter(weekBegin) && event.dateEnd.isBefore(weekEnd)))
-					&& event;
+				return (event.dateBegin.isSameOrAfter(weekBegin) && event.dateBegin.isBefore(weekEnd))
+					|| (event.dateEnd.isSameOrAfter(weekBegin) && event.dateEnd.isBefore(weekEnd));
 			}),
 			day: events.filter(event => {
-				return (event.dateBegin.isSame(date)
+				return event.dateBegin.isSame(date)
 					|| (event.dateBegin.isSameOrBefore(date) && event.dateEnd.isSameOrAfter(date))
-					&& (event.periodic ? event.week[day] : true))
-					&& event;
+					&& (event.periodic ? event.week[day] : true);
 			})
 		};
 	}

@@ -90,6 +90,7 @@ function timeRequire(value) {
 }
 
 function timeEndValidate(value) {
+  if (this.allDay) return true;
   const time = +value.replace(/:/g, '');
   const begin = +this.timeBegin.replace(/:/g, '');
   return time - begin >= 0;

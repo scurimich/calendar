@@ -1,4 +1,4 @@
-body, ul, h1, h2, h3, h4, h5, h6 {
+body, ul, h1, h2, h3, h4, h5, h6, p {
 	margin: 0;
 	padding: 0;
 }
@@ -31,23 +31,54 @@ input, textarea {
 	100% {opacity: 1;}
 }
 
-.container {
-	display: flex;
+.waiting {
+	position: fixed;
+	left: 0;
+	right: 0;
 	height: 100%;
-	margin: 0 auto;
+
+	&__spinner {
+		position: absolute;
+		top: 40%;
+		left: calc(50% - 40px);
+		display: block;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		border: 10px solid;
+		border-color: #fff #999;
+		animation-name: app-waiting;
+		animation-duration: 0.7s;
+		animation-timing-function: linear;
+		animation-iteration-count: infinite;
+	}
+}
+
+@keyframes app-waiting {
+	0% {transform: rotate(0deg)}
+	100% {transform: rotate(360deg)}
 }
 
 .content {
-	height: 100%;
-	width: calc(100% - 231px);
-	flex-grow: 1;
 	display: flex;
-	flex-direction: column;
+	height: 100%;
+
+	&__main {
+		height: 100%;
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__sidebar {
+		flex-grow: 0;
+		flex-shrink: 0;
+		width: 280px;
+	}
 }
 
 .body {
-	flex-shrink: 1;
-	flex-grow: 1;
+	flex: 1;
 	display: flex;
 	position: relative;
 }

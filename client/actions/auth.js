@@ -1,4 +1,4 @@
-import { SubmissionError } from 'redux-form';
+import { SubmissionError, reset } from 'redux-form';
 import { LOGIN, LOGIN_ERROR, LOGOUT, REGISTER, REGISTER_ERROR } from '../constants/actions.js';
 import { serverRequest } from '../utils.js';
 
@@ -10,6 +10,7 @@ export function login(user, dispatch) {
       else {
         localStorageSave(json);
         dispatch({type: LOGIN, email: json.user});
+        dispatch(reset('signin'));
         resolve();
       }
     });
@@ -34,6 +35,7 @@ export function register(user, dispatch) {
       else {
         localStorageSave(json);
         dispatch({type: LOGIN, email: json.user});
+        dispatch(reset('signup'));
         resolve();
       }
     })

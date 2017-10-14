@@ -49,10 +49,6 @@ export function getWeek({ firstDay, date }) {
   return week;
 }
 
-export function addNull(str) {
-  return str.toString().length === 1 ? '0' + str : str;
-}
-
 export function sortEvents(a, b) {
   return a.dateBegin - b.dateBegin || b.duration - a.duration;
 }
@@ -75,11 +71,11 @@ export function getWeekEvents(data, date, linesCount) {
     let size = 0;
     let currentOffset;
 
-    for(let i = 0; i < DAYS_IN_WEEK; i += size, day = new Date(day.getFullYear(), day.getMonth(), day.getDate() + size)) {
+    for(let i = 0; i < DAYS_IN_WEEK; i += size, day.add(size, 'days')) {
 
       const event = events.find((event, ndx) => {
-        if ((i === 0 && (event.dateBegin <= day && event.dateEnd >= day)) ||
-          (i !== 0 && event.dateBegin - day === 0)) {
+        if ((i === 0 && (event.dateBegin.isSameOrBefore(day) && event.dateEnd.isSameOrAfter(day))) ||
+          (i !== 0 && event.dateBegin.isSame(day))) {
           events.splice(ndx, 1);
           return event;
         }
@@ -97,7 +93,7 @@ export function getWeekEvents(data, date, linesCount) {
         size = i + difference >= DAYS_IN_WEEK ? DAYS_IN_WEEK - i : difference;
 
         if (event.periodic) {
-          const weekDay = day.getDay() ? day.getDay() : 7;
+          const weekDay = day.day() ? day.day() : 7;
           let daysCounter = 0;
           let offsetCounter = 0;
           
@@ -145,9 +141,9 @@ export function getWeekEvents(data, date, linesCount) {
 
   let day = date;
   for (let i = 0; i < DAYS_IN_WEEK; i++) {
-    const currentEvents = events.filter(event => (event.dateBegin <= day && event.dateEnd >= day)).length;
+    const currentEvents = events.filter(event => (event.dateBegin.isSameOrBefore(day) && event.dateEnd.isSameOrAfter(day))).length;
     extra.push({date: day, count: currentEvents});
-    day = new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1);
+    day.add(1, 'days');
   }
   return result;
 }

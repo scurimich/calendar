@@ -6,7 +6,6 @@ import moment from 'moment';
 import Select from 'react-select';
 import { WEEKDAYS } from '../../../constants/calendar.js';
 
-import 'react-select/dist/react-select.css';
 import './eventwindow.scss';
 
 const inputText = ({ input, label, type, required, meta: { touched, error } }) => {

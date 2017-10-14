@@ -5,7 +5,7 @@ import {
 } from '../constants/actions.js';
 
 const initialState = {
-  status: false,
+  status: '',
   error: ''
 }
 

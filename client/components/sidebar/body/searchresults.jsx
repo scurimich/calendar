@@ -3,7 +3,7 @@ import GeminiScrollbar from 'react-gemini-scrollbar';
 
 import Event from './event.jsx';
 
-import './SearchResults.scss';
+import './searchresults.scss';
 
 export default class SearchResults extends React.Component {
 	constructor(props) {
@@ -14,10 +14,6 @@ export default class SearchResults extends React.Component {
 		return this.props.onSrchResClick.bind(null, date);
 	}
 
-	getEvents() {
-		const { events } = this.props;
-	}
-
 	getSearchString() {
 		const { search } = this.props;
 		if (search) return `Results for "${search}":`;
@@ -26,29 +22,32 @@ export default class SearchResults extends React.Component {
 
 	getGroup(id) {
 		const { groups } = this.props;
-		return groups.find(group => (id === group.id));
+		return groups.find(group => id === group._id);
 	}
 
 	render() {
 		const { events, eventWindowShow } = this.props;
+		const searchString = this.getSearchString();
+
 		return (
-			<div className='search-res'>
-				<h2 className='search-res__head'>{this.getSearchString()}</h2>
-				<GeminiScrollbar>
-				<ul className='search-res__list'>
-					{
-						events.map((event, key) => (
-							<Event
-								title={event.title}
-								description={event.description}
-								group={this.getGroup(event.group)}
-								onEventClick={eventWindowShow.bind(null, event)}
-								key={key}
-							/>
-						))
-					}
-				</ul>
-				</GeminiScrollbar>
+			<div className='sidebar__search-results search-results'>
+				<h2 className='search-results__head'>{searchString}</h2>
+				<div className='search-results__scroll-container'>
+					<GeminiScrollbar className='search-results__scrollbar'>
+					<ul className='search-results__list'>
+						{
+							events.map((event, key) => (
+								<Event
+									{...event}
+									group={this.getGroup(event.group)}
+									onEventClick={eventWindowShow.bind(null, {...event})}
+									key={key}
+								/>
+							))
+						}
+					</ul>
+					</GeminiScrollbar>
+				</div>
 			</div>
 		);
 	}

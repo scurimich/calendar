@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -13,11 +14,11 @@ import {
 import { setView } from '../../actions/view.js';
 import { changeSearchStr } from '../../actions/search.js';
 
-import { MONTH_NAMES, DAYS_IN_WEEK } from '../../constants/calendar.js';
+import { DAYS_IN_WEEK } from '../../constants/calendar.js';
 
 import './controls.scss';
 
-const viewList = ['Day', 'Week', 'Month', 'Year'];
+const viewsList = ['Day', 'Week', 'Month', 'Year'];
 
 class Controls extends React.Component {
 	constructor(props) {
@@ -45,6 +46,7 @@ class Controls extends React.Component {
 			activeView
 		} = this.props;
 		const { setSpaces } = this;
+
 		switch(activeView) {
 			case 'Day':
 				return type ? setSpaces(space.clone().add(1, 'days')) : setSpaces(space.clone().subtract(1, 'days'));
@@ -73,7 +75,7 @@ class Controls extends React.Component {
 				const weekDay = space.day() ? space.day() - 1 : DAYS_IN_WEEK;
 				const weekBegin = space.clone().subtract(weekDay, 'days');
 				const weekEnd = space.clone().add(DAYS_IN_WEEK - weekDay - 1, 'days');
-				return `${weekBegin.format('DD.MM.YYYY')} - ${weekEnd.format('DD.MM.YYYY')}`;
+				return `${weekBegin.format('D.MM.YYYY')} - ${weekEnd.format('D.MM.YYYY')}`;
 			case 'Year':
 				return space.format('YYYY');
 			case 'MONTH':
@@ -84,15 +86,16 @@ class Controls extends React.Component {
 
 	render() {
 		const { search, activeView, setView } = this.props;
+		
 		return (
-			<header className="controls">
+			<header className='content__controls controls'>
 				<CurrentSpace
 					spaceString={this.spaceString()}
 					onPrevClick={this.prevClick}
 					onNextClick={this.nextClick}
 				/>
-				<ul className="controls__views views">
-					{viewList.map((view, ndx) => {
+				<ul className='controls__views views'>
+					{viewsList.map((view, ndx) => {
 						return (
 							<View 
 								name={view}
@@ -113,6 +116,16 @@ class Controls extends React.Component {
 	}
 }
 
+Controls.propTypes = {
+	activeView: PropTypes.string,
+	date: PropTypes.object,
+	search: PropTypes.string,
+	space: PropTypes.object,
+	changeSearchStr: PropTypes.func,
+	setView: PropTypes.func,
+	setSpace: PropTypes.func,
+	setMiniSpace: PropTypes.func
+};
 
 const mapStateToProps = (state) => {
 	return {

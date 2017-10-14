@@ -41,7 +41,7 @@ export function auth(req, res, next) {
 }
 
 function generateToken(user) {
-  return jwt.sign(user, config.secret, {
+  return jwt.sign({ data: user }, config.secret, {
     expiresIn: '24h'
-  })
+  });
 }

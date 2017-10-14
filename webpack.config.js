@@ -10,26 +10,24 @@ module.exports = {
 	entry: './client/index.jsx',
 	output: {
 		filename: 'build.js',
-		path: path.resolve(__dirname, './public/build/'),
-		publicPath: 'build/'
+		path: path.resolve(__dirname, 'public/build/'),
+		publicPath: 'build'
 	},
 	devtool: NODE_ENV == 'dev' ? 'inline-source-map' : null,
+	devServer: {
+		hot: true,
+		port: 9000,
+		proxy: {
+			'*': 'http://localhost:3000'
+		}
+	},
 	watch: NODE_ENV == 'dev',
 	watchOptions: {
 		aggregateTimeout: 100
 	},
 	resolve: {
 		modules: ['node_modules'],
-		extensions: ['.js', '.jsx']
-	},
-	devServer: {
-		host: 'localhost',
-		hot: true,
-		port: 9000,
-		contentBase: './public/',
-		proxy: {
-			'*': 'http://localhost:3000'
-		}
+		extensions: ['.js', '.jsx', '.json']
 	},
 	plugins: [
 		new webpack.NoEmitOnErrorsPlugin(),
@@ -62,7 +60,7 @@ module.exports = {
 				exclude: [/public/]
 			}
 		]
-	}
+	},
 }
 
 if (NODE_ENV == 'prod') {

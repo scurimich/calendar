@@ -49,7 +49,7 @@ passport.use('local-register', new LocalStrategy(localOptions, (email, password,
 }));
 
 passport.use('jwt', new JwtStrategy(jwtOptions, (payload, done) => {
-  User.findById(payload._doc._id, (err, user) => {
+  User.findById(payload.data._id, (err, user) => {
     if (err) return done(err);
     if (user) {
       done(null, user);

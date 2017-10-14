@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router';
@@ -9,7 +10,7 @@ import Controls from './controls/controls.jsx';
 import Body from './body/body.jsx';
 import NotificationContainer from './notification/notifictaioncontainer.jsx';
 
-import { login, register, auth } from '../actions/auth.js';
+import { auth } from '../actions/auth.js';
 import { fetchEvents, changeEvent } from '../actions/events.js';
 import { fetchGroups } from '../actions/groups.js';
 import './app.scss';
@@ -22,12 +23,19 @@ class App extends React.Component {
     this.getNotifications = this.getNotifications.bind(this);
   }
 
+  componentDidUpdate() {
+    const { user, eventsStatus, events, fetchEvents, groups, fetchGroups, groupsStatus } = this.props;
+    const { authenticated } = user;
+    if (authenticated && !groups.length && !groupsStatus) fetchGroups();
+    if (authenticated && !events.length && !eventsStatus) fetchEvents();
+  }
+
   getNotifications() {
     const { events } = this.props;
     const now = moment();
     return events.reduce((prev, event, ndx) => {
       const date = event.dateBegin;
-      const time = event.timeBegin || new Date(1970, 0, 1, 0, 0);
+      const time = event.timeBegin || moment(0, 'HH');
       const begin = date.clone().hours(time.hours()).minutes(time.minutes() - 5);
       const end = date.clone().hours(time.hours()).minutes(time.minutes());
       if (now - end > 0 || !event.notification) return prev;
@@ -48,25 +56,44 @@ class App extends React.Component {
   render() {
     const token = localStorage.getItem('token');
     if (!token) return <Redirect to='/login' />;
+
     const { getNotifications, removeNotification } = this;
-    const { auth, user, events, eventsStatus, fetchEvents, groups, fetchGroups, groupsStatus } = this.props;
+    const { auth, user, events } = this.props;
     const { authenticated } = user;
 
-    if (token && !authenticated) auth(token);
-    if (!groups.length && !groupsStatus) fetchGroups();
-    if (!events.length && !eventsStatus) fetchEvents();
+    const waiting = (
+      <div className='waiting'><span className='waiting__spinner'></span></div>
+    );
 
-    return (
-      <div className="container">
-        <Sidebar />
-        <div className="content">
+    const application = (
+      <div className="content">
+        <div className='content__sidebar'>
+          <Sidebar />
+        </div>
+        <div className="content__main">
           <Controls />
           <Body />
         </div>
         <NotificationContainer notifications={getNotifications()} events={events} removeNotification={removeNotification} />
       </div>
     );
+
+    if (token && !authenticated) auth(token);
+    
+    return authenticated ? application : waiting;
   }
+}
+
+App.propTypes = {
+  user: PropTypes.object,
+  events: PropTypes.array,
+  eventsStatus: PropTypes.string,
+  groups: PropTypes.array,
+  groupsStatus: PropTypes.string,
+  auth: PropTypes.func,
+  fetchEvents: PropTypes.func,
+  changeEvent: PropTypes.func,
+  fetchGroups: PropTypes.func
 }
 
 

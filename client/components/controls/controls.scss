@@ -1,8 +1,20 @@
+.content {
+  &__controls {
+    flex-shrink: 0;
+    margin-bottom: 8px;
+  }
+}
+
 .controls {
-	height: 50px;
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
-	flex-shrink: 0;
-	margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.views {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  list-style: none;
 }

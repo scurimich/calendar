@@ -1,0 +1,17 @@
+.socials {
+  &__item {
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+
+  &__link {
+    font-size: 22px;
+    color: #fff;
+    transition: .2s;
+
+    &:hover {
+      color: darken(#fff, 20%);
+    }
+  }
+}

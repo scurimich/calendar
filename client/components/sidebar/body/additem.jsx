@@ -1,14 +1,11 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import './additem.scss';
 
 const AddItem = ({ addEvent, addGroup }) => (
-  <div className='add'>
-    <div className='add-event'>
-      <a className='add-event__button' onClick={addEvent}>add event</a>
-    </div>
-    <div className='add-group'>
-      <a className='add-group__button' onClick={addGroup}>add group</a>
-    </div>
+  <div className='sidebar__add add'>
+    <a className='add__button' onClick={addEvent}>add event</a>
+    <a className='add__button' onClick={addGroup}>add group</a>
   </div>
 );
 

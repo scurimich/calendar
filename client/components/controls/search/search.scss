@@ -3,28 +3,28 @@
 
 	&__input {
 		box-sizing: border-box;
-		background-color: #e6e6e6;
-		height: 25px;
-		width: 230px;
-		padding: 2px 15px 3px;
-		border-radius: 3px;
-		border: none;
+		width: 100%;
+		padding: 4px 8px;
 		font-family: 'Open Sans';
 		font-size: 13px;
+		border-radius: 3px;
+		border: none;
+		background-color: #e6e6e6;
 	}
 
 	&__cancel {
 		box-sizing: border-box;
 		position: absolute;
 		right: 5px;
-		top: 6px;
-		font-size: 10px;
-		width: 13px;
-		height: 13px;
-		padding: 1px 0 0 2px;
+		top: 50%;
+		font-size: 9px;
+		width: 14px;
+		height: 14px;
+		padding: 2px 0 0 3px;
 		border-radius: 50%;
 		color: #fff;
 		background-color: #aaa;
-		cursor: pointer
+		cursor: pointer;
+		transform: translate(0, -50%);
 	}
 }

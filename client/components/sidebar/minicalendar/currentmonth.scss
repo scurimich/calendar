@@ -1,9 +1,8 @@
-$arrowColor: #808080;
-
-.cur-month {
+.current-month {
 	display: flex;
 	flex-wrap: nowrap;
-	padding: 10px;
+	justify-content: space-between;
+	padding: 8px;
 
 	&__title {
 		font-family: 'Open Sans', sans-serif;
@@ -14,8 +13,6 @@ $arrowColor: #808080;
 	}
 
 	&__control {
-		margin-left: 20px;
-		flex-grow: 1;
 		display: flex;
 		justify-content: space-around;
 		align-items: center;
@@ -23,12 +20,13 @@ $arrowColor: #808080;
 	}
 
 	&__arrow {
+		padding: 0 8px;
 		font-size: 18px;
 		color: #808080;
 		cursor: pointer;
 
 		&:hover {
-			color: lighten($arrowColor, 20%);
+			color: lighten(#808080, 20%);
 		}
 	}
 }

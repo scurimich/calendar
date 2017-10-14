@@ -5,7 +5,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 
 import createHistory from 'history/createBrowserHistory';
-import { Route, Redirect } from 'react-router';
+import { Route } from 'react-router';
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
 
 import thunk from 'redux-thunk';
@@ -19,7 +19,7 @@ const history = createHistory();
 const middleware = routerMiddleware(history);
 
 const store = createStore(reducer,
-//   // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   applyMiddleware(thunk, middleware));
 
 ReactDOM.render(

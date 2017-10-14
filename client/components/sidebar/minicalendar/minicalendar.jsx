@@ -1,10 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
 import MiniMonth from './minimonth.jsx';
 import CurrentMonth from './currentmonth.jsx';
+
 import { getMonthInfo } from '../../../utils.js';
-import { MONTH_NAMES } from '../../../constants/calendar.js';
 
 import {
 	setDate,
@@ -14,8 +16,6 @@ import {
 	decrMiniSpace
 } from '../../../actions/space';
 import { setView } from '../../../actions/view';
-
-import './MiniCalendar.scss';
 
 class MiniCalendar extends React.Component {
 	constructor(props) {
@@ -50,6 +50,11 @@ class MiniCalendar extends React.Component {
 		);
 	}
 }
+
+MiniCalendar.propTypes = {
+	date: PropTypes.object,
+	space: PropTypes.object
+};
 
 const mapStateToProps = (state) => ({
 	date: state.date,

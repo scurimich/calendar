@@ -1,7 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import MiniDay from './miniday.jsx';
 import { getMonthInfo, getFirstDays, getWeek } from '../../../utils.js';
 import { WEEKDAYS } from '../../../constants/calendar.js'
+
+import './minimonth.scss';
 
 export default class MiniMonth extends React.Component {
   constructor(props) {
@@ -29,22 +32,20 @@ export default class MiniMonth extends React.Component {
     const { date, setCurrentDate } = this.props;
     const month = this.getMonth();
     return (
-      <div className='mini'>
-        <header className='mini__weekdays weekdays'>
-          <ul className='weekdays__list weekdays__list_mini'>
-            {WEEKDAYS.map((day, ndx) => (
-              <li className='weekdays__item weekdays__item_mini' key={ndx}>{day}</li>
-            ))}
-          </ul>
-        </header>
+      <div className='sidebar-month'>
+        <ul className='sidebar-month__weekdays'>
+          {WEEKDAYS.map((day, ndx) => (
+            <li className='sidebar-month__weekday' key={ndx}>{day}</li>
+          ))}
+        </ul>
+        <ul className='sidebar-month__weeks'>
         {
           month.dates.map((week, ndx) => {
             return (
-              <li className='mini__item' key={ndx} >
-                <ul className={`mini__week ${month.activeWeek === ndx ? 'mini__week_active' : ''}`}>
+              <li className='sidebar-month__week sidebar-week' key={ndx} >
+                <ul className={`sidebar-week__list${month.activeWeek === ndx ? ' sidebar-week__list_active' : ''}`}>
                 {
                   week.map((day, key) => {
-                    // console.log(day.date.date())
                     return (<MiniDay {...day} key={key} onDayClick={setCurrentDate.bind(null, day.date)} />);
                   })
                 }
@@ -53,7 +54,15 @@ export default class MiniMonth extends React.Component {
             );
           })
         }
+        </ul>
       </div>
     );
   }
 }
+
+MiniMonth.propTypes = {
+  date: PropTypes.object,
+  miniSpace: PropTypes.object,
+  monthInfo: PropTypes.object,
+  setCurrentDate: PropTypes.func
+};
