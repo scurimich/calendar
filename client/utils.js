@@ -34,14 +34,15 @@ export function getFirstDays(monthInfo) {
   return firstDays;
 }
 
-export function getWeek({ firstDay, date }) {
+export function getWeek({ firstDay, date, space }) {
   const week = [];
   let oneDay = firstDay;
 
   for (let i = 0; i < DAYS_IN_WEEK; i++) {
     week.push({
       date: oneDay,
-      currentDate: date - oneDay === 0
+      currentDate: date - oneDay === 0,
+      currentSpace: space.month() === oneDay.month()
     });
     oneDay = oneDay.clone().add(1, 'days');
   }

@@ -15,11 +15,12 @@ export default class MiniMonth extends React.Component {
     const { date, miniSpace } = this.props;
     const monthInfo = getMonthInfo(miniSpace);
     const firstDays = getFirstDays(monthInfo);
+    const space = miniSpace;
     let activeWeek;
     const dates = firstDays.reduce((array, firstDay, ndx, firstDays) => {
       if (array.length && (firstDays[ndx - 1].isSameOrBefore(date) && firstDay.isAfter(date)))
         activeWeek = ndx - 1;
-      array.push(getWeek({ firstDay, date }));
+      array.push(getWeek({ firstDay, date, space }));
       return array;
     }, []);
     return {
@@ -31,6 +32,7 @@ export default class MiniMonth extends React.Component {
   render() {
     const { date, setCurrentDate } = this.props;
     const month = this.getMonth();
+
     return (
       <div className='sidebar-month'>
         <ul className='sidebar-month__weekdays'>

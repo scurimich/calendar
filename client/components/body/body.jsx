@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -90,7 +91,7 @@ class Body extends React.Component {
 			groupWindowHide
 		} = this.props;
 		return (
-			<div className="body">
+			<div className="content__body body">
 				{this.setCurrentView()}
 				<EventWindow
 					addEvent={addEvent}
@@ -111,6 +112,21 @@ class Body extends React.Component {
 		);
 	}
 }
+
+Body.propTypes = {
+	active: PropTypes.string,
+	date: PropTypes.object,
+	events: PropTypes.array,
+	eventWindow: PropTypes.object,
+	groups: PropTypes.array,
+	groupWindow: PropTypes.object,
+	space: PropTypes.object,
+	selectedEvent: PropTypes.object,
+	eventWindowShow: PropTypes.func,
+	eventWindowHide: PropTypes.func,
+	groupWindowShow: PropTypes.func,
+	groupWindowHide: PropTypes.func
+};
 
 const mapStateToProps = state => ({
 	active: state.view,

@@ -1,50 +1,19 @@
+.content {
+  &__body {
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
+}
+
 .body {
+  display: flex;
+  position: relative;
+
   .gm-scrollbar .thumb {
     background-color: #ebebeb;
 
     &:hover, &:active {
       background-color: #808080;
     }
-  }
-}
-
-.weekdays {
-
-	&__list {
-		list-style: none;
-		display: flex;
-		flex-wrap: nowrap;
-		border-bottom: none;
-
-		&_week {
-      padding-left: 60px;
-		}
-	}
-
-	&__item {
-		flex-grow: 1;
-
-		&_month {
-			text-transform: uppercase;
-			width: 14.28%;
-			min-width: 100px;
-			padding-left: 10px;
-		}
-	}
-}
-
-.mouse-events-off {
-	pointer-events: none;
-}
-
-.allday {
-  padding-left: 60px;
-  padding-right: 12px;
-
-  &__event {
-    background-color: #eee;
-    border:1px solid #e6e6e6;
-    border-radius: 2px;
-    margin-bottom: 1px;
   }
 }

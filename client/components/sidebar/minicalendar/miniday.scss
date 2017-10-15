@@ -28,6 +28,10 @@
     }
   }
 
+  &_not-current {
+    opacity: .3;
+  }
+
   &__number {
     flex-grow: 1;
     display: flex;

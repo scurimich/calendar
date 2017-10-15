@@ -33,16 +33,17 @@ export function fetchEvents() {
         for (let prop in event) {
           if (event[prop]) {
             if (prop === 'dateBegin' || prop === 'dateEnd') {
-              event[prop] = moment(event[prop]);
+              event[prop] = moment(event[prop], 'YYYY-MM-DD');
               // event[prop].setHours(0);
             }
             if (prop === 'timeBegin' || prop === 'timeEnd') {
-              event[prop] = moment(event[prop]);
+              event[prop] = moment(event[prop], 'HH:mm');
             }
           }
         }
         return event;
       });
+      console.log(events)
       dispatch({ type: EVENTS_ADD, events});
       dispatch({ type: EVENTS_FETCH_OK });
     })

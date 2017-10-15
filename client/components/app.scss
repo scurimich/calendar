@@ -64,10 +64,12 @@ input, textarea {
 	height: 100%;
 
 	&__main {
-		height: 100%;
+		box-sizing: border-box;
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
+		height: 100%;
+  	width: calc(100% - 280px);
 	}
 
 	&__sidebar {
@@ -75,12 +77,6 @@ input, textarea {
 		flex-shrink: 0;
 		width: 280px;
 	}
-}
-
-.body {
-	flex: 1;
-	display: flex;
-	position: relative;
 }
 
 .message {
