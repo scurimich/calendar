@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import {TODAY} from '../../../constants/calendar.js';
-
 import DragAndDrop from '../../../hoc/dragndrop.jsx';
+
+import './weekday.scss';
 
 class WeekDay extends React.Component {
   constructor(props) {
@@ -112,14 +113,22 @@ class WeekDay extends React.Component {
       const width = position !== horizontalSize - 1 ? onePiece * 1.5 : onePiece;
       const left = onePiece * position;
       const zIndex = position + 1;
+      const color = event.group && event.group.color;
       return (
         <div
-        className='hour__event'
-        key={event._id} id={event._id}
-        style={ {'height': height + '%','width': width + '%', 'top': top + '%', 'left': left + '%', 'zIndex': zIndex} } 
-        onMouseDown={eventDragAndDrop}
+          className='week-hour__event wh-event'
+          key={event._id} id={event._id}
+          style={ {'height': height + '%','width': width + '%', 'top': top + '%', 'left': left + '%', 'zIndex': zIndex} } 
+          onMouseDown={eventDragAndDrop}
         >
-          {event.title}
+          <div
+            className='wh-event__background'
+            style={ color ? {'backgroundColor': color} : {} }
+          ></div>
+          <span className='wh-event__title'>{event.title}</span>
+          <span className='wh-event__time'>
+            {`${event.timeBegin.format('HH:mm')} - ${event.timeEnd.format('HH:mm')}`}
+          </span>
         </div>
       );
     });
@@ -128,12 +137,19 @@ class WeekDay extends React.Component {
   render() {
     return (
       <li id='day' data-date={this.props.id} className={'week__day'}>
-        <ul className='week__sublist'>
+        <ul className='week__hours'>
           {this.renderDay()}
         </ul>
       </li>
     );
   }
-  
 }
+
+WeekDay.propTypes = {
+  date: PropTypes.object,
+  events: PropTypes.array,
+  id: PropTypes.string,
+  eventDragAndDrop: PropTypes.func
+};
+
 export default DragAndDrop(WeekDay);

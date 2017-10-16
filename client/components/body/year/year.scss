@@ -1,13 +1,7 @@
-$arrColor: #323232;
-$actColor: #1f97fc;
-$actBackColor: #bde2ff;
-$backColor: #f9f9f9;
-$borderColor: #dbdbdb;
-
 .year {
 	display: flex;
 	width: 100%;
-	padding-bottom: 20px;
+	padding: 32px 8px 48px;
 
 	&__list {
 		flex-grow: 1;
@@ -15,57 +9,48 @@ $borderColor: #dbdbdb;
 		flex-wrap: wrap;
 		align-content: space-between;
 		justify-content: space-around;
-		width: 70%;
 		margin: 0 20px;
 	}
 
 	&__item {
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 10px;
 		height: 30%;
 		width: 22%;
+		background-color: #f9f9f9;
+		transition: .3s;
+		cursor: pointer;
 		overflow: hidden;
+
+		&:hover {
+			background-color: darken(#f9f9f9, 5%);
+		}
+
+		&_active {
+			background-color: #bde2ff;
+
+			&:hover {
+				background-color:  darken(#bde2ff, 10%);
+			}
+		}
 	}
 
-	&__arr {
+	&__arrow {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		width: 8%;
-		color: $arrColor;
+		color: #808080;
 		font-size: 36px;
 		cursor: pointer;
-		transition: .2s;
+		transition: .3s;
 
 		&:hover {
-			color: darken($arrColor, 20%);
-			background-color: darken(#fff, 5%);
-		}
-	}
-}
-
-.y-month {
-	box-sizing: border-box;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	transition: .3s;
-	background-color: $backColor;
-	cursor: pointer;
-	padding: 10px;
-	box-shadow: none;
-
-	&:hover {
-		box-shadow: 0 0 0 1px darken($borderColor, 10%);
-		background-color: darken($backColor, 5%);
-	}
-
-	&_active {
-		border-color: $actColor;
-		background-color: $actBackColor;
-
-		&:hover {
-			box-shadow: 0 0 0 1px darken($actColor, 20%);
-			background-color:  darken($actBackColor, 10%);
+			color: darken(#808080, 50%);
 		}
 	}
 
@@ -76,7 +61,7 @@ $borderColor: #dbdbdb;
 		color: #000;
 	}
 
-	&__year {
+	&__full-year {
 		font-family: 'Open Sans', sans-serif;
 		font-size: 20px;
 		font-weight: 600;

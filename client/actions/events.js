@@ -34,7 +34,6 @@ export function fetchEvents() {
           if (event[prop]) {
             if (prop === 'dateBegin' || prop === 'dateEnd') {
               event[prop] = moment(event[prop], 'YYYY-MM-DD');
-              // event[prop].setHours(0);
             }
             if (prop === 'timeBegin' || prop === 'timeEnd') {
               event[prop] = moment(event[prop], 'HH:mm');
@@ -43,7 +42,6 @@ export function fetchEvents() {
         }
         return event;
       });
-      console.log(events)
       dispatch({ type: EVENTS_ADD, events});
       dispatch({ type: EVENTS_FETCH_OK });
     })

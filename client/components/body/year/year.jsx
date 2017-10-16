@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
@@ -6,7 +7,6 @@ import moment from 'moment';
 import { MONTH_NAMES, MONTHS_IN_YEAR, TODAY } from '../../../constants/calendar.js';
 
 import {
-  setDate,
   setSpace,
   setMiniSpace
 } from '../../../actions/space';
@@ -19,10 +19,6 @@ class Year extends React.Component {
     super(props);
     this.onPrevClick = this.onArrowClick.bind(this, false);
     this.onNextClick = this.onArrowClick.bind(this, true);
-  }
-
-  monthClasses(month) {
-    return `year__item y-month ${month.current ? 'y-month_active' : ''}`;
   }
 
   onArrowClick(type) {
@@ -50,11 +46,11 @@ class Year extends React.Component {
           && event.dateEnd.isBefore(nextMonth))) count++;
     });
     return (count > 0 ? 
-      <span className='y-month__events'>
-        <span className='y-month__events-count'>{count}</span> events.
+      <span className='year__events'>
+        <span className='year__events-count'>{count}</span> events.
       </span>
       :
-      <span className='y-month__events'>There are no events.</span>
+      <span className='year__events'>There are no events.</span>
     );
   }
 
@@ -67,15 +63,20 @@ class Year extends React.Component {
     for (let i = 0; i < MONTHS_IN_YEAR; i++) {
       const oneMonth = {
         month: i,
-        year: yearNumber
+        year: yearNumber,
+        current: curMonth === i
       }
       yearArray[i] = oneMonth;
     }
     return yearArray.map((val, ndx) => {
       return (
-        <li className={this.monthClasses(val)} key={ndx} onClick={this.onMonthClick.bind(this, val)}>
-          <h3 className='y-month__title'>{MONTH_NAMES[ndx]}</h3>
-          <span className='y-month__year'>{val.year}</span>
+        <li
+          className={`year__item${val.current ? ' year__item_active' : ''}`}
+          key={ndx}
+          onClick={this.onMonthClick.bind(this, val)}
+        >
+          <h3 className='year__title'>{MONTH_NAMES[ndx]}</h3>
+          <span className='year__full-year'>{val.year}</span>
           {this.getEventsCount(val)}
         </li>
       );
@@ -85,20 +86,28 @@ class Year extends React.Component {
   render() {
     const { date } = this.props;
     return (
-      <div className="year">
-        <span className='year__arr' onClick={this.onPrevClick}>
+      <div className="body__year year">
+        <span className='year__arrow' onClick={this.onPrevClick}>
           <i className="fa fa-angle-left" aria-hidden="true"></i>
         </span>
         <ul className="year__list">
           {this.getYear(date)}
         </ul>
-        <span className='year__arr' onClick={this.onNextClick}>
+        <span className='year__arrow' onClick={this.onNextClick}>
           <i className="fa fa-angle-right" aria-hidden="true"></i>
         </span>
       </div>
     );
   }
 }
+
+Year.propTypes = {
+  date: PropTypes.object,
+  space: PropTypes.object,
+  setView: PropTypes.func,
+  setSpace: PropTypes.func,
+  setMiniSpace: PropTypes.func
+};
 
 const mapStateToProps = state => ({
   date: state.date,

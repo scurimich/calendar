@@ -159,7 +159,7 @@ class Day extends React.Component {
     const { id, space } = this.props;
     return (
       <div className='body__day day' id='day' data-date={id}>
-          <div className='day__main'>
+          <div className='day__scroll-container'>
             <GeminiScrollbar className='day__scrollbar'>
               <ul className='day__events day-events'>
                 {

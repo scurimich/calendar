@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import GeminiScrollbar from 'react-gemini-scrollbar';
@@ -6,9 +7,7 @@ import moment from 'moment';
 
 import WeekDay from './weekday.jsx';
 import {DAYS_IN_WEEK, WEEKDAYS} from '../../../constants/calendar.js';
-import {addNull, getWeekEvents} from '../../../utils.js';
-import { selectEvent, changeSelectedEvent, removeEventSelection } from '../../../actions/selectedevent.js';
-import { updateEvent } from '../../../actions/events.js';
+import { getWeekEvents } from '../../../utils.js';
 
 import './Week.scss';
 
@@ -59,50 +58,48 @@ class Week extends React.Component {
     });
   }
 
-  renderAllDayDays() {
-    return this.getWeek().map((day, ndx) => {
-      return (
-        <li className='week__allday-day' key={ndx}></li>
-      );
-    });
-  }
-
   renderAllDayEvents() {
     const { space } = this.props;
     const day = space.day() == 0 ? 6 : space.day() - 1;
     const firstDay = day == 1 ? space : space.clone().subtract(day, 'days');
     const weekEvents = getWeekEvents(this.weekEvents(), firstDay);
     const lines = (weekEvents && weekEvents.lines) || [];
+    console.log(lines)
     return lines.map((line, ndx) => {
       return (
         <li key={ndx} className='week-events__line'>
           {
             line.map((item, ndx) => {
+              const offset = (
+                <span className={`week-events__offset week-events__offset_${item.size}`} key={ndx}></span>
+              );
+
               if (!item._id) 
-                return (
-                  <span className={`week-events__offset week-events__offset_${item.size}`} key={ndx}>
-                  </span>
-                );
+                return offset;
+
+              const color = item.group && item.group.color;
+              const time = item.allDay ? '' : `${item.timeBegin.format('HH:mm')} - ${item.timeEnd.format('HH:mm')}`;
+
               return (
-                <span
-                  className={this.eventClasses(item)} 
+                <div
+                  className={`week-events__item week-events__item_size-${item.size}${item.hidden ? ' week-events__item_hidden' : ''} week-event`} 
                   key={ndx}
                   id={item._id}
                 >
-                  {item.title}
-                </span>
+                  <div
+                    className='week-event__background'
+                    style={ color ? {'backgroundColor': color} : {} }
+                  ></div>
+                  <span className='week-event__title'>{item.title}</span>
+                  <span className='week-event__description'>{item.description}</span>
+                  <span className='week-event__time'>{time}</span>
+                </div>
               );
             })
           }
         </li>
       );
     });
-  }
-
-  eventClasses(item) {
-    return `week-events__item
-      week-events__item_size-${item.size}
-      ${item.hidden ? 'week-events__item_hidden' : ''}`;
   }
 
   renderSidebar() {
@@ -114,10 +111,8 @@ class Week extends React.Component {
     while(currentTime - nextDay < 0) {
 
       halfHours.push(
-        <li className='week__sb-hour sb-hour' key={currentTime.format('HHmm')}>
-          <div className='sb-hour__time'>
-            {currentTime.format('h:00 A')}
-          </div>
+        <li className='week__time' key={currentTime.format('HHmm')}>
+          {currentTime.format('h:00 A')}
         </li>
       );
 
@@ -128,53 +123,63 @@ class Week extends React.Component {
   }
 
   render() {
-    const { selectedEvent, selectEvent, updateEvent, changeSelectedEvent, removeEventSelection } = this.props;
+    const weekDays = this.getWeek();
+
     return (
-      <div className='week'>
-        <header className='week__head weekdays'>
-          <ul className='weekdays__list weekdays__list_week'>
-            {WEEKDAYS.map((day, ndx) => (
-              <li className='weekdays__item weekdays__item_week' key={ndx}>{day}</li>
-            ))}
-          </ul>
-        </header>
-        <GeminiScrollbar>
-          <div className='week__allday'>
-            <ul className='week__allday-events'>
-              {this.renderAllDayEvents()}
-              <ul className='week__allday-days'>
-                {this.renderAllDayDays()}
+      <div className='body__week week'>
+        <ul className='week__weekdays'>
+          {
+            WEEKDAYS.map((day, ndx) => (
+              <li className='week__weekday' key={ndx}>{day}</li>
+            ))
+          }
+        </ul>
+        <div className='week__scroll-container'>
+          <GeminiScrollbar className='week__scrollbar'>
+            <div className='week__events week-events'>
+              <ul className='week-events__list'>
+                { this.renderAllDayEvents() }
+                <ul className='week-events__days'>
+                  {
+                    weekDays.map((day, ndx) => (
+                      <li className='week-events__day' key={ndx}></li>
+                    ))
+                  }
+                </ul>
               </ul>
-            </ul>
-          </div>
-          <div className='week__body'>
-            <div className='week__sidebar'>
-              {this.renderSidebar()}
             </div>
-            <ul className='week__main'>
-              {
-                this.getWeek().map((day, ndx) => {
-                  return (<WeekDay
-                    events={this.dayEvents(day.date)}
-                    key={ndx}
-                    date={day.date}
-                    id={day.id}
-                    selectedEvent={selectedEvent}
-                  />);
-                })
-              }
-            </ul>
-          </div>
-        </GeminiScrollbar>
+            <div className='week__body'>
+              <div className='week__sidebar'>
+                {this.renderSidebar()}
+              </div>
+              <ul className='week__main'>
+                {
+                  this.getWeek().map((day, ndx) => {
+                    return (<WeekDay
+                      events={this.dayEvents(day.date)}
+                      key={ndx}
+                      date={day.date}
+                      id={day.id}
+                    />);
+                  })
+                }
+              </ul>
+            </div>
+          </GeminiScrollbar>
+        </div>
       </div>
     );
   }
 }
 
+Week.propTypes = {
+  date: PropTypes.object,
+  space: PropTypes.object
+};
+
 const mapStateToProps = state => ({
   date: state.date,
-  space: state.space.main,
-  selectedEvent: state.selected
+  space: state.space.main
 });
 
 export default connect(mapStateToProps, null)(Week);
