@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router';
@@ -13,33 +14,47 @@ class Auth extends React.Component {
     super(props)
   }
 
-  render() {
+  componentDidMount() {
+    const token = localStorage.getItem('token');
     const { auth, user } = this.props;
     const { authenticated } = user;
-    const token = localStorage.getItem('token');
 
     if (token && !authenticated) {
       auth(token);
-      return (
-        <div className='auth__spin-container'>
-          <span className='auth__spinner'>
-            <i className="fa fa-spinner" aria-hidden="true"></i>
-          </span>
-        </div>
-      );
     }
+  }
+
+  render() {
+    const token = localStorage.getItem('token');
+    const { auth, user } = this.props;
+    const { authenticated } = user;
+
+    const waiting = <div className='waiting'><span className='waiting__spinner'></span></div>
+
+    if (token && !authenticated) {
+      return waiting;
+    }
+
     if (authenticated) return <Redirect to='/' />;
+
     return (
       <div className='auth'>
+        <div className='auth__container'>
         <Signin />
         <div className='auth__splitter'>
-          <span className='auth__split-text'>or</span>
+          <span className='auth__splitter-text'>or</span>
         </div>
         <Signup />
+        </div>
       </div>
     );
   }
 }
+
+Auth.propTypes = {
+  auth: PropTypes.func,
+  user: PropTypes.object
+};
 
 const mapStateToProps = state => ({
   user: state.user

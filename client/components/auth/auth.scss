@@ -1,15 +1,15 @@
 .auth {
   box-sizing: border-box;
-  width: 350px;
-  margin: 100px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 100px;
+  animation: auth-opacity .2s linear;
 
-  &__title {
-    margin-bottom: 10px;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 18px;
-    font-weight: 400;
-    color: #f0403c;
-    text-align: center;
+  &__container {
+    flex-shrink: 0;
+    width: 30%;
+    min-width: 280px;
   }
 
   &__splitter {
@@ -30,7 +30,7 @@
     }
   }
 
-  &__split-text {
+  &__splitter-text {
     display: inline-block;
     padding: 0 10px;
     font-family: 'Open Sans', sans-serif;
@@ -39,77 +39,6 @@
     background-color: #fff;
     text-transform: uppercase;
   }
-
-  &__form {
-    text-align: center;
-    padding: 20px 30px;
-    border-radius: 3px;
-    background-color: #f6f6f6;
-    box-shadow: 1px 1px 3px 1px rgba(69, 69, 69, .4);
-  }
-
-  &__label {
-    display: block;
-    margin-bottom: 10px;
-    text-align: left;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
-    color: #323232;
-  }
-
-  &__input {
-    box-sizing: border-box;
-    padding: 5px 10px 6px 10px;
-    width: 100%;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 13px;
-    color: #323232;
-    border: 1px solid #ebebeb;
-    background-color: #fff;
-  }
-
-  &__button {
-    box-sizing: border-box;
-    margin-top: 5px;
-    padding: 3px 8px 4px 8px;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    color: #f0403c;
-    background-color: #ebebeb;
-    border: 1px solid #ebebeb;
-    border-radius: 2px;
-    text-transform: uppercase;
-  }
-
-  &__error {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
-    color: #f0403c;
-
-    &_back {
-      font-size: 13px;
-    }
-  }
-
-  &__spin-container {
-    margin: 300px auto;
-    text-align: center;
-    animation: auth-opacity .5s linear;
-  }
-
-  &__spinner {
-    display: inline-block;
-    font-size: 60px;
-    line-height: 60px;
-    color: #858585;
-    animation: auth-spinner 1s linear infinite;
-  }
-}
-
-@keyframes auth-spinner {
-  0% {transform: rotate(0deg);}
-  100% {transform: rotate(360deg);}
 }
 
 @keyframes auth-opacity {

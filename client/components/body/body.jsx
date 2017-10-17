@@ -59,11 +59,9 @@ class Body extends React.Component {
 		};
 	}
 
-
 	setCurrentView() {
 		const {
 			active,
-			date,
 			space,
 			onAddClick,
 			onMonthDayClick
@@ -79,7 +77,6 @@ class Body extends React.Component {
 		}
 	}
 
-	
 	render() {
 		const {
 			eventWindow,

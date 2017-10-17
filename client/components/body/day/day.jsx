@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import GeminiScrollbar from 'react-gemini-scrollbar';
 import moment from 'moment';
 
+import calendarInfo from '../../../hoc/calendarinfo.jsx';
 import dragAndDrop from '../../../hoc/dragndrop.jsx';
 
 import './day.scss';
@@ -87,39 +88,6 @@ class Day extends React.Component {
       }, []);
   }
 
-  renderHours() {
-    const eventsWithTime = this.modifiedTimeEvents();
-    const hours = [];
-    const nextDay = moment(0, 'HH').add(1, 'days');
-    let currentTime = moment(0, 'HH');
-    let nextTime = currentTime.clone().add(1, 'hours');
-
-    while(currentTime.isBefore(nextDay)) {
-      const currentEvents = eventsWithTime.filter(event => {
-        return event.timeBegin.isSameOrAfter(currentTime) && event.timeBegin.isBefore(nextTime);
-      });
-
-      hours.push(
-        <li className='day__hour day-hour' key={currentTime.format('HHmm')} data-key={currentTime.format('HHmm')}>
-          <div className='day-hour__time'>
-            {currentTime.format('h:00 A')}
-          </div>
-          <div 
-            className='day-hour__body'
-            data-dd='true'
-            data-time={currentTime.format('MM DD YYYYY HH:mm')}
-          >
-            {currentEvents ? this.getCurrentEvents(currentEvents) : ''}
-          </div>
-        </li>
-      );
-
-      currentTime = nextTime.clone();
-      nextTime.add(1, 'hours');
-    }
-    return hours;
-  }
-
   getCurrentEvents(events) {
     return events.map(event => {
       const { eventDragAndDrop } = this.props;
@@ -156,7 +124,10 @@ class Day extends React.Component {
   }
 
   render() {
-    const { id, space } = this.props;
+    const { id, space, getHours } = this.props;
+    const events = this.modifiedTimeEvents();
+    const hours = getHours(events);
+
     return (
       <div className='body__day day' id='day' data-date={id}>
           <div className='day__scroll-container'>
@@ -177,7 +148,26 @@ class Day extends React.Component {
                 }
               </ul>
               <ul className='day__list'>
-                {this.renderHours()}
+                {
+                  hours.map(hour => (
+                    <li
+                      className='day__hour day-hour'
+                      key={hour.time.format('HHmm')}
+                      data-key={hour.time.format('HHmm')}
+                    >
+                      <div className='day-hour__time'>
+                        {hour.time.format('h:00 A')}
+                      </div>
+                      <div 
+                        className='day-hour__body'
+                        data-dd='true'
+                        data-time={hour.time.format('MM DD YYYYY HH:mm')}
+                      >
+                        {hour.events ? this.getCurrentEvents(hour.events) : ''}
+                      </div>
+                    </li>
+                  ))
+                }
               </ul>
             </GeminiScrollbar>
           </div>
@@ -191,7 +181,8 @@ Day.propTypes = {
   space: PropTypes.object,
   selectedEvent: PropTypes.object,
   events: PropTypes.array,
-  eventDragAndDrop: PropTypes.func
+  eventDragAndDrop: PropTypes.func,
+  getHours: PropTypes.func
 };
 
 const mapStateToProps = state => ({
@@ -200,4 +191,4 @@ const mapStateToProps = state => ({
   groups: state.groups
 });
 
-export default connect(mapStateToProps, null)(dragAndDrop(Day));
+export default connect(mapStateToProps, null)(calendarInfo(dragAndDrop(Day)));

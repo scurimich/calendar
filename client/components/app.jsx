@@ -23,9 +23,22 @@ class App extends React.Component {
     this.getNotifications = this.getNotifications.bind(this);
   }
 
+  componentDidMount() {
+    const { auth, user } = this.props;
+    const token = localStorage.getItem('token');
+
+    if (token && !user.authenticated) return auth(token);
+    this.getUserContent();
+  }
+
   componentDidUpdate() {
+    this.getUserContent();
+  }
+
+  getUserContent() {
     const { user, eventsStatus, events, fetchEvents, groups, fetchGroups, groupsStatus } = this.props;
     const { authenticated } = user;
+
     if (authenticated && !groups.length && !groupsStatus) fetchGroups();
     if (authenticated && !events.length && !eventsStatus) fetchEvents();
   }
@@ -58,7 +71,7 @@ class App extends React.Component {
     if (!token) return <Redirect to='/login' />;
 
     const { getNotifications, removeNotification } = this;
-    const { auth, user, events } = this.props;
+    const { user, events } = this.props;
     const { authenticated } = user;
 
     const waiting = (
@@ -77,8 +90,6 @@ class App extends React.Component {
         <NotificationContainer notifications={getNotifications()} events={events} removeNotification={removeNotification} />
       </div>
     );
-
-    if (token && !authenticated) auth(token);
     
     return authenticated ? application : waiting;
   }

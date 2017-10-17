@@ -1,9 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import MonthDay from './monthday.jsx';
 import MonthEvents from './monthevents.jsx';
 import DragAndDrop from '../../../hoc/dragndrop.jsx';
 import { DAYS_IN_WEEK, TODAY } from '../../../constants/calendar.js';
-import { addNull } from '../../../utils.js';
+
+import './monthweek.scss';
 
 class MonthWeek extends React.Component {
   constructor(props) {
@@ -105,7 +108,7 @@ class MonthWeek extends React.Component {
       eventDragAndDrop
     } = this.props;
     return (
-      <li className='month__item' onClick={this.onWeekClick}>
+      <li className='month__week' onClick={this.onWeekClick}>
         <MonthEvents
           date={firstDay}
           events={events}
@@ -114,7 +117,7 @@ class MonthWeek extends React.Component {
           changeSelectedDate={this.changeSelectedDate}
           eventDragAndDrop={eventDragAndDrop}
         />
-        <ul className='month__week'>
+        <ul className='month__days'>
           {
             this.getWeek().map((day, dayNdx) => {
               return (<MonthDay
@@ -129,5 +132,21 @@ class MonthWeek extends React.Component {
     );
   }
 }
+
+MonthWeek.propTypes = {
+  activeDate: PropTypes.object,
+  space: PropTypes.object,
+  selectedEvent: PropTypes.object,
+  firstDay: PropTypes.object,
+  events: PropTypes.array,
+  weekNdx: PropTypes.number,
+  viewInfo: PropTypes.object,
+  eventDragAndDrop: PropTypes.func,
+  setView: PropTypes.func,
+  setSpace: PropTypes.func,
+  setMiniSpace: PropTypes.func,
+  eventWindowShow: PropTypes.func,
+  setDate: PropTypes.func
+};
 
 export default DragAndDrop(MonthWeek);

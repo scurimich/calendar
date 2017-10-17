@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
@@ -13,7 +14,6 @@ import {
 	setMiniSpace
 } from '../../../actions/space.js';
 import { setView, changeViewInfo } from '../../../actions/view.js';
-import { selectEvent, changeSelectedEvent, removeEventSelection } from '../../../actions/selectedevent.js';
 
 import './month.scss';
 
@@ -59,43 +59,53 @@ class Month extends React.Component {
 			setMiniSpace
 		} = this.props;
 		return (
-			<div className='month'>
-				<header className='month__head weekdays'>
-					<ul className='weekdays__list weekdays__list_month'>
-						{WEEKDAYS.map((day, ndx) => (
-							<li className='weekdays__item weekdays__item_month' key={ndx}>{day}</li>
-						))}
-					</ul>
-				</header>
-				<div className='month__main'>
-					<ul className='month__list'>
-						{
-							this.getMonth().map((firstDay, ndx) => {
-								return <MonthWeek
-									activeDate={date}
-									firstDay={firstDay} 
-									events={this.weekEvents(firstDay)} 
-									space={space} 
-									prevDays={monthInfo.previous.extraDays} 
-									curNumber={monthInfo.current.days} 
-									key={ndx} 
-									weekNdx={ndx}
-									viewInfo={viewInfo}
-									selectedEvent={selectedEvent}
-									setDate={setDate}
-									setSpace={setSpace}
-									setMiniSpace={setMiniSpace}
-									setView={setView}
-									eventWindowShow={eventWindowShow}
-									changeViewInfo={changeViewInfo}
-								/>
-							})
-						}
-					</ul>
-				</div>
+			<div className='body__month month'>
+				<ul className='month__weekdays'>
+					{WEEKDAYS.map((day, ndx) => (
+						<li className='month__weekday' key={ndx}>{day}</li>
+					))}
+				</ul>
+				<ul className='month__weeks'>
+					{
+						this.getMonth().map((firstDay, ndx) => {
+							return <MonthWeek
+								activeDate={date}
+								firstDay={firstDay} 
+								events={this.weekEvents(firstDay)} 
+								space={space} 
+								prevDays={monthInfo.previous.extraDays} 
+								curNumber={monthInfo.current.days} 
+								key={ndx} 
+								weekNdx={ndx}
+								viewInfo={viewInfo}
+								selectedEvent={selectedEvent}
+								setDate={setDate}
+								setSpace={setSpace}
+								setMiniSpace={setMiniSpace}
+								setView={setView}
+								eventWindowShow={eventWindowShow}
+								changeViewInfo={changeViewInfo}
+							/>
+						})
+					}
+				</ul>
 			</div>
 		);
 	}
+}
+
+Month.propTypes = {
+	events: PropTypes.array,
+	date: PropTypes.object,
+	space: PropTypes.object,
+	selectedEvent: PropTypes.object,
+	viewInfo: PropTypes.object,
+	eventWindowShow: PropTypes.func,
+	setDate: PropTypes.func,
+	setSpace: PropTypes.func,
+	setMiniSpace: PropTypes.func,
+	setView: PropTypes.func,
+	changeViewInfo: PropTypes.func
 }
 
 const mapStateToProps = state => ({

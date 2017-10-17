@@ -1,4 +1,4 @@
-import { DAYS_IN_WEEK, DAY, WEEKS_COUNT, MONTH_IN_YEAR } from './constants/calendar.js';
+import { DAYS_IN_WEEK, DAY, NUMBER_OF_WEEKS, MONTH_IN_YEAR } from './constants/calendar.js';
 import moment from 'moment';
 
 export function getMonthInfo(date) {
@@ -27,7 +27,7 @@ export function getFirstDays(monthInfo) {
   const date = extraDays ? monthInfo.previous.days - (extraDays - 1) : monthInfo.current.days;
   let firstDay = moment([year, month, date]);
   const firstDays = [];
-  for (let i = 0; i < WEEKS_COUNT; i++) {
+  for (let i = 0; i < NUMBER_OF_WEEKS; i++) {
     firstDays.push(firstDay);
     firstDay = firstDay.clone().add(DAYS_IN_WEEK, 'days');
   }

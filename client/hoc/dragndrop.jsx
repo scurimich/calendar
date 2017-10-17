@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { selectEvent, changeSelectedEvent, removeEventSelection } from '../actions/selectedevent.js';
@@ -8,7 +9,7 @@ import { eventWindowShow } from '../actions/eventwindow.js';
 
 const dragAndDrop = (Component) => {
 
-  class dndComponent extends React.Component {
+  class DNDComponent extends React.Component {
     constructor(props) {
       super(props);
       this.eventDragAndDrop = this.eventDragAndDrop.bind(this);
@@ -97,6 +98,15 @@ const dragAndDrop = (Component) => {
     }
   };
 
+  DNDComponent.propTypes = {
+    selectedEvent: PropTypes.object,
+    selectEvent: PropTypes.func,
+    updateEvent: PropTypes.func,
+    changeSelectedEvent: PropTypes.func,
+    removeEventSelection: PropTypes.func,
+    eventWindowShow: PropTypes.func
+  };
+
   const mapStateToProps = state => ({
     selectedEvent: state.selected
   });
@@ -109,7 +119,7 @@ const dragAndDrop = (Component) => {
     eventWindowShow
   }, dispatch);
 
-  return connect(mapStateToProps, mapDispatchToProps)(dndComponent);
+  return connect(mapStateToProps, mapDispatchToProps)(DNDComponent);
 };
 
 export default dragAndDrop;

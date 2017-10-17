@@ -1,0 +1,81 @@
+.month {
+  &__day {
+    flex-grow: 0;
+  }
+}
+
+.month-day {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% / 5);
+  min-width: 100px;
+  position: relative;
+  border-top: 1px solid #e6e6e6;
+
+  &:not(:last-child) {
+    border-right: 1px solid #e6e6e6;
+  }
+
+  &_today .month-day__number {
+    box-shadow: inset 0 0 0 1px #1f97fc;
+  }
+
+  &_active .month-day__number {
+    background-color: #1f97fc;
+    color: #fff;
+  }
+
+  &_hover {
+    background-color: #eee;
+  }
+
+  &__head {
+   flex-grow: 0;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+  }
+
+  &__number {
+   margin-left: 5px;
+   font-family: 'Open Sans', sans-serif;
+   font-size: 14px;
+   cursor: pointer;
+  }
+
+  &__add {
+    margin-right: 5px;
+    cursor: pointer;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    line-height: 100%;
+  }
+
+  &__body {
+    flex-grow: 1;
+  }
+
+  &__all {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    border: 1px solid #999;
+    background-color: #fff;
+    z-index: 2;
+
+    &_hidden {
+      display: none;
+    }
+  }
+
+  &__full {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+  }
+
+  &__close {
+    font-size: 9px;
+    cursor: pointer;
+  }
+}

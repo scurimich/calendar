@@ -1,6 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { DAYS_IN_WEEK, DAY, WEEKS_COUNT } from '../../../constants/calendar.js';
 import { getWeekEvents } from '../../../utils.js';
+
+import './monthevents.scss';
 
 export default class MonthEvents extends React.Component {
   constructor(props) {
@@ -19,9 +23,9 @@ export default class MonthEvents extends React.Component {
   }
 
   eventClasses(item) {
-    return `week-events__item
-      week-events__item_size-${item.size}
-      ${item.hidden ? 'week-events__item_hidden' : ''}`;
+    return `month-events__item
+      month-events__item_size-${item.size}
+      ${item.hidden ? 'month-events__item_hidden' : ''}`;
   }
 
   moreClick(date, e) {
@@ -34,15 +38,15 @@ export default class MonthEvents extends React.Component {
     const { lines, extra, changeSelectedDate, selectedEvent } = currentEvents;
     const { eventDragAndDrop } = this.props;
     return (
-      <ul className='month__week-events week-events'>
+      <ul className='month__events month-events'>
         {
           lines.map((line, ndx) => {
             return (
-              <li key={ndx} className='week-events__line' onMouseDown={eventDragAndDrop} >
+              <li key={ndx} className='month-events__line' onMouseDown={eventDragAndDrop} >
               {
                 line.map((item, ndx) => {
                   return !item._id ?
-                    <div className={`week-events__offset week-events__offset_${item.size}`} key={ndx}></div> :
+                    <div className={`month-events__offset month-events__offset_${item.size}`} key={ndx}></div> :
                     <span className={this.eventClasses(item)} key={ndx} id={item._id}> {item.title} </span>
                 })
               }
@@ -50,13 +54,13 @@ export default class MonthEvents extends React.Component {
             );
           })
         }
-        <li className='week-events__line'>
+        <li className='month-events__line'>
           {
             extra.map((item, ndx) => {
               return item.count === 0 ?
-                <div className={'week-events__offset week-events__offset_1'} key={ndx}></div> :
-                <div className={'week-events__more'} key={ndx}>
-                  <span className={'week-events__more-text'} onClick={this.moreClick.bind(this, item.date)}>{`+ ${item.count} more`}</span>
+                <div className={'month-events__offset month-events__offset_1'} key={ndx}></div> :
+                <div className={'month-events__more'} key={ndx}>
+                  <span className={'month-events__more-button'} onClick={this.moreClick.bind(this, item.date)}>{`+ ${item.count} more`}</span>
                 </div>
             })
           }
@@ -65,3 +69,11 @@ export default class MonthEvents extends React.Component {
     );
   }
 }
+
+MonthEvents.propTypes = {
+  events: PropTypes.array,
+  date: PropTypes.object,
+  linesCount: PropTypes.number,
+  changeSelectedDate: PropTypes.func,
+  eventDragAndDrop: PropTypes.func
+};

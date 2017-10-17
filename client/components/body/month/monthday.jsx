@@ -1,5 +1,7 @@
-import React, { PropTypes } from 'react';
-import { MONTH_NAMES } from '../../../constants/calendar.js';
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import './monthday.scss';
 
 class MonthDay extends React.Component {
   constructor(props) {
@@ -44,12 +46,12 @@ class MonthDay extends React.Component {
         onClick={onDayClick}
       >
         <div className='month-day__head'>
-          <span id='day-date' className='month-day__num' onClick={onDateClick}>{date.date()}</span>
+          <span id='day-date' className='month-day__number' onClick={onDateClick}>{date.date()}</span>
           <span id='add-event' className='month-day__add' onClick={onAddClick}>+</span>
         </div>
         <div className='month-day__body' ref={(body) => {this.body = body;}}></div>
-        <div className={`month-day__all-events ${selected ? '' : 'month-day__all-events_hidden'}`}>
-          <span className='month-day__full-date'>{date.format('DD MMMM YYYY')}</span>
+        <div className={`month-day__all${selected ? '' : ' month-day__all_hidden'}`}>
+          <span className='month-day__full'>{date.format('DD MMMM YYYY')}</span>
           <span className='month-day__close' onClick={removeSelectedDate}><i className="fa fa-times" aria-hidden="true"></i></span>
           {
             events.map(event => {
