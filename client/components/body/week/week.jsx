@@ -8,6 +8,7 @@ import moment from 'moment';
 import WeekDay from './weekday.jsx';
 import {DAYS_IN_WEEK, WEEKDAYS} from '../../../constants/calendar.js';
 import { getWeekEvents } from '../../../utils.js';
+import calendarInfo from '../../../hoc/calendarinfo.jsx';
 
 import './Week.scss';
 
@@ -102,28 +103,25 @@ class Week extends React.Component {
     });
   }
 
-  renderSidebar() {
+  getSidebar() {
     const { space } = this.props;
     const nextDay = space.clone().add(1, 'days');
     const halfHours = [];
     let currentTime = space;
 
-    while(currentTime - nextDay < 0) {
-
-      halfHours.push(
-        <li className='week__time' key={currentTime.format('HHmm')}>
-          {currentTime.format('h:00 A')}
-        </li>
-      );
-
-      currentTime = currentTime.clone().add(60, 'minutes');
+    while(currentTime.isBefore(nextDay)) {
+      halfHours.push(currentTime.clone());
+      currentTime.add(60, 'minutes');
     }
 
     return halfHours;
   }
 
   render() {
-    const weekDays = this.getWeek();
+    const { getWeek, space, date } = this.props;
+    const week = getWeek({space, date});
+    const sidebar = this.getSidebar();
+    const alldayEvents = this.renderAllDayEvents();
 
     return (
       <div className='body__week week'>
@@ -138,10 +136,10 @@ class Week extends React.Component {
           <GeminiScrollbar className='week__scrollbar'>
             <div className='week__events week-events'>
               <ul className='week-events__list'>
-                { this.renderAllDayEvents() }
+                { alldayEvents }
                 <ul className='week-events__days'>
                   {
-                    weekDays.map((day, ndx) => (
+                    WEEKDAYS.map((day, ndx) => (
                       <li className='week-events__day' key={ndx}></li>
                     ))
                   }
@@ -150,16 +148,21 @@ class Week extends React.Component {
             </div>
             <div className='week__body'>
               <div className='week__sidebar'>
-                {this.renderSidebar()}
+                {
+                  sidebar.map(hour => (
+                    <li className='week__time' key={hour.format('HHmm')}>
+                      {hour.format('h:00 A')}
+                    </li>
+                  ))
+                }
               </div>
               <ul className='week__main'>
                 {
-                  this.getWeek().map((day, ndx) => {
+                  week.map((day, ndx) => {
                     return (<WeekDay
+                      {...day}
                       events={this.dayEvents(day.date)}
                       key={ndx}
-                      date={day.date}
-                      id={day.id}
                     />);
                   })
                 }
@@ -182,4 +185,4 @@ const mapStateToProps = state => ({
   space: state.space.main
 });
 
-export default connect(mapStateToProps, null)(Week);
+export default connect(mapStateToProps, null)(calendarInfo(Week));

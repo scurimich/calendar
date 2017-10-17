@@ -29,7 +29,6 @@ class Day extends React.Component {
   }
 
   modifiedTimeEvents() {
-    const { events } = this.props;
     const timeEvents = this.getTimeEvents();
     let groups = [];
 
@@ -124,7 +123,7 @@ class Day extends React.Component {
   }
 
   render() {
-    const { id, space, getHours } = this.props;
+    const { id, getHours } = this.props;
     const events = this.modifiedTimeEvents();
     const hours = getHours(events);
 
@@ -177,8 +176,6 @@ class Day extends React.Component {
 }
 
 Day.propTypes = {
-  date: PropTypes.object,
-  space: PropTypes.object,
   selectedEvent: PropTypes.object,
   events: PropTypes.array,
   eventDragAndDrop: PropTypes.func,
@@ -186,8 +183,6 @@ Day.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  date: state.date,
-  space: state.space.main,
   groups: state.groups
 });
 

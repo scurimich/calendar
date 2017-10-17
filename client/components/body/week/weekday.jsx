@@ -11,70 +11,78 @@ class WeekDay extends React.Component {
     super(props);
   }
 
-  renderDay() {
-    const {date, events, id} = this.props;
-    const nextDay = moment(0, 'HH').add(1, 'days');
-    const halfHours = [];
-    let currentTime = moment(0, 'HH');
-    let nextTime = currentTime.clone().add(1, 'hours');
+  getTimeEvents() {
+    const { events } = this.props;
+    return events.filter(event => event.timeBegin && event.timeEnd);
+  }
+
+  getModifiedEvents() {
+    const timeEvents = this.getTimeEvents();
     let groups = [];
 
-    const eventsWithTime = events.filter(event => {
-      return event.timeBegin && event.timeEnd;
-    }).sort((a, b) => {
-      return a.timeBegin - b.timeBegin || b.timeEnd - a.timeEnd;
-    }).reduce((result, event, ndx, arr) => {
-      event = Object.assign({}, event);
-      if (ndx === 0) {
-        groups.push(event.timeEnd);
-        event.horizontal = 0;
-        result.push(event);
-        return result;
-      }
+    return timeEvents.sort((a, b) => a.timeBegin - b.timeBegin || b.timeEnd - a.timeEnd)
+      .reduce((result, event, ndx, arr) => {
+        event = {...event};
+        if (ndx === 0) {
+          groups.push(event.timeEnd);
+          event.horizontal = 0;
+          result.push(event);
+          return result;
+        }
 
-      const find = groups.find((groupTime, groupNdx, groupArr) => {
-        if (event.timeBegin.isSameOrAfter(groupTime)) {
-          event.horizontal = groupNdx;
-          if (groupNdx === 0) {
-            const find = groupArr.find(val => {
-              return event.timeBegin.isBefore(val);
-            });
-            if (!find) {
-              result.push(event);
+        const find = groups.find((groupTime, groupNdx, groupArr) => {
+          if (event.timeBegin.isSameOrAfter(groupTime)) {
+            event.horizontal = groupNdx;
+            if (groupNdx === 0) {
+              const find = groupArr.find(val => {
+                return event.timeBegin.isBefore(val);
+              });
+              if (!find) {
+                result.push(event);
+                result.map(resEvent => {
+                  if (!resEvent.horizontalSize) resEvent.horizontalSize = groupArr.length;
+                  return resEvent;
+                });
+                groups = [event.timeEnd];
+                return true;
+              }
+            }
+            groupArr[groupNdx] = Math.max(groupArr[groupNdx], event.timeEnd);
+            result.push(event);
+            if (ndx === arr.length - 1) {
               result.map(resEvent => {
                 if (!resEvent.horizontalSize) resEvent.horizontalSize = groupArr.length;
                 return resEvent;
               });
-              groups = [event.timeEnd];
-              return true;
             }
+            return true;
           }
-          groupArr[groupNdx] = Math.max(groupArr[groupNdx], event.timeEnd);
-          result.push(event);
-          if (ndx === arr.length - 1) {
-            result.map(resEvent => {
-              if (!resEvent.horizontalSize) resEvent.horizontalSize = groupArr.length;
-              return resEvent;
-            });
+          if (groupNdx === groupArr.length - 1) {
+            event.horizontal = groupNdx + 1;
+            groupArr.push(event.timeEnd);
+            result.push(event);
+            if (ndx === arr.length - 1) {
+              result.map(resEvent => {
+                if (!resEvent.horizontalSize) resEvent.horizontalSize = groupArr.length;
+                return resEvent;
+              });
+            }
+            return true;
           }
-          return true;
-        }
-        if (groupNdx === groupArr.length - 1) {
-          event.horizontal = groupNdx + 1;
-          groupArr.push(event.timeEnd);
-          result.push(event);
-          if (ndx === arr.length - 1) {
-            result.map(resEvent => {
-              if (!resEvent.horizontalSize) resEvent.horizontalSize = groupArr.length;
-              return resEvent;
-            });
-          }
-          return true;
-        }
-      });
+        });
 
-      return result;
-    }, []);
+        return result;
+      }, []);
+  }
+
+  renderDay() {
+    const {id} = this.props;
+    const nextDay = moment(0, 'HH').add(1, 'days');
+    const halfHours = [];
+    let currentTime = moment(0, 'HH');
+    let nextTime = currentTime.clone().add(1, 'hours');
+
+    const eventsWithTime = this.getModifiedEvents();
 
     while(currentTime.isBefore(nextDay)) {
       const currentEvents = eventsWithTime.filter(event => {

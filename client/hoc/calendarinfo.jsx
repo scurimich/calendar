@@ -1,20 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import moment from 'moment';
 
 import { MONTH_IN_YEAR, NUMBER_OF_WEEKS, DAYS_IN_WEEK } from '../constants/calendar.js';
 
 const calendarInfo = (Component) => {
 
-  class CalendarInfoComponent extends React.Component {
+  return class CalendarInfoComponent extends React.Component {
     constructor(props) {
       super(props);
+
+      this.getWeeks = this.getWeeks.bind(this);
+      this.getWeek = this.getWeek.bind(this);
     }
 
-    getMonthInfo() {
-      const { space } = this.props;
+    getMonthInfo(space) {
       const current = {
         number: space.month(),
         days: space.clone().add(1, 'month').date(0).date(),
@@ -29,47 +28,45 @@ const calendarInfo = (Component) => {
       }
 
       return {
-        current,
-        previous
+        previous,
+        current
       };
     }
 
-    getWeeks() {
-      const monthInfo = this.getMonthInfo();
-      const extraDays = monthInfo.previous.extraDays;
-      const year = extraDays ? monthInfo.previous.year : monthInfo.current.year;
-      const month = extraDays ? monthInfo.previous.number : monthInfo.current.number;
-      const date = extraDays ? monthInfo.previous.days - (extraDays - 1) : monthInfo.current.days;
+    getWeeks(space) {
+      const info = this.getMonthInfo(space);
+      const extraDays = info.previous.extraDays;
+      const year = extraDays ? info.previous.year : info.current.year;
+      const month = extraDays ? info.previous.number : info.current.number;
+      const date = extraDays ? info.previous.days - (extraDays - 1) : info.current.days;
       const weeks = [];
       let firstDay = moment([year, month, date]);
 
       for (let i = 0; i < NUMBER_OF_WEEKS; i++) {
-        firstDays.push(firstDay.clone());
+        weeks.push(firstDay.clone());
         firstDay.add(DAYS_IN_WEEK, 'days');
       }
 
       return weeks;
     }
 
-    getWeek() {
-      const weeks = this.getWeeks();
-      const { space, date } = this.props;
-      
-      return weeks.map(firstDay => {
-        const days = [];
-        let oneDay = firstDay;
+    getWeek({space, date}) {
+      const days = [];
+      const day = space.day() === 0 ? 6 : space.day() - 1;
+      let oneDay = day == 1 ? space : space.clone().subtract(day, 'days');
 
-        for (let i = 0; i < DAYS_IN_WEEK; i++) {
-          days.push({
-            date: oneDay.clone(),
-            currentDate: oneDay.isSame(date),
-            currentSpace: space.month() === oneDay.month()
-          });
-          oneDay.add(1, 'days');
-        }
+      for (let i = 0; i < DAYS_IN_WEEK; i++) {
+        days.push({
+          date: oneDay.clone(),
+          currentDate: oneDay.isSame(date),
+          currentSpace: space.month() === oneDay.month(),
+          id: oneDay.format('YYYY,MM,DD'),
+          weekend: oneDay.day() === 0 || oneDay.day() === 6
+        });
+        oneDay.add(1, 'days');
+      }
 
-        return days;
-      });
+      return days;
     }
 
     getHours(events) {
@@ -97,12 +94,11 @@ const calendarInfo = (Component) => {
     }
 
     render() {
-      const {getMonthInfo, getWeeks, getWeek, getHours} = this;
+      const {getWeeks, getWeek, getHours} = this;
 
       return (
         <Component
           {...this.props}
-          getMonthInfo={getMonthInfo}
           getWeeks={getWeeks}
           getWeek={getWeek}
           getHours={getHours}
@@ -110,18 +106,6 @@ const calendarInfo = (Component) => {
       );
     }
   };
-
-  CalendarInfoComponent.propTypes = {
-    space: PropTypes.object,
-    date: PropTypes.object
-  };
-
-  const mapStateToProps = state => ({
-    space: state.space,
-    date: state.date
-  });
-
-  return connect(mapStateToProps, null)(CalendarInfoComponent);
 };
 
 export default calendarInfo;
