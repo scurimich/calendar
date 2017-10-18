@@ -20,36 +20,6 @@ export function getMonthInfo(date) {
   };
 }
 
-export function getFirstDays(monthInfo) {
-  const extraDays = monthInfo.previous.extraDays;
-  const year = extraDays ? monthInfo.previous.year : monthInfo.current.year;
-  const month = extraDays ? monthInfo.previous.number : monthInfo.current.number;
-  const date = extraDays ? monthInfo.previous.days - (extraDays - 1) : monthInfo.current.days;
-  let firstDay = moment([year, month, date]);
-  const firstDays = [];
-  for (let i = 0; i < NUMBER_OF_WEEKS; i++) {
-    firstDays.push(firstDay);
-    firstDay = firstDay.clone().add(DAYS_IN_WEEK, 'days');
-  }
-  return firstDays;
-}
-
-export function getWeek({ firstDay, date, space }) {
-  const week = [];
-  let oneDay = firstDay;
-
-  for (let i = 0; i < DAYS_IN_WEEK; i++) {
-    week.push({
-      date: oneDay,
-      currentDate: date - oneDay === 0,
-      currentSpace: space.month() === oneDay.month()
-    });
-    oneDay = oneDay.clone().add(1, 'days');
-  }
-
-  return week;
-}
-
 export function sortEvents(a, b) {
   return a.dateBegin - b.dateBegin || b.duration - a.duration;
 }

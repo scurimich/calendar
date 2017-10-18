@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 
-import { MONTH_IN_YEAR, NUMBER_OF_WEEKS, DAYS_IN_WEEK } from '../constants/calendar.js';
+import { MONTH_IN_YEAR, NUMBER_OF_WEEKS, DAYS_IN_WEEK, TODAY } from '../constants/calendar.js';
 
 const calendarInfo = (Component) => {
 
@@ -50,18 +50,23 @@ const calendarInfo = (Component) => {
       return weeks;
     }
 
-    getWeek({space, date}) {
+    getWeek({space, date, events = [], index}) {
+      if (index === 0) space.month(space.month() + 1).date(1);
+
       const days = [];
       const day = space.day() === 0 ? 6 : space.day() - 1;
       let oneDay = day == 1 ? space : space.clone().subtract(day, 'days');
 
       for (let i = 0; i < DAYS_IN_WEEK; i++) {
+        const currentEvents = events.filter(event => (event.dateBegin.isSameOrBefore(oneDay) && event.dateEnd.isSameOrAfter(oneDay)));
         days.push({
           date: oneDay.clone(),
+          today: oneDay.isSame(TODAY),
           currentDate: oneDay.isSame(date),
           currentSpace: space.month() === oneDay.month(),
           id: oneDay.format('YYYY,MM,DD'),
-          weekend: oneDay.day() === 0 || oneDay.day() === 6
+          weekend: oneDay.day() === 0 || oneDay.day() === 6,
+          events: currentEvents
         });
         oneDay.add(1, 'days');
       }
@@ -94,7 +99,7 @@ const calendarInfo = (Component) => {
     }
 
     render() {
-      const {getWeeks, getWeek, getHours} = this;
+      const {getWeeks, getWeek, getHours, getMonthInfo} = this;
 
       return (
         <Component
@@ -102,6 +107,7 @@ const calendarInfo = (Component) => {
           getWeeks={getWeeks}
           getWeek={getWeek}
           getHours={getHours}
+          getMonthInfo={getMonthInfo}
         />
       );
     }

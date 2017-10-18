@@ -11,51 +11,18 @@ import './monthweek.scss';
 class MonthWeek extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       selected: null
     };
+
+    this.onDateClick = this.onDateClick.bind(this);
+    this.getCellHeight = this.getCellHeight.bind(this);
     this.changeSelectedDate = this.changeSelectedDate.bind(this);
   }
 
   changeSelectedDate(date, e) {
     this.setState({ selected: date });
-  }
-
-  getWeek() {
-    const { firstDay, activeDate, space, selectedEvent, events } = this.props;
-    const week = [];
-    const year = firstDay.year();
-    const month = firstDay.month();
-    const day = firstDay.day() == 0 ? 6 : firstDay.day() - 1;
-    let oneDay = day == 1 ? firstDay
-      : firstDay.clone().subtract(day, 'days');
-
-    for (let i = 1; i <= DAYS_IN_WEEK; oneDay = oneDay.clone().add(1, 'days'), i++) {
-      const currentEvents = events.filter(event => (event.dateBegin <= oneDay && event.dateEnd >= oneDay));
-      const currentMonth = oneDay.month() + 1;
-      let currentDay = oneDay.format('YYYY,MM,DD');
-
-      week.push({
-        date: oneDay,
-        selected: this.state.selected - oneDay === 0,
-        events: currentEvents,
-        id: currentDay,
-        current: !Boolean(activeDate - oneDay),
-        today: !Boolean(TODAY - oneDay),
-        prevMonth: currentMonth < space.month() + 1,
-        nextMonth: currentMonth > space.month() + 1,
-        hover: selectedEvent ?
-          Boolean(oneDay.isSameOrAfter(selectedEvent.dateBegin)
-            && selectedEvent.dateEnd.isAfter(oneDay))
-          : null,
-        onDateClick: this.onDateClick.bind(this, oneDay),
-        onAddClick: this.onAddClick.bind(this, oneDay),
-        onDayClick: this.onDayClick.bind(this, oneDay),
-        getCellHeight: this.getCellHeight.bind(this),
-        changeSelectedDate: this.changeSelectedDate.bind(this)
-      });
-    }
-    return week;
   }
 
   onAddClick(date, e) {
@@ -101,31 +68,45 @@ class MonthWeek extends React.Component {
 
   render() {
     const {
+      activeDate,
       firstDay,
       events,
       weekNdx,
       viewInfo,
-      eventDragAndDrop
+      eventDragAndDrop,
+      selectedEvent,
+      getWeek
     } = this.props;
+    const { selected } = this.state;
+    const { onDateClick, onAddClick, onDayClick, getCellHeight, changeSelectedDate } = this;
+    const week = getWeek({space:firstDay, date: activeDate, events});
+
     return (
-      <li className='month__week' onClick={this.onWeekClick}>
+      <li className='month__week'>
         <MonthEvents
           date={firstDay}
           events={events}
           linesCount={viewInfo.cellSize}
           ndx={weekNdx}
-          changeSelectedDate={this.changeSelectedDate}
+          changeSelectedDate={changeSelectedDate}
           eventDragAndDrop={eventDragAndDrop}
         />
-        <ul className='month__days'>
+         <ul className='month__days'>
           {
-            this.getWeek().map((day, dayNdx) => {
-              return (<MonthDay
+            week.map((day, ndx) => (
+              <MonthDay 
                 {...day}
-                key={dayNdx}
+                key={ndx}
+                selected={selected && selected.isSame(day.date)}
+                hover={selectedEvent && day.date.isSameOrAfter(selectedEvent.dateBegin) && selectedEvent.dateEnd.isAfter(day.date)}
+                onDateClick={onDateClick}
+                onAddClick={onAddClick.bind(this, day.date)}
+                onDayClick={onDayClick.bind(this, day.date)}
+                getCellHeight={getCellHeight}
+                changeSelectedDate={changeSelectedDate}
                 eventDragAndDrop={eventDragAndDrop}
-              />);
-            })
+              />
+            ))
           }
         </ul>
       </li>
@@ -135,7 +116,6 @@ class MonthWeek extends React.Component {
 
 MonthWeek.propTypes = {
   activeDate: PropTypes.object,
-  space: PropTypes.object,
   selectedEvent: PropTypes.object,
   firstDay: PropTypes.object,
   events: PropTypes.array,
@@ -146,7 +126,9 @@ MonthWeek.propTypes = {
   setSpace: PropTypes.func,
   setMiniSpace: PropTypes.func,
   eventWindowShow: PropTypes.func,
-  setDate: PropTypes.func
+  setDate: PropTypes.func,
+  changeViewInfo: PropTypes.func,
+  getWeek: PropTypes.func
 };
 
 export default DragAndDrop(MonthWeek);

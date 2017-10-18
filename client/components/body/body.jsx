@@ -71,9 +71,9 @@ class Body extends React.Component {
 		const events = this.eventsFilter(this.monthInfo);
 		switch(active) {
 			case 'Day': return <Day events={events.day} />;
-			case 'Week': return <Week events={events.week} monthInfo={this.monthInfo} />;
+			case 'Week': return <Week events={events.week} />;
 			case 'Year': return <Year events={events.year} />;
-			default: return <Month events={events.month} monthInfo={this.monthInfo} />;
+			default: return <Month events={events.month} />;
 		}
 	}
 

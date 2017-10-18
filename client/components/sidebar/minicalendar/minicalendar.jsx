@@ -6,8 +6,6 @@ import { bindActionCreators } from 'redux';
 import MiniMonth from './minimonth.jsx';
 import CurrentMonth from './currentmonth.jsx';
 
-import { getMonthInfo } from '../../../utils.js';
-
 import {
 	setDate,
 	setSpace,
@@ -32,7 +30,6 @@ class MiniCalendar extends React.Component {
 
 	render() {
 		const { date, space, incrMiniSpace, decrMiniSpace, setSpace } = this.props;
-		const monthInfo = getMonthInfo(space.mini);
 		return (
 			<div className="sidebar__calendar">
 				<CurrentMonth
@@ -42,8 +39,7 @@ class MiniCalendar extends React.Component {
 				/>
 				<MiniMonth
 					date={date}
-					miniSpace={space.mini}
-					monthInfo={monthInfo}
+					space={space.mini}
 					setCurrentDate={this.setCurrentDate}
 				/>
 			</div>

@@ -6,42 +6,15 @@ import GeminiScrollbar from 'react-gemini-scrollbar';
 import moment from 'moment';
 
 import WeekDay from './weekday.jsx';
-import {DAYS_IN_WEEK, WEEKDAYS} from '../../../constants/calendar.js';
+import { WEEKDAYS } from '../../../constants/calendar.js';
 import { getWeekEvents } from '../../../utils.js';
 import calendarInfo from '../../../hoc/calendarinfo.jsx';
 
-import './Week.scss';
+import './week.scss';
 
 class Week extends React.Component {
   constructor(props) {
     super(props);
-    const { date, monthInfo } = this.props;
-    this.prevDays = monthInfo.previous.extraDays;
-    this.curNumber = monthInfo.current.days;
-  }
-
-  getWeek() {
-    const { space, date } = this.props;
-    const { prevDays, curNumber } = this;
-    const week = [];
-    const year = space.year();
-    const month = space.month();
-    const day = space.day() == 0 ? 6 : space.day() - 1;
-    let oneDay = day == 1 ? space : space.clone().subtract(day, 'days');
-
-    for (let i = 1; i <= DAYS_IN_WEEK; oneDay.clone().add(1, 'days'), i++) {
-      const currentDay = oneDay.format('YYYY,MM,DD');
-      let currentHover;
-      const current = oneDay - date === 0;
-
-      week.push({
-        date: oneDay,
-        id: currentDay,
-        current: current
-      });
-    }
-
-    return week;
   }
 
   dayEvents(date) {

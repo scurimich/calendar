@@ -5,7 +5,8 @@ import { bindActionCreators } from 'redux';
 import moment from 'moment';
 
 import MonthWeek from './monthweek.jsx';
-import { WEEKDAYS, WEEKS_COUNT, DAYS_IN_WEEK} from '../../../constants/calendar.js';
+import { WEEKDAYS, NUMBER_OF_WEEKS, DAYS_IN_WEEK} from '../../../constants/calendar.js';
+import calendarInfo from '../../../hoc/calendarinfo.jsx';
 
 import { eventWindowShow } from '../../../actions/eventwindow.js';
 import {
@@ -20,17 +21,6 @@ import './month.scss';
 class Month extends React.Component {
 	constructor(props) {
 		super(props);
-	}
-
-	getMonth() {
-		const { space, monthInfo } = this.props;
-		let firstDay = moment([monthInfo.current.year, monthInfo.current.number]).date(1 - (monthInfo.previous.extraDays));
-		const monthArray = [];
-
-		for (let i = 0; i < WEEKS_COUNT; i++, firstDay = firstDay.clone().add(DAYS_IN_WEEK, 'days')) {
-			monthArray.push(firstDay);
-		}
-		return monthArray;
 	}
 
 	weekEvents(weekBegin) {
@@ -49,15 +39,18 @@ class Month extends React.Component {
 			date,
 			space,
 			selectedEvent,
-			monthInfo,
 			viewInfo,
 			eventWindowShow,
 			setView,
 			changeViewInfo,
 			setDate,
 			setSpace,
-			setMiniSpace
+			setMiniSpace,
+			getWeeks,
+			getWeek
 		} = this.props;
+		const weeks = getWeeks(space);
+
 		return (
 			<div className='body__month month'>
 				<ul className='month__weekdays'>
@@ -67,14 +60,11 @@ class Month extends React.Component {
 				</ul>
 				<ul className='month__weeks'>
 					{
-						this.getMonth().map((firstDay, ndx) => {
+						weeks.map((firstDay, ndx) => {
 							return <MonthWeek
 								activeDate={date}
 								firstDay={firstDay} 
 								events={this.weekEvents(firstDay)} 
-								space={space} 
-								prevDays={monthInfo.previous.extraDays} 
-								curNumber={monthInfo.current.days} 
 								key={ndx} 
 								weekNdx={ndx}
 								viewInfo={viewInfo}
@@ -85,6 +75,7 @@ class Month extends React.Component {
 								setView={setView}
 								eventWindowShow={eventWindowShow}
 								changeViewInfo={changeViewInfo}
+								getWeek={getWeek}
 							/>
 						})
 					}
@@ -124,4 +115,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 	changeViewInfo,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Month);
+export default connect(mapStateToProps, mapDispatchToProps)(calendarInfo(Month));
