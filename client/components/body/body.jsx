@@ -26,35 +26,25 @@ import './body.scss';
 
 class Body extends React.Component {
 
-	eventsFilter(info) {
+	eventsFilter() {
 		const { events, space } = this.props;
-		const date = space.main;
-		const day = !date.day() ? 6 : date.day() - 1;
-		const next = date.clone().add(1, 'days');
+		const day = !space.day() ? 6 : space.day() - 1;
+		const next = space.clone().add(1, 'days');
 		const prevDays = this.monthInfo.previous.extraDays;
 		const nextDays = DAYS_IN_MONTH_SPACE - (this.monthInfo.current.days + prevDays);
-		const monthBegin = date.clone().date(1 - prevDays);
-		const monthEnd = date.clone().add(1, 'months').date(1 + nextDays);
-		const weekBegin = date.clone().subtract(day, 'days');
-		const weekEnd = date.clone().add(7 - day, 'days');
+		const monthBegin = space.clone().date(1 - prevDays);
+		const monthEnd = space.clone().add(1, 'months').date(1 + nextDays);
+		const weekBegin = space.clone().subtract(day, 'days');
+		const weekEnd = space.clone().add(7 - day, 'days');
 
 		return {
 			year: events.filter(event => {
-				return (event.dateBegin.year() == info.current.year
-					|| event.dateEnd.year() == info.current.year);
+				return (event.dateBegin.year() == space.year()
+					|| event.dateEnd.year() == space.year());
 			}),
 			month: events.filter(event => {
 				return (event.dateBegin.isSameOrAfter(monthBegin) && event.dateBegin.isBefore(monthEnd))
 					|| (event.dateEnd.isSameOrAfter(monthBegin) && event.dateEnd.isBefore(monthEnd));
-			}),
-			week: events.filter(event => {
-				return (event.dateBegin.isSameOrAfter(weekBegin) && event.dateBegin.isBefore(weekEnd))
-					|| (event.dateEnd.isSameOrAfter(weekBegin) && event.dateEnd.isBefore(weekEnd));
-			}),
-			day: events.filter(event => {
-				return event.dateBegin.isSame(date)
-					|| (event.dateBegin.isSameOrBefore(date) && event.dateEnd.isSameOrAfter(date))
-					&& (event.periodic ? event.week[day] : true);
 			})
 		};
 	}
@@ -66,14 +56,14 @@ class Body extends React.Component {
 			onAddClick,
 			onMonthDayClick
 		} = this.props;
-		const spaceDate = space.main.clone();
+		const spaceDate = space.clone();
 		this.monthInfo = getMonthInfo(spaceDate);
-		const events = this.eventsFilter(this.monthInfo);
+		const events = this.eventsFilter();
 		switch(active) {
-			case 'Day': return <Day events={events.day} />;
-			case 'Week': return <Week events={events.week} />;
-			case 'Year': return <Year events={events.year} />;
-			default: return <Month events={events.month} />;
+			case 'Day': return <Day />;
+			case 'Week': return <Week />;
+			case 'Year': return <Year />;
+			default: return <Month space={space}/>;
 		}
 	}
 
@@ -132,7 +122,7 @@ const mapStateToProps = state => ({
 	eventWindow: state.eventWindow,
 	groups: state.groups,
 	groupWindow: state.groupWindow,
-	space: state.space,
+	space: state.space.main,
 	selectedEvent: state.selected
 });
 

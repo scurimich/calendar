@@ -1,10 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import MonthDay from './monthday.jsx';
 import MonthEvents from './monthevents.jsx';
-import DragAndDrop from '../../../hoc/dragndrop.jsx';
-import { DAYS_IN_WEEK, TODAY } from '../../../constants/calendar.js';
+import dragAndDrop from '../../../hoc/dragndrop.jsx';
+import events from '../../../hoc/events.jsx';
+
+import { eventWindowShow } from '../../../actions/eventwindow.js';
+import {
+  setDate,
+  setSpace,
+  setMiniSpace
+} from '../../../actions/space.js';
+import { setView, changeViewInfo } from '../../../actions/view.js';
 
 import './monthweek.scss';
 
@@ -18,6 +28,8 @@ class MonthWeek extends React.Component {
 
     this.onDateClick = this.onDateClick.bind(this);
     this.getCellHeight = this.getCellHeight.bind(this);
+    this.getLineHeight = this.getLineHeight.bind(this);
+    this.getLinesNumber = this.getLinesNumber.bind(this);
     this.changeSelectedDate = this.changeSelectedDate.bind(this);
   }
 
@@ -33,8 +45,8 @@ class MonthWeek extends React.Component {
       allDay: true,
       title: '',
       description: '',
-      dateBegin: date,
-      dateEnd: date,
+      dateBegin: date.format('YYYY-MM-DD'),
+      dateEnd: date.format('YYYY-MM-DD'),
       timeBegin: null,
       timeEnd: null,
       periodic: false,
@@ -46,7 +58,7 @@ class MonthWeek extends React.Component {
   }
 
   onDayClick(date) {
-    const {setDate} = this.props;
+    const { setDate } = this.props;
     setDate(date);
   }
 
@@ -61,35 +73,48 @@ class MonthWeek extends React.Component {
   getCellHeight(cell) {
     if (!cell) return;
     const { changeViewInfo } = this.props;
-    const LINE_HEIGHT = 21;
-    const height = cell.clientHeight - LINE_HEIGHT;
-    changeViewInfo({ cellSize: Math.floor(height / LINE_HEIGHT) });
+    changeViewInfo({ cellSize: cell.clientHeight });
+  }
+
+  getLineHeight(line) {
+    if (!line) return;
+    const { changeViewInfo } = this.props;
+    changeViewInfo({ lineSize: line.clientHeight });
+  }
+
+  getLinesNumber() {
+    const { cellSize, lineSize } = this.props.viewInfo;
+    return isFinite(Math.floor((cellSize - lineSize) / lineSize)) && Math.floor((cellSize - lineSize) / lineSize);
   }
 
   render() {
     const {
-      activeDate,
+      date,
       firstDay,
       events,
       weekNdx,
-      viewInfo,
       eventDragAndDrop,
       selectedEvent,
-      getWeek
+      getWeek,
+      getWeekLines,
+      filterWeek
     } = this.props;
     const { selected } = this.state;
-    const { onDateClick, onAddClick, onDayClick, getCellHeight, changeSelectedDate } = this;
-    const week = getWeek({space:firstDay, date: activeDate, events});
+    const { onDateClick, onAddClick, onDayClick, getCellHeight, changeSelectedDate, getLineHeight, getLinesNumber } = this;
+    const filteredEvents = filterWeek({weekBegin: firstDay, events});
+    const week = getWeek({space:firstDay, date, filteredEvents});
 
     return (
       <li className='month__week'>
         <MonthEvents
           date={firstDay}
-          events={events}
-          linesCount={viewInfo.cellSize}
+          events={filteredEvents}
+          linesCount={getLinesNumber() || 0}
           ndx={weekNdx}
           changeSelectedDate={changeSelectedDate}
           eventDragAndDrop={eventDragAndDrop}
+          getWeekLines={getWeekLines}
+          getLineHeight={getLineHeight}
         />
          <ul className='month__days'>
           {
@@ -115,7 +140,7 @@ class MonthWeek extends React.Component {
 }
 
 MonthWeek.propTypes = {
-  activeDate: PropTypes.object,
+  date: PropTypes.object,
   selectedEvent: PropTypes.object,
   firstDay: PropTypes.object,
   events: PropTypes.array,
@@ -128,7 +153,26 @@ MonthWeek.propTypes = {
   eventWindowShow: PropTypes.func,
   setDate: PropTypes.func,
   changeViewInfo: PropTypes.func,
-  getWeek: PropTypes.func
+  getWeek: PropTypes.func,
+  getWeekLines: PropTypes.func,
+  filterWeek: PropTypes.func
 };
 
-export default DragAndDrop(MonthWeek);
+const mapStateToProps = state => ({
+  date: state.date,
+  events: state.events,
+  space: state.space.main,
+  selectedEvent: state.selected,
+  viewInfo: state.viewInfo
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  eventWindowShow,
+  setDate,
+  setSpace,
+  setMiniSpace,
+  setView,
+  changeViewInfo,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(events(dragAndDrop(MonthWeek)));

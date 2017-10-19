@@ -7,8 +7,8 @@ import moment from 'moment';
 
 import WeekDay from './weekday.jsx';
 import { WEEKDAYS } from '../../../constants/calendar.js';
-import { getWeekEvents } from '../../../utils.js';
 import calendarInfo from '../../../hoc/calendarinfo.jsx';
+import events from '../../../hoc/events.jsx';
 
 import './week.scss';
 
@@ -17,84 +17,34 @@ class Week extends React.Component {
     super(props);
   }
 
-  dayEvents(date) {
-    const { events } = this.props;
-    return events.filter(event => {
-      return event.duration === 0
-        && (event.dateBegin - date === 0);
-    });
-  }
-
-  weekEvents() {
-    const { events } = this.props;
-    return events.filter(event => {
-      return event.duration > 0;
-    });
-  }
-
-  renderAllDayEvents() {
-    const { space } = this.props;
+  getAllDayEvents(events) {
+    const { space, getWeekLines, filterDays } = this.props;
     const day = space.day() == 0 ? 6 : space.day() - 1;
-    const firstDay = day == 1 ? space : space.clone().subtract(day, 'days');
-    const weekEvents = getWeekEvents(this.weekEvents(), firstDay);
-    const lines = (weekEvents && weekEvents.lines) || [];
-    console.log(lines)
-    return lines.map((line, ndx) => {
-      return (
-        <li key={ndx} className='week-events__line'>
-          {
-            line.map((item, ndx) => {
-              const offset = (
-                <span className={`week-events__offset week-events__offset_${item.size}`} key={ndx}></span>
-              );
-
-              if (!item._id) 
-                return offset;
-
-              const color = item.group && item.group.color;
-              const time = item.allDay ? '' : `${item.timeBegin.format('HH:mm')} - ${item.timeEnd.format('HH:mm')}`;
-
-              return (
-                <div
-                  className={`week-events__item week-events__item_size-${item.size}${item.hidden ? ' week-events__item_hidden' : ''} week-event`} 
-                  key={ndx}
-                  id={item._id}
-                >
-                  <div
-                    className='week-event__background'
-                    style={ color ? {'backgroundColor': color} : {} }
-                  ></div>
-                  <span className='week-event__title'>{item.title}</span>
-                  <span className='week-event__description'>{item.description}</span>
-                  <span className='week-event__time'>{time}</span>
-                </div>
-              );
-            })
-          }
-        </li>
-      );
-    });
+    const firstDay = day == 1 ? space.clone() : space.clone().subtract(day, 'days');
+    const weekEvents = getWeekLines({data: filterDays(events), date: firstDay});
+    return (weekEvents && weekEvents.lines) || [];
   }
 
   getSidebar() {
     const { space } = this.props;
     const nextDay = space.clone().add(1, 'days');
     const halfHours = [];
-    let currentTime = space;
+    let currentTime = space.clone();
 
     while(currentTime.isBefore(nextDay)) {
       halfHours.push(currentTime.clone());
-      currentTime.add(60, 'minutes');
+      currentTime.add(1, 'hours');
     }
 
     return halfHours;
   }
 
   render() {
-    const { getWeek, space, date } = this.props;
+    const { events, getWeek, space, date, filterDay, filterWeek, getHours, setEventsPositions } = this.props;
+    const filteredEvents = filterWeek({events, weekBegin: date});
     const week = getWeek({space, date});
     const sidebar = this.getSidebar();
-    const alldayEvents = this.renderAllDayEvents();
+    const lines = this.getAllDayEvents(filteredEvents);
 
     return (
       <div className='body__week week'>
@@ -109,14 +59,44 @@ class Week extends React.Component {
           <GeminiScrollbar className='week__scrollbar'>
             <div className='week__events week-events'>
               <ul className='week-events__list'>
-                { alldayEvents }
-                <ul className='week-events__days'>
-                  {
-                    WEEKDAYS.map((day, ndx) => (
-                      <li className='week-events__day' key={ndx}></li>
-                    ))
-                  }
-                </ul>
+                {
+                  lines.map((line, ndx) => (
+                    <li key={ndx} className='week-events__line'>
+                      {
+                        line.map((item, ndx) => {
+                          if (!item._id) 
+                            return <span className={`week-events__offset week-events__offset_${item.size}`} key={ndx}></span>
+
+                          const color = item.group && item.group.color;
+                          const time = item.allDay ? '' : `${item.timeBegin.format('HH:mm')} - ${item.timeEnd.format('HH:mm')}`;
+
+                          return (
+                            <div
+                              className={`week-events__item week-events__item_size-${item.size}${item.hidden ? ' week-events__item_hidden' : ''} week-event`} 
+                              key={ndx}
+                              id={item._id}
+                            >
+                              <div
+                                className='week-event__background'
+                                style={ color ? {'backgroundColor': color} : {} }
+                              ></div>
+                              <span className='week-event__title'>{item.title}</span>
+                              <span className='week-event__description'>{item.description}</span>
+                              <span className='week-event__time'>{time}</span>
+                            </div>
+                          );
+                        })
+                      }
+                    </li>
+                  ))
+                }
+              </ul>
+              <ul className='week-events__days'>
+                {
+                  WEEKDAYS.map((day, ndx) => (
+                    <li className='week-events__day' key={ndx}></li>
+                  ))
+                }
               </ul>
             </div>
             <div className='week__body'>
@@ -134,8 +114,10 @@ class Week extends React.Component {
                   week.map((day, ndx) => {
                     return (<WeekDay
                       {...day}
-                      events={this.dayEvents(day.date)}
+                      events={filterDay({date: day.date, events: filteredEvents})}
                       key={ndx}
+                      getHours={getHours}
+                      setEventsPositions={setEventsPositions}
                     />);
                   })
                 }
@@ -149,13 +131,22 @@ class Week extends React.Component {
 }
 
 Week.propTypes = {
+  events: PropTypes.array,
   date: PropTypes.object,
-  space: PropTypes.object
+  space: PropTypes.object,
+  getWeekLines: PropTypes.func,
+  getWeek: PropTypes.func,
+  filterWeek: PropTypes.func,
+  filterDay: PropTypes.func,
+  filterDays: PropTypes.func,
+  getHours: PropTypes.func,
+  setEventsPositions: PropTypes.func
 };
 
 const mapStateToProps = state => ({
   date: state.date,
-  space: state.space.main
+  space: state.space.main,
+  events: state.events
 });
 
-export default connect(mapStateToProps, null)(calendarInfo(Week));
+export default connect(mapStateToProps, null)(calendarInfo(events(Week)));

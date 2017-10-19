@@ -4,7 +4,6 @@ import moment from 'moment';
 import { MONTH_IN_YEAR, NUMBER_OF_WEEKS, DAYS_IN_WEEK, TODAY } from '../constants/calendar.js';
 
 const calendarInfo = (Component) => {
-
   return class CalendarInfoComponent extends React.Component {
     constructor(props) {
       super(props);

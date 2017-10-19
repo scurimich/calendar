@@ -11,6 +11,7 @@ const initialSpace = {
   mini: TODAY
 }
 
+
 export default function space(state = initialSpace, action) {
   switch (action.type) {
     case CHANGE_SPACE:

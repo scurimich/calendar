@@ -1,0 +1,59 @@
+.day-hour {
+  &__event {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.hour-event {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  padding: 4px 8px;
+  width: 100%;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+
+  &__background {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: .8;
+    z-index: -1;
+    background-color: #e6e6e6;
+  }
+
+  &__title {
+    flex-shrink: 0;
+    margin-right: 8px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #323232;
+  }
+
+  &__description {
+    flex-grow: 1;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 200;
+    font-size: 14px;
+    color: #323232;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  &__time {
+    flex-shrink: 0;
+    margin-left: 16px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #323232;
+  }
+}

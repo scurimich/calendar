@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 
+import events from '../../../hoc/events.jsx';
 import { MONTH_NAMES, MONTHS_IN_YEAR, TODAY } from '../../../constants/calendar.js';
 
 import {
@@ -34,9 +35,8 @@ class Year extends React.Component {
     setView('Month');
   }
 
-  getEventsCount(monthInfo) {
+  getEventsCount(monthInfo, events) {
     let count = 0;
-    const { events } = this.props;
     const month = moment([monthInfo.year, monthInfo.month]);
     const nextMonth = moment([monthInfo.year, monthInfo.month + 1]);
     events.map(event => {
@@ -45,17 +45,11 @@ class Year extends React.Component {
         || (event.dateEnd.isSameOrAfter(month)
           && event.dateEnd.isBefore(nextMonth))) count++;
     });
-    return (count > 0 ? 
-      <span className='year__events'>
-        <span className='year__events-count'>{count}</span> events.
-      </span>
-      :
-      <span className='year__events'>There are no events.</span>
-    );
+    return count;
   }
 
-  getYear(date) {
-    const { space } = this.props;
+  getYear() {
+    const { space, date } = this.props;
     const yearNumber = space.year();
     const curYear = TODAY.year();
     const curMonth = yearNumber === curYear ? TODAY.month() : null;
@@ -66,32 +60,47 @@ class Year extends React.Component {
         year: yearNumber,
         current: curMonth === i
       }
-      yearArray[i] = oneMonth;
+      yearArray.push(oneMonth);
     }
-    return yearArray.map((val, ndx) => {
-      return (
-        <li
-          className={`year__item${val.current ? ' year__item_active' : ''}`}
-          key={ndx}
-          onClick={this.onMonthClick.bind(this, val)}
-        >
-          <h3 className='year__title'>{MONTH_NAMES[ndx]}</h3>
-          <span className='year__full-year'>{val.year}</span>
-          {this.getEventsCount(val)}
-        </li>
-      );
-    });
+    return yearArray
   }
 
   render() {
-    const { date } = this.props;
+    const { date, filterYear, space, events } = this.props;
+    const filteredEvents = filterYear({events, space});
+    const year = this.getYear();
+
     return (
       <div className="body__year year">
         <span className='year__arrow' onClick={this.onPrevClick}>
           <i className="fa fa-angle-left" aria-hidden="true"></i>
         </span>
         <ul className="year__list">
-          {this.getYear(date)}
+          {
+            year.map((month, ndx) => {
+              const eventsNumber = this.getEventsCount(month, filteredEvents);
+              const number = (
+                <span className='year__events'>
+                  <span className='year__events-count'>{eventsNumber}</span> events.
+                </span>
+              );
+              const empty = <span className='year__events'>There are no events.</span>;
+
+              return (
+                <li
+                  className={`year__item${month.current ? ' year__item_active' : ''}`}
+                  key={ndx}
+                  onClick={this.onMonthClick.bind(this, month)}
+                >
+                  <h3 className='year__title'>{MONTH_NAMES[ndx]}</h3>
+                  <span className='year__full-year'>{month.year}</span>
+                  {
+                    eventsNumber ? number : empty
+                  }
+                </li>
+              );
+            })
+          }
         </ul>
         <span className='year__arrow' onClick={this.onNextClick}>
           <i className="fa fa-angle-right" aria-hidden="true"></i>
@@ -102,15 +111,18 @@ class Year extends React.Component {
 }
 
 Year.propTypes = {
+  events: PropTypes.array,
   date: PropTypes.object,
   space: PropTypes.object,
   setView: PropTypes.func,
   setSpace: PropTypes.func,
-  setMiniSpace: PropTypes.func
+  setMiniSpace: PropTypes.func,
+  filterYear: PropTypes.func
 };
 
 const mapStateToProps = state => ({
   date: state.date,
+  events: state.events,
   space: state.space.main
 });
 
@@ -120,4 +132,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   setMiniSpace
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Year);
+export default connect(mapStateToProps, mapDispatchToProps)(events(Year));

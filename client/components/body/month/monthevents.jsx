@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { DAYS_IN_WEEK, DAY, WEEKS_COUNT } from '../../../constants/calendar.js';
-import { getWeekEvents } from '../../../utils.js';
-
 import './monthevents.scss';
 
 export default class MonthEvents extends React.Component {
@@ -11,21 +8,20 @@ export default class MonthEvents extends React.Component {
     super(props);
   }
 
+  componentDidMount() {
+    const { getLineHeight } = this.props;
+    if (this.line) getLineHeight(this.line);
+  }
+
   getEvents() {
-    const { events, date, linesCount } = this.props;
+    const { events, date, linesCount, getWeekLines } = this.props;
     if (events.length) {
-      return getWeekEvents(events, date, linesCount);
+      return getWeekLines({data: events, date, linesCount});
     }
     return {
       lines: [],
       extra: []
     }
-  }
-
-  eventClasses(item) {
-    return `month-events__item
-      month-events__item_size-${item.size}
-      ${item.hidden ? 'month-events__item_hidden' : ''}`;
   }
 
   moreClick(date, e) {
@@ -35,19 +31,25 @@ export default class MonthEvents extends React.Component {
 
   render() {
     const currentEvents = this.getEvents();
-    const { lines, extra, changeSelectedDate, selectedEvent } = currentEvents;
+    const { lines, extra } = currentEvents;
     const { eventDragAndDrop } = this.props;
     return (
       <ul className='month__events month-events'>
         {
           lines.map((line, ndx) => {
             return (
-              <li key={ndx} className='month-events__line' onMouseDown={eventDragAndDrop} >
+              <li key={ndx} className='month-events__line' onMouseDown={eventDragAndDrop} ref={(line) => {this.line = line;}}>
               {
                 line.map((item, ndx) => {
                   return !item._id ?
                     <div className={`month-events__offset month-events__offset_${item.size}`} key={ndx}></div> :
-                    <span className={this.eventClasses(item)} key={ndx} id={item._id}> {item.title} </span>
+                    <span
+                      className={`month-events__item month-events__item_size-${item.size}${item.hidden ? 'month-events__item_hidden' : ''}`}
+                      key={ndx}
+                      id={item._id}
+                    >
+                      {item.title}
+                    </span>
                 })
               }
               </li>
@@ -75,5 +77,6 @@ MonthEvents.propTypes = {
   date: PropTypes.object,
   linesCount: PropTypes.number,
   changeSelectedDate: PropTypes.func,
-  eventDragAndDrop: PropTypes.func
+  eventDragAndDrop: PropTypes.func,
+  getLineHeight: PropTypes.func
 };

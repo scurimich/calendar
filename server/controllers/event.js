@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import eachSeries from 'async/eachSeries';
 import Event from '../models/event';
 import config from '../config';
-import { DAY } from '../../client/constants/calendar.js';
+import mongoose from 'mongoose';
 
 export function getEvents(req, res) {
   const token = req.headers.authorization.substr(4);
@@ -20,7 +20,7 @@ export function addEvent(req, res) {
   const token = req.headers.authorization.substr(4);
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) return res.status(403).end();
-    const newEvent = new Event({...req.body, user: decoded.data._id});
+    const newEvent = new Event({...req.body, user: decoded.data._id, _id: new mongoose.Types.ObjectId(),});
     newEvent.save((err, event) => {
       if (err) return res.json(err);
       res.send(event);
