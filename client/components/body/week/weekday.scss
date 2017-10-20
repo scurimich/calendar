@@ -7,6 +7,10 @@
     &:not(:last-child) {
       border-right: 1px solid #e6e6e6;
     }
+
+    &_weekend {
+      background-color: #fafafa;
+    }
   }
 
   &__hours {

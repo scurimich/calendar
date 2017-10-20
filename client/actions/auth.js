@@ -1,6 +1,6 @@
 import { SubmissionError, reset } from 'redux-form';
 import { LOGIN, LOGIN_ERROR, LOGOUT, REGISTER, REGISTER_ERROR } from '../constants/actions.js';
-import { serverRequest } from '../utils.js';
+import { serverRequest } from '../utils/server.js';
 
 export function login(user, dispatch) {
   return serverRequest(user, '/login', 'POST')
@@ -60,9 +60,8 @@ export function auth(token) {
       dispatch({type: LOGIN, email: user});
     })
     .catch((err) => {
-      console.log(err)
-      // dispatch({type: LOGOUT});
-      // localStorageClear();
+      dispatch({type: LOGOUT});
+      localStorageClear();
     });
   }
 };

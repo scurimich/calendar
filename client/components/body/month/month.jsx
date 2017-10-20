@@ -27,7 +27,7 @@ class Month extends React.Component {
 						<li className='month__weekday' key={ndx}>{day}</li>
 					))}
 				</ul>
-				<ul className='month__weeks'>
+				<ul className='month__weeks' data-dnd>
 					{
 						weeks.map((firstDay, ndx) => {
 							return <MonthWeek

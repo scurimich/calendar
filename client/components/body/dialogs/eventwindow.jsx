@@ -19,7 +19,7 @@ const inputText = ({ input, label, type, required, meta: { touched, error } }) =
 };
 
 const inputDate = ({ input, label, type, required, meta: { touched, error } }) => {
-	if (typeof input.value === 'object') input.value = input.value.format('YYYY-MM-D');
+	if (typeof input.value === 'object') input.value = moment(input.value).format('YYYY-MM-D');
 	const req = required ? (<span className='event-window__required'>*</span>) : '';
 	return (
 		<div className='event-window__date-cont'>
@@ -89,6 +89,8 @@ const validate = values => {
 		}
 		if (!daysCounter) errors.week = 'There aren\'t any days with events';
 	}
+	if (typeof values.group === 'string')
+		values.group = groups.find(group => group._id === values.group);
 
 	return errors;
 }
@@ -148,7 +150,7 @@ class EventWindow extends React.Component {
 				options={options}
 				optionRenderer={optionRenderer}
 				valueRenderer={valueRenderer}
-				value={(input.value) || ''}
+				value={input.value || ''}
 			/>
 		);
 	}
@@ -217,7 +219,14 @@ class EventWindow extends React.Component {
 	}
 }
 
-export default connect(state => ({initialValues: state.eventWindow.data}), null)(reduxForm({
+const mapStateToProps = state => {
+	const group = state.groups.find(group => group._id === state.eventWindow.data.group);
+	return {
+		initialValues: {...state.eventWindow.data, group}
+	};
+};
+
+export default connect(mapStateToProps, null)(reduxForm({
 	form: 'event',
 	enableReinitialize: true,
 	keepDirtyOnReinitialize: true,

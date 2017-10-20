@@ -51,12 +51,12 @@ class Controls extends React.Component {
 			case 'Day':
 				return type ? setSpaces(space.clone().add(1, 'days')) : setSpaces(space.clone().subtract(1, 'days'));
 			case 'Week':
-			const day = space.day() ? space.day() - 1 : 6;
-				return type ? setSpaces(space.clone().add(DAYS_IN_WEEK - day, 'days')) : setSpaces(space.clone().subtract(DAYS_IN_WEEK - day, 'days'));
+				const day = space.day() ? space.day() - 1 : 6;
+				return type ? setSpaces(space.clone().add(DAYS_IN_WEEK - day, 'days')) : setSpaces(space.clone().subtract(day + DAYS_IN_WEEK, 'days'));
 			case 'Month':
 				return type ? setSpaces(space.clone().add(1, 'months')) : setSpaces(space.clone().subtract(1, 'months'));
 			case 'Year':
-				return type ? setSpaces(space.clone().add(1, 'years')) : setSpaces(space.clone().subtract(1, 'months'));
+				return type ? setSpaces(space.clone().add(1, 'years')) : setSpaces(space.clone().subtract(1, 'years'));
 		}
 	}
 
@@ -72,7 +72,7 @@ class Controls extends React.Component {
 			case 'Day':
 				return space.format('DD MMMM YYYY');
 			case 'Week': 
-				const weekDay = space.day() ? space.day() - 1 : DAYS_IN_WEEK;
+				const weekDay = space.day() ? space.day() - 1 : 6;
 				const weekBegin = space.clone().subtract(weekDay, 'days');
 				const weekEnd = space.clone().add(DAYS_IN_WEEK - weekDay - 1, 'days');
 				return `${weekBegin.format('D.MM.YYYY')} - ${weekEnd.format('D.MM.YYYY')}`;
@@ -128,6 +128,9 @@ Controls.propTypes = {
 };
 
 const mapStateToProps = (state) => {
+	// console.log('---------------------------')
+	// console.log(state.space.main.format())
+	// console.log(state.space.mini.format())
 	return {
 		activeView: state.view,
 		date: state.date,

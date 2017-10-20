@@ -12,53 +12,25 @@ import GroupWindow from './dialogs/groupwindow.jsx';
 
 import {
 	addEvent,
-	updateEvent,
-	removeEvent
+	updateEvent
 } from '../../actions/events.js';
 import { eventWindowShow, eventWindowHide } from '../../actions/eventwindow.js';
 import { groupWindowShow, groupWindowHide } from '../../actions/groupwindow.js';
 import { addGroup, updateGroup } from '../../actions/groups.js';
 
-import { DAYS_IN_MONTH_SPACE } from '../../constants/calendar';
-import { getMonthInfo } from '../../utils';
-
 import './body.scss';
 
 class Body extends React.Component {
-
-	eventsFilter() {
-		const { events, space } = this.props;
-		const day = !space.day() ? 6 : space.day() - 1;
-		const next = space.clone().add(1, 'days');
-		const prevDays = this.monthInfo.previous.extraDays;
-		const nextDays = DAYS_IN_MONTH_SPACE - (this.monthInfo.current.days + prevDays);
-		const monthBegin = space.clone().date(1 - prevDays);
-		const monthEnd = space.clone().add(1, 'months').date(1 + nextDays);
-		const weekBegin = space.clone().subtract(day, 'days');
-		const weekEnd = space.clone().add(7 - day, 'days');
-
-		return {
-			year: events.filter(event => {
-				return (event.dateBegin.year() == space.year()
-					|| event.dateEnd.year() == space.year());
-			}),
-			month: events.filter(event => {
-				return (event.dateBegin.isSameOrAfter(monthBegin) && event.dateBegin.isBefore(monthEnd))
-					|| (event.dateEnd.isSameOrAfter(monthBegin) && event.dateEnd.isBefore(monthEnd));
-			})
-		};
+	constructor(props) {
+		super(props);
 	}
 
 	setCurrentView() {
 		const {
 			active,
 			space,
-			onAddClick,
-			onMonthDayClick
 		} = this.props;
-		const spaceDate = space.clone();
-		this.monthInfo = getMonthInfo(spaceDate);
-		const events = this.eventsFilter();
+
 		switch(active) {
 			case 'Day': return <Day />;
 			case 'Week': return <Week />;
@@ -77,9 +49,11 @@ class Body extends React.Component {
 			groupWindowShow,
 			groupWindowHide
 		} = this.props;
+		const view = this.setCurrentView();
+
 		return (
 			<div className="content__body body">
-				{this.setCurrentView()}
+				{ view }
 				<EventWindow
 					addEvent={addEvent}
 					updateEvent={updateEvent}
@@ -102,13 +76,10 @@ class Body extends React.Component {
 
 Body.propTypes = {
 	active: PropTypes.string,
-	date: PropTypes.object,
-	events: PropTypes.array,
 	eventWindow: PropTypes.object,
 	groups: PropTypes.array,
 	groupWindow: PropTypes.object,
 	space: PropTypes.object,
-	selectedEvent: PropTypes.object,
 	eventWindowShow: PropTypes.func,
 	eventWindowHide: PropTypes.func,
 	groupWindowShow: PropTypes.func,
@@ -117,13 +88,10 @@ Body.propTypes = {
 
 const mapStateToProps = state => ({
 	active: state.view,
-	date: state.date,
-	events: state.events,
 	eventWindow: state.eventWindow,
 	groups: state.groups,
 	groupWindow: state.groupWindow,
-	space: state.space.main,
-	selectedEvent: state.selected
+	space: state.space.main
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

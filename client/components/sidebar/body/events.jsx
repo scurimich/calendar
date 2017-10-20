@@ -3,23 +3,23 @@ import PropTypes from 'prop-types';
 import GeminiScrollbar from 'react-gemini-scrollbar';
 
 import Event from './event.jsx';
-import { sortEvents } from '../../../utils.js';
+import events from '../../../hoc/events.jsx';
 
 import './events.scss';
 
-export default class Events extends React.Component {
+class Events extends React.Component {
 	constructor(props) {
     super(props);
 	}
 
-  getGroup(id) {
+  getGroup(id, event) {
     const { groups } = this.props;
     return groups.find(group => group._id === id);
   }
 
 	render() {
-    const { date, events, eventsStatus, groups, currentGroup, eventWindowShow } = this.props;
-    if (events.length) events.sort(sortEvents);
+    const { date, events, eventsStatus, groups, currentGroup, eventWindowShow, sortDateDuration } = this.props;
+    if (events.length) events.sort(sortDateDuration);
 
     const filteredEvents = events.filter(event => event.dateBegin.isSameOrBefore(date)
       && event.dateEnd.isSameOrAfter(date)
@@ -40,7 +40,7 @@ export default class Events extends React.Component {
             filteredEvents.map((event, key) => (
               <Event
                 {...event}
-                group={this.getGroup(event.group)}
+                group={this.getGroup(event.group, event)}
                 key={key}
                 onEventClick={eventWindowShow.bind(null, {...event})}
               />
@@ -67,5 +67,8 @@ Events.propTypes = {
   eventsStatus: PropTypes.object,
   groups: PropTypes.array,
   currentGroup: PropTypes.object,
-  eventWindowShow: PropTypes.func
+  eventWindowShow: PropTypes.func,
+  sortDateDuration: PropTypes.func
 };
+
+export default events(Events);

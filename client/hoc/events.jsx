@@ -42,7 +42,11 @@ const events = (Component) => {
     }
 
     filterDay({events, date}) {
-      return events.filter(event => event.duration === 0 && (event.dateBegin.isSame(date)));
+      return events.filter(event => (
+        !event.allDay
+        && event.duration === 0
+        && (event.dateBegin.isSame(date)))
+      );
     }
 
     filterAllDay(events) {
@@ -147,10 +151,10 @@ const events = (Component) => {
 
       if (!events.length) return result;
 
-      let day = date;
+      let day = date.clone();
       for (let i = 0; i < DAYS_IN_WEEK; i++) {
         const currentEvents = events.filter(event => (event.dateBegin.isSameOrBefore(day) && event.dateEnd.isSameOrAfter(day))).length;
-        extra.push({date: day, count: currentEvents});
+        extra.push({date: day.clone(), count: currentEvents});
         day.add(1, 'days');
       }
 
@@ -158,8 +162,9 @@ const events = (Component) => {
     }
 
     setEventsSizes(events) {
+      const { sortTimeBeginEnd } = this;
       let groups = [];
-      return events.sort((a, b) => sortTimeBeginEnd)
+      return events.sort(sortTimeBeginEnd)
         .reduce((result, item, ndx, arr) => {
           const event = {...item};
           if (ndx === 0) {
@@ -247,6 +252,7 @@ const events = (Component) => {
         filterAllDay,
         filterDay,
         filterTime,
+        sortTimeBeginEnd,
         setEventsSizes,
         setEventsPositions
       } = this;
@@ -262,6 +268,7 @@ const events = (Component) => {
           filterAllDay={filterAllDay}
           filterDay={filterDay}
           filterTime={filterTime}
+          sortTimeBeginEnd={sortTimeBeginEnd}
           setEventsSizes={setEventsSizes}
           setEventsPositions={setEventsPositions}
         />

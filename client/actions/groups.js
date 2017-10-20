@@ -9,7 +9,7 @@ import {
   GROUPS_FETCH_OK,
   GROUP_WINDOW_HIDE
 } from '../constants/actions.js';
-import { serverRequest } from '../utils.js';
+import { serverRequest } from '../utils/server.js';
 
 export function fetchGroups() {
   return dispatch => {

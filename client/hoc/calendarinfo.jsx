@@ -23,7 +23,7 @@ const calendarInfo = (Component) => {
         number: space.clone().subtract(1, 'month').month(),
         days: space.clone().date(0).date(),
         extraDays: current.firstDay - 1,
-        year: (space.month() == (MONTH_IN_YEAR - 1) && space.year() - 1) || space.year()
+        year: (space.month() === 0 && space.year() - 1) || space.year()
       }
 
       return {
@@ -37,10 +37,9 @@ const calendarInfo = (Component) => {
       const extraDays = info.previous.extraDays;
       const year = extraDays ? info.previous.year : info.current.year;
       const month = extraDays ? info.previous.number : info.current.number;
-      const date = extraDays ? info.previous.days - (extraDays - 1) : info.current.days;
+      const date = extraDays ? info.previous.days - (extraDays - 1) : 1;
       const weeks = [];
       let firstDay = moment([year, month, date]);
-
       for (let i = 0; i < NUMBER_OF_WEEKS; i++) {
         weeks.push(firstDay.clone());
         firstDay.add(DAYS_IN_WEEK, 'days');
@@ -49,20 +48,21 @@ const calendarInfo = (Component) => {
       return weeks;
     }
 
-    getWeek({space, date, events = [], index}) {
-      if (index === 0) space.month(space.month() + 1).date(1);
-
+    getWeek({space, date, events = [], globalSpace}) {
       const days = [];
-      const day = space.day() === 0 ? 6 : space.day() - 1;
+      const day = space.day() ? space.day() - 1 : 6;
       let oneDay = day == 1 ? space : space.clone().subtract(day, 'days');
-
       for (let i = 0; i < DAYS_IN_WEEK; i++) {
-        const currentEvents = events.filter(event => (event.dateBegin.isSameOrBefore(oneDay) && event.dateEnd.isSameOrAfter(oneDay)));
+        const currentEvents = events.filter(event => (
+          event.dateBegin.isSameOrBefore(oneDay)
+          && event.dateEnd.isSameOrAfter(oneDay)
+          && (!event.periodic || event.week[oneDay.day() ? oneDay.day() - 1 : 6])
+        ));
         days.push({
           date: oneDay.clone(),
           today: oneDay.isSame(TODAY),
           currentDate: oneDay.isSame(date),
-          currentSpace: space.month() === oneDay.month(),
+          currentSpace: globalSpace && globalSpace.month() === oneDay.month(),
           id: oneDay.format('YYYY,MM,DD'),
           weekend: oneDay.day() === 0 || oneDay.day() === 6,
           events: currentEvents

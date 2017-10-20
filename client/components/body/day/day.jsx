@@ -58,7 +58,7 @@ class Day extends React.Component {
                   })
                 }
               </ul>
-              <ul className='day__list'>
+              <ul className='day__list' data-dnd>
                 {
                   hours.map(hour => {
                     const events = setEventsPositions(hour.events);

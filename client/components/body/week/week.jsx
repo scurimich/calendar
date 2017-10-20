@@ -18,10 +18,16 @@ class Week extends React.Component {
   }
 
   getAllDayEvents(events) {
-    const { space, getWeekLines, filterDays } = this.props;
-    const day = space.day() == 0 ? 6 : space.day() - 1;
+    const { space, getWeekLines, filterDays, groups } = this.props;
+    const day = space.day() ? space.day() - 1 : 6;
     const firstDay = day == 1 ? space.clone() : space.clone().subtract(day, 'days');
-    const weekEvents = getWeekLines({data: filterDays(events), date: firstDay});
+
+    const filteredEvents = filterDays(events).map(event => {
+      if (!event.group) return event;
+      const group = groups.find(group => group._id === event.group);
+      return {...event, group};
+    });
+    const weekEvents = getWeekLines({data: filteredEvents, date: firstDay});
     return (weekEvents && weekEvents.lines) || [];
   }
 
@@ -41,7 +47,9 @@ class Week extends React.Component {
 
   render() {
     const { events, getWeek, space, date, filterDay, filterWeek, getHours, setEventsPositions } = this.props;
-    const filteredEvents = filterWeek({events, weekBegin: date});
+    const day = space.day() ? space.day() - 1 : 6;
+    const weekBegin = space.clone().subtract(day, 'days');
+    const filteredEvents = filterWeek({events, weekBegin});
     const week = getWeek({space, date});
     const sidebar = this.getSidebar();
     const lines = this.getAllDayEvents(filteredEvents);
@@ -93,8 +101,14 @@ class Week extends React.Component {
               </ul>
               <ul className='week-events__days'>
                 {
-                  WEEKDAYS.map((day, ndx) => (
-                    <li className='week-events__day' key={ndx}></li>
+                  WEEKDAYS.map((day, ndx, days) => (
+                    <li
+                      className={
+                        `week-events__day
+                        ${days.length - 2 <= ndx ? ' week-events__day_weekend' : ''}`
+                      }
+                      key={ndx}
+                    ></li>
                   ))
                 }
               </ul>
@@ -109,7 +123,7 @@ class Week extends React.Component {
                   ))
                 }
               </div>
-              <ul className='week__main'>
+              <ul className='week__main' data-dnd>
                 {
                   week.map((day, ndx) => {
                     return (<WeekDay
@@ -132,6 +146,7 @@ class Week extends React.Component {
 
 Week.propTypes = {
   events: PropTypes.array,
+  groups: PropTypes.array,
   date: PropTypes.object,
   space: PropTypes.object,
   getWeekLines: PropTypes.func,
@@ -146,7 +161,8 @@ Week.propTypes = {
 const mapStateToProps = state => ({
   date: state.date,
   space: state.space.main,
-  events: state.events
+  events: state.events,
+  groups: state.groups
 });
 
 export default connect(mapStateToProps, null)(calendarInfo(events(Week)));

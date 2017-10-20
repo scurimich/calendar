@@ -31,6 +31,7 @@ class MonthWeek extends React.Component {
     this.getLineHeight = this.getLineHeight.bind(this);
     this.getLinesNumber = this.getLinesNumber.bind(this);
     this.changeSelectedDate = this.changeSelectedDate.bind(this);
+    this.getEventsGroups = this.getEventsGroups.bind(this);
   }
 
   changeSelectedDate(date, e) {
@@ -72,14 +73,16 @@ class MonthWeek extends React.Component {
 
   getCellHeight(cell) {
     if (!cell) return;
-    const { changeViewInfo } = this.props;
-    changeViewInfo({ cellSize: cell.clientHeight });
+    const { changeViewInfo, viewInfo } = this.props;
+    if (viewInfo.cellSize !== cell.clientHeight)
+      changeViewInfo({ cellSize: cell.clientHeight });
   }
 
   getLineHeight(line) {
     if (!line) return;
-    const { changeViewInfo } = this.props;
-    changeViewInfo({ lineSize: line.clientHeight });
+    const { changeViewInfo, viewInfo } = this.props;
+    if (viewInfo.lineSize !== line.clientHeight)
+      changeViewInfo({ lineSize: line.clientHeight });
   }
 
   getLinesNumber() {
@@ -87,11 +90,22 @@ class MonthWeek extends React.Component {
     return isFinite(Math.floor((cellSize - lineSize) / lineSize)) && Math.floor((cellSize - lineSize) / lineSize);
   }
 
+  getEventsGroups(events) {
+    const {groups} = this.props;
+    return events.map(event => {
+      if (!event.group) return event;
+      const group = groups.find(group => group._id === event.group);
+      return {...event, group};
+    });
+  }
+
   render() {
     const {
+      space,
       date,
       firstDay,
       events,
+      groups,
       weekNdx,
       eventDragAndDrop,
       selectedEvent,
@@ -100,15 +114,15 @@ class MonthWeek extends React.Component {
       filterWeek
     } = this.props;
     const { selected } = this.state;
-    const { onDateClick, onAddClick, onDayClick, getCellHeight, changeSelectedDate, getLineHeight, getLinesNumber } = this;
+    const { onDateClick, onAddClick, onDayClick, getCellHeight, changeSelectedDate, getLineHeight, getLinesNumber, getEventsGroups } = this;
     const filteredEvents = filterWeek({weekBegin: firstDay, events});
-    const week = getWeek({space:firstDay, date, filteredEvents});
-
+    const week = getWeek({space:firstDay, globalSpace: space, events: filteredEvents, date});
+    console.log(selectedEvent)
     return (
       <li className='month__week'>
         <MonthEvents
           date={firstDay}
-          events={filteredEvents}
+          events={getEventsGroups(filteredEvents)}
           linesCount={getLinesNumber() || 0}
           ndx={weekNdx}
           changeSelectedDate={changeSelectedDate}
@@ -121,6 +135,7 @@ class MonthWeek extends React.Component {
             week.map((day, ndx) => (
               <MonthDay 
                 {...day}
+                events={getEventsGroups(day.events)}
                 key={ndx}
                 selected={selected && selected.isSame(day.date)}
                 hover={selectedEvent && day.date.isSameOrAfter(selectedEvent.dateBegin) && selectedEvent.dateEnd.isAfter(day.date)}
@@ -141,9 +156,11 @@ class MonthWeek extends React.Component {
 
 MonthWeek.propTypes = {
   date: PropTypes.object,
+  space: PropTypes.object,
   selectedEvent: PropTypes.object,
   firstDay: PropTypes.object,
   events: PropTypes.array,
+  groups: PropTypes.array,
   weekNdx: PropTypes.number,
   viewInfo: PropTypes.object,
   eventDragAndDrop: PropTypes.func,
@@ -161,6 +178,7 @@ MonthWeek.propTypes = {
 const mapStateToProps = state => ({
   date: state.date,
   events: state.events,
+  groups: state.groups,
   space: state.space.main,
   selectedEvent: state.selected,
   viewInfo: state.viewInfo

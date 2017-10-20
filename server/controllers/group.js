@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import Group from '../models/group';
 import Event from '../models/event.js';
 import config from '../config';
-import { DAY } from '../../client/constants/calendar.js';
+import mongoose from 'mongoose';
 
 export function getGroups(req, res) {
   const token = req.headers.authorization.substr(4);
@@ -20,7 +20,7 @@ export function addGroup(req, res) {
   const token = req.headers.authorization.substr(4);
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) return res.status(403).end();
-    const newGroup = new Group({...req.body, user: decoded.data._id});
+    const newGroup = new Group({...req.body, user: decoded.data._id, _id: new mongoose.Types.ObjectId()});
     newGroup.save((err, group) => {
       if (err) return res.send(err);
       res.send(group);

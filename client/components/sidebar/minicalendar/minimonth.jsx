@@ -17,7 +17,7 @@ class MiniMonth extends React.Component {
     const weeks = getWeeks(space);
     const month = {};
     month.dates = weeks.map((week, ndx) => {
-      const weekInfo = getWeek({space: week,index: ndx, date});
+      const weekInfo = getWeek({space: week, globalSpace: space, date});
       month.activeWeek = month.activeWeek || (weekInfo.find(week => week.currentDate) && ndx);
       return weekInfo;
     });

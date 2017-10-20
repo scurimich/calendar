@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
+
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { selectEvent, changeSelectedEvent, removeEventSelection } from '../actions/selectedevent.js';
@@ -19,10 +21,10 @@ const dragAndDrop = (Component) => {
     eventDragAndDrop(e) {
       e.preventDefault();
       const { events, selectedEvent } = this.props;
-      const element = e.target;
+      const element = e.currentTarget;
       const event = selectedEvent || events.find(event => event._id === element.id);
       const baseElement = document.querySelector('[data-dd]');
-      this.mainElement = document.querySelector('.body [class*="_main"]');
+      this.mainElement = document.querySelector('[data-dnd]');
 
       window.onmouseup = this.eventOnDrop.bind(this, event);
       this.timeout = setTimeout(function() {
@@ -49,15 +51,15 @@ const dragAndDrop = (Component) => {
         }
         const date = dd.getAttribute('data-date');
         if (date) {
-          this.event.dateBegin = new Date(date);
-          this.event.dateEnd = new Date(new Date(date).setDate(this.event.dateBegin.getDate() + event.duration));
+          this.event.dateBegin = moment(date, 'YYYY,MM,DD');
+          this.event.dateEnd = moment(date, 'YYYY,MM,DD').add(event.duration, 'days');
         }
 
         const time = dd.getAttribute('data-time');
         if (time) {
-          this.event.timeBegin = new Date(time);
+          this.event.timeBegin = moment(time, 'HH:mm');
           const timeDifference = this.event.timeBegin - event.timeBegin;
-          this.event.timeEnd = new Date(Date.parse(event.timeEnd) + timeDifference);
+          this.event.timeEnd = moment(event.timeEnd.format('x') + timeDifference);
         }
       };
 

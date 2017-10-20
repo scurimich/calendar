@@ -15,13 +15,8 @@ export default class MonthEvents extends React.Component {
 
   getEvents() {
     const { events, date, linesCount, getWeekLines } = this.props;
-    if (events.length) {
-      return getWeekLines({data: events, date, linesCount});
-    }
-    return {
-      lines: [],
-      extra: []
-    }
+
+    return getWeekLines({data: events, date, linesCount}) || {lines: [], extra: []};
   }
 
   moreClick(date, e) {
@@ -33,37 +28,53 @@ export default class MonthEvents extends React.Component {
     const currentEvents = this.getEvents();
     const { lines, extra } = currentEvents;
     const { eventDragAndDrop } = this.props;
+
     return (
       <ul className='month__events month-events'>
         {
           lines.map((line, ndx) => {
             return (
-              <li key={ndx} className='month-events__line' onMouseDown={eventDragAndDrop} ref={(line) => {this.line = line;}}>
+              <li key={ndx} className='month-events__line'>
               {
                 line.map((item, ndx) => {
-                  return !item._id ?
-                    <div className={`month-events__offset month-events__offset_${item.size}`} key={ndx}></div> :
+                  const color = item.group && item.group.color;
+                  const offset = <div className={`month-events__offset month-events__offset_${item.size}`} key={ndx}></div>;
+                  const event = (
                     <span
-                      className={`month-events__item month-events__item_size-${item.size}${item.hidden ? 'month-events__item_hidden' : ''}`}
+                      className={
+                        `month-events__item
+                        month-events__item_size-${item.size}
+                        ${item.hidden ? 'month-events__item_hidden' : ''}
+                        month-event`
+                      }
                       key={ndx}
                       id={item._id}
+                      ref={(line) => {this.line = line;}}
+                      onMouseDown={eventDragAndDrop}
                     >
-                      {item.title}
+                      <div className='month-event__background' style={ color ? {'backgroundColor': color} : {} }></div>
+                      <span className='month-event__title'>{item.title}</span>
                     </span>
+                  );
+
+                  return !item._id ? offset : event;
                 })
               }
               </li>
             );
           })
         }
-        <li className='month-events__line'>
+        <li className='month-events__line month-events__line_more'>
           {
             extra.map((item, ndx) => {
-              return item.count === 0 ?
-                <div className={'month-events__offset month-events__offset_1'} key={ndx}></div> :
+              const  offset = <div className={'month-events__offset month-events__offset_1'} key={ndx}></div>;
+              const more = (
                 <div className={'month-events__more'} key={ndx}>
                   <span className={'month-events__more-button'} onClick={this.moreClick.bind(this, item.date)}>{`+ ${item.count} more`}</span>
                 </div>
+              );
+
+              return item.count === 0 ? offset : more;
             })
           }
         </li>

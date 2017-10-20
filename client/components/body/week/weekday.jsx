@@ -12,11 +12,11 @@ class WeekDay extends React.Component {
   }
 
   render() {
-    const { id, events, getHours, eventDragAndDrop, setEventsPositions} = this.props;
+    const { id, events, getHours, weekend, eventDragAndDrop, setEventsPositions} = this.props;
     const hours = getHours(events);
 
     return (
-      <li id='day' className={'week__day'}>
+      <li id='day' className={`week__day${weekend ? ' week__day_weekend' : ''}`}>
         <ul className='week__hours'>
           {
             hours.map(hour => {

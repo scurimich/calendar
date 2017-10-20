@@ -12,7 +12,7 @@ import {
   EVENT_WINDOW_HIDE
 } from '../constants/actions.js';
 import { DAY, DAYS_IN_WEEK } from '../constants/calendar.js';
-import { serverRequest } from '../utils.js';
+import { serverRequest } from '../utils/server.js';
 
 
 export function fetchEvents() {
@@ -96,18 +96,11 @@ export function removeEvent(event) {
 }
 
 export function updateEvent(event, dispatch) {
-  if (event.dateBegin)
-    event.dateBegin = new Date(new Date(event.dateBegin).setHours(0));
-  if (event.dateEnd)
-    event.dateEnd = new Date(new Date(event.dateEnd).setHours(0));
+  const dateBegin = moment(event.dateBegin, 'YYYY-MM-DD');
+  const dateEnd = moment(event.dateEnd, 'YYYY-MM-DD');
 
-  if (event.timeBegin && typeof event.timeBegin === 'string')
-    event.timeBegin = new Date(1970, 0, 1, event.timeBegin.substr(0, 2), event.timeBegin.substr(3, 2));
-  if (event.timeEnd && typeof event.timeBegin === 'string')
-    event.timeEnd = new Date(1970, 0, 1, event.timeEnd.substr(0, 2), event.timeEnd.substr(3, 2));
-
-  event.duration = (event.dateEnd - event.dateBegin) / DAY;
-  if (event.week && event.week.length !== DAYS_IN_WEEK) 
+  event.duration = (dateEnd - dateBegin) / DAY;
+  if (event.week && event.week.length !== DAYS_IN_WEEK)
     event.week = event.week.concat(new Array(DAYS_IN_WEEK - event.week.length).fill(null));
   if (event.group) event.group = event.group._id;
 
@@ -127,7 +120,7 @@ export function updateEvent(event, dispatch) {
         throw new SubmissionError(errors);
       }
       dispatch({ type: EVENT_WINDOW_HIDE });
-      dispatch({ type: EVENT_CHANGE, event });
+      dispatch({ type: EVENT_CHANGE, event: {...event} });
       dispatch(reset('event'));
       resolve();
     });
