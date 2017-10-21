@@ -37,7 +37,7 @@ export function updateGroup(req, res) {
       runValidators: true,
       new: true
     };
-    Group.findOneAndUpdate({_id}, req.body, (err, updatedGroup) => {
+    Group.findOneAndUpdate({_id}, req.body, {new: true}, (err, updatedGroup) => {
       if (err) return res.send({error: err.message});
       res.send(updatedGroup);
     });

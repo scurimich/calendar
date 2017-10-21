@@ -31,7 +31,7 @@
   }
 
   &_hover {
-    background-color: #eee;
+    background-color: #f6f6f6;
   }
 
   &_notcurrent {
@@ -116,6 +116,7 @@
     font-family: 'Open Sans', sans-serif;
     font-weight: 200;
     font-size: 13px;
+    cursor: pointer;
     border-radius: 3px;
     overflow: hidden;
     white-space: nowrap;

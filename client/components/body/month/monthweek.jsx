@@ -117,7 +117,6 @@ class MonthWeek extends React.Component {
     const { onDateClick, onAddClick, onDayClick, getCellHeight, changeSelectedDate, getLineHeight, getLinesNumber, getEventsGroups } = this;
     const filteredEvents = filterWeek({weekBegin: firstDay, events});
     const week = getWeek({space:firstDay, globalSpace: space, events: filteredEvents, date});
-    console.log(selectedEvent)
     return (
       <li className='month__week'>
         <MonthEvents
@@ -138,7 +137,11 @@ class MonthWeek extends React.Component {
                 events={getEventsGroups(day.events)}
                 key={ndx}
                 selected={selected && selected.isSame(day.date)}
-                hover={selectedEvent && day.date.isSameOrAfter(selectedEvent.dateBegin) && selectedEvent.dateEnd.isAfter(day.date)}
+                hover={
+                  selectedEvent
+                  && selectedEvent.dateBegin.isSameOrBefore(day.date)
+                  && selectedEvent.dateEnd.isSameOrAfter(day.date)
+                }
                 onDateClick={onDateClick}
                 onAddClick={onAddClick.bind(this, day.date)}
                 onDayClick={onDayClick.bind(this, day.date)}

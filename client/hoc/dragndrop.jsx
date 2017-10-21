@@ -36,7 +36,7 @@ const dragAndDrop = (Component) => {
       const { selectEvent, changeSelectedEvent } = this.props;
       if (!event.hidden) {
         event.hidden = true;
-        selectEvent(event);
+        selectEvent({...event});
 
         Array.from(document.querySelectorAll('.week-events')).map(event => {
           event.classList.add('mouse-events-off');
@@ -59,10 +59,9 @@ const dragAndDrop = (Component) => {
         if (time) {
           this.event.timeBegin = moment(time, 'HH:mm');
           const timeDifference = this.event.timeBegin - event.timeBegin;
-          this.event.timeEnd = moment(event.timeEnd.format('x') + timeDifference);
+          this.event.timeEnd = moment(parseInt(event.timeEnd.format('x')) + timeDifference);
         }
       };
-
       changeSelectedEvent(this.event);
     }
 
@@ -72,19 +71,26 @@ const dragAndDrop = (Component) => {
       window.onmouseup = null;
 
       if (!event.hidden) {
-        this.props.eventWindowShow(event);
+        this.props.eventWindowShow({
+          ...event,
+          dateBegin: event.dateBegin.format('YYYY-MM-DD'),
+          dateEnd: event.dateEnd.format('YYYY-MM-DD')
+        });
         return;
       }
 
       if (event.hidden) {
         const { selectedEvent, removeEventSelection, updateEvent } = this.props;
         this.mainElement.onmouseover = null;
-        Array.from(document.querySelectorAll('.week-events')).map(event => {
+        [...document.querySelectorAll('.month-event')].map(event => {
           event.classList.remove('mouse-events-off');
         });
 
         delete selectedEvent.size;
         delete selectedEvent.hidden;
+        selectedEvent.dateBegin = selectedEvent.dateBegin.format('YYYY-MM-DD');
+        selectedEvent.dateEnd = selectedEvent.dateEnd.format('YYYY-MM-DD');
+
         updateEvent(selectedEvent);
         removeEventSelection();
       }

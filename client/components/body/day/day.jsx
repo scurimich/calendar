@@ -74,7 +74,7 @@ class Day extends React.Component {
                         <div 
                           className='day-hour__body'
                           data-dd='true'
-                          data-time={hour.time.format('MM DD YYYYY HH:mm')}
+                          data-time={hour.time.format('HH:mm')}
                         >
                           {
                             events.map((event, ndx) => (

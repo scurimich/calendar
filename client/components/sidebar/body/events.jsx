@@ -25,7 +25,6 @@ class Events extends React.Component {
       && event.dateEnd.isSameOrAfter(date)
       && (!event.periodic || event.week[date.day() ? date.day() - 1 : 6])
       && (!currentGroup || currentGroup._id === event.group));
-
     const spinner = (
       <div className='events__spinner-container'>
         <span className='events__spinner'></span>
@@ -42,7 +41,11 @@ class Events extends React.Component {
                 {...event}
                 group={this.getGroup(event.group, event)}
                 key={key}
-                onEventClick={eventWindowShow.bind(null, {...event})}
+                onEventClick={eventWindowShow.bind(null, {
+                  ...event,
+                  dateBegin: event.dateBegin.format('YYYY-MM-DD'),
+                  dateEnd: event.dateEnd.format('YYYY-MM-DD'),
+                })}
               />
             ))
           }

@@ -36,7 +36,7 @@ export function updateEvent(req, res) {
       runValidators: true,
       new: true
     };
-    Event.findOneAndUpdate({_id}, req.body, (err, updatedEvent) => {
+    Event.findOneAndUpdate({_id}, req.body, {new: true}, (err, updatedEvent) => {
       if (err) return res.send({error: err.message});
       res.send(updatedEvent);
     });

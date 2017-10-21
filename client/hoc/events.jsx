@@ -231,13 +231,13 @@ const events = (Component) => {
         result.height = (result.timeDifference / milliseconds / seconds / minutes) * percentages;
         result.top = event.timeBegin.minutes() / minutes * percentages;
         result.position = event.horizontal;
-        result.horizontalSize = event.horizontalSize;
+        result.horizontalSize = event.horizontalSize || 1;
         result.onePiece = percentages / result.horizontalSize;
         result.width = result.position !== result.horizontalSize - 1 ? result.onePiece * 1.5 : result.onePiece;
         result.left = result.onePiece * result.position;
         result.zIndex = result.position + 1;
         result.color = event.group && event.group.length && event.group.color;
-
+        
         return result;
       });
     }

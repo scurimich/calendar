@@ -129,8 +129,7 @@ Controls.propTypes = {
 
 const mapStateToProps = (state) => {
 	// console.log('---------------------------')
-	// console.log(state.space.main.format())
-	// console.log(state.space.mini.format())
+	// console.log(state.selected)
 	return {
 		activeView: state.view,
 		date: state.date,

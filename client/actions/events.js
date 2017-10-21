@@ -30,16 +30,7 @@ export function fetchEvents() {
     })
     .then(events => {
       events = events.map(event => {
-        for (let prop in event) {
-          if (event[prop]) {
-            if (prop === 'dateBegin' || prop === 'dateEnd') {
-              event[prop] = moment(event[prop], 'YYYY-MM-DD');
-            }
-            if (prop === 'timeBegin' || prop === 'timeEnd') {
-              event[prop] = moment(event[prop], 'HH:mm');
-            }
-          }
-        }
+        makeMomentDates(event);
         return event;
       });
       dispatch({ type: EVENTS_ADD, events});
@@ -60,6 +51,11 @@ export function addEvent(data, dispatch) {
     data.week = data.week.concat(new Array(DAYS_IN_WEEK - data.week.length).fill(null));
   if (data.group) data.group = data.group._id;
 
+  if (event.timeBegin && typeof event.timeBegin === 'object')
+    event.timeBegin = event.timeBegin.format('HH:mm')
+  if (event.timeEnd && typeof event.timeEnd === 'object')
+    event.timeEnd = event.timeEnd.format('HH:mm')
+
   const token = localStorage.getItem('token');
   return serverRequest(data, '/event', 'POST', token)
     .then(([response, json]) => {
@@ -76,16 +72,7 @@ export function addEvent(data, dispatch) {
       }
       dispatch({ type: EVENT_WINDOW_HIDE });
       dispatch(reset('event'));
-      for (let prop in json) {
-        if (json[prop]) {
-          if (prop === 'dateBegin' || prop === 'dateEnd') {
-            json[prop] = moment(json[prop], 'YYYY-MM-DD');
-          }
-          if (prop === 'timeBegin' || prop === 'timeEnd') {
-            json[prop] = moment(json[prop], 'HH:mm');
-          }
-        }
-      }
+      makeMomentDates(json);
       dispatch({ type: EVENT_ADD, event: json });
       resolve();
     });
@@ -102,7 +89,12 @@ export function updateEvent(event, dispatch) {
   event.duration = (dateEnd - dateBegin) / DAY;
   if (event.week && event.week.length !== DAYS_IN_WEEK)
     event.week = event.week.concat(new Array(DAYS_IN_WEEK - event.week.length).fill(null));
-  if (event.group) event.group = event.group._id;
+  if (event.group && typeof event.group === 'object') event.group = event.group._id;
+
+  if (event.timeBegin && typeof event.timeBegin === 'object')
+    event.timeBegin = event.timeBegin.format('HH:mm')
+  if (event.timeEnd && typeof event.timeEnd === 'object')
+    event.timeEnd = event.timeEnd.format('HH:mm')
 
   if (dispatch) {
   const token = localStorage.getItem('token');
@@ -120,8 +112,9 @@ export function updateEvent(event, dispatch) {
         throw new SubmissionError(errors);
       }
       dispatch({ type: EVENT_WINDOW_HIDE });
-      dispatch({ type: EVENT_CHANGE, event: {...event} });
       dispatch(reset('event'));
+      makeMomentDates(json);
+      dispatch({ type: EVENT_CHANGE, event: json });
       resolve();
     });
   }
@@ -136,8 +129,22 @@ export function updateEvent(event, dispatch) {
       body: JSON.stringify(event)
     })
     .then(res => res.json())
-    .then(() => {
-      dispatch({ type: EVENT_CHANGE, event });
+    .then((json) => {
+      makeMomentDates(json);
+      dispatch({ type: EVENT_CHANGE, event: json });
     });
   };
+}
+
+function makeMomentDates(event) {
+  for (let prop in event) {
+    if (event[prop]) {
+      if (prop === 'dateBegin' || prop === 'dateEnd') {
+        event[prop] = moment(event[prop], 'YYYY-MM-DD');
+      }
+      if (prop === 'timeBegin' || prop === 'timeEnd') {
+        event[prop] = moment(event[prop], 'HH:mm');
+      }
+    }
+  }
 }

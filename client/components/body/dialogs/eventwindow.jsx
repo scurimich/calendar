@@ -61,6 +61,7 @@ const periodicField = ({ input, type, disabled, required, meta: { touched, error
 };
 
 const validate = values => {
+	// console.log(values);
 	const errors = {};
 	const dateBegin = moment(values.dateBegin);
 	const dateEnd = moment(values.dateEnd);
