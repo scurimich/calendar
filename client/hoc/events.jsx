@@ -78,7 +78,7 @@ const events = (Component) => {
       let counter = 0;
       let flag = true;
 
-      while((linesCount && counter < linesCount) || (events.length && !linesCount)) {
+      while((linesCount && counter <= linesCount) || (events.length && !linesCount)) {
         let day = date.clone();
         let size = 0;
         let currentOffset;

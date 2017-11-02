@@ -2,7 +2,7 @@ import { CHANGE_MONTHVIEW } from '../constants/actions.js';
 
 const initialInfo = {
   cellSize: 0,
-  lineSize: 19,
+  lineSize: 0,
   allEvents: null
 };
 

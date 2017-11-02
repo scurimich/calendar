@@ -69,12 +69,24 @@ input, textarea {
 		flex-direction: column;
 		height: 100%;
   	width: calc(100% - 280px);
+
+  	@media (max-width: 700px) {
+  		transorm: translate(100%);
+  	}
 	}
 
 	&__sidebar {
 		flex-grow: 0;
 		flex-shrink: 0;
 		width: 280px;
+
+	  @media (max-width: 860px) {
+			width: 210px;
+	  }
+
+  	@media (max-width: 700px) {
+  		width: 100%;
+  	}
 	}
 }
 

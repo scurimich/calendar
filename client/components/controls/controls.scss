@@ -10,11 +10,18 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-}
 
-.views {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  list-style: none;
+  &__views {
+    margin: 0 4px;
+
+    @media (max-width: 860px) {
+      margin: 0;
+    }
+  }
+
+  &__search {
+    @media (max-width: 1040px) {
+      display: none;
+    }
+  }
 }

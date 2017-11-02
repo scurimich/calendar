@@ -1,4 +1,9 @@
 .views {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  list-style: none;
+
 	&__item {
 		&:not(:last-child) {
 			margin-right: 2px;
@@ -23,6 +28,16 @@
 		&_active {
 			color: #fff;
 			background-color: #f0403c;
+		}
+
+		@media (max-width: 1040px) {
+			width: 50px;
+		}
+
+		@media (max-width: 860px) {
+			padding: 5px 8px 6px;
+			width: 32px;
+			font-size: 11px;
 		}
 	}
 }

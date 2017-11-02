@@ -28,7 +28,7 @@ class MonthWeek extends React.Component {
   componentDidUpdate() {
     const { changeMonthView, monthView }  = this.props;
     const cell = document.querySelector('.month-day__body');
-    const line = document.querySelector('.month-events__line');
+    const line = document.querySelector('.month-events__line:not([class*=more])');
 
     if (cell && cell.clientHeight && cell.clientHeight !== monthView.cellSize) 
       changeMonthView({ cellSize: cell.clientHeight });
@@ -76,8 +76,7 @@ class MonthWeek extends React.Component {
 
   getLinesNumber() {
     const { cellSize, lineSize } = this.props.monthView;
-    console.log(cellSize, lineSize)
-    return isFinite(Math.floor((cellSize - lineSize) / lineSize)) && Math.floor((cellSize - lineSize) / lineSize);
+    return isFinite(Math.floor((cellSize - (lineSize - 1)) / lineSize)) && Math.floor((cellSize - lineSize) / lineSize);
   }
 
   getEventsGroups(events) {
@@ -122,7 +121,7 @@ class MonthWeek extends React.Component {
         <MonthEvents
           date={firstDay}
           events={getEventsGroups(filteredEvents)}
-          linesCount={getLinesNumber() || 0}
+          linesCount={getLinesNumber() || 1}
           ndx={weekNdx}
           changeSelectedDate={changeSelectedDate}
           eventDragAndDrop={eventDragAndDrop}

@@ -17,6 +17,14 @@
     background-color: lighten(#323232, 5%);
   }
 
+  @media (max-width: 860px) {
+    padding-left: 4px;
+  }
+
+  @media (max-width: 700px) {
+    padding-left: 24px;
+  }
+
   &__descr {
     display: flex;
     flex-wrap: nowrap;
@@ -32,6 +40,10 @@
     height: 8px;
     border-radius: 50%;
     opacity: .8;
+
+    @media (max-width: 860px) {
+      margin-right: 4px;
+    }
   }
 
   &__title {

@@ -4,6 +4,10 @@
   flex-grow: 1;
   padding: 8px;
 
+  @media (max-width: 700px) {
+    padding: 8px 24px;
+  }
+
   &__weekdays {
     list-style: none;
     display: flex;

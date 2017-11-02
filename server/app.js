@@ -9,7 +9,7 @@ import router from './router';
 import config from './config';
 import './passport';
 
-mongoose.connect('mongodb://admin:vladireloner@ds127375.mlab.com:27375/calendar')
+mongoose.connect('mongodb://admin:vladireloner@ds127375.mlab.com:27375/calendar');
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
