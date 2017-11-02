@@ -4,20 +4,19 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 
-import events from '../../../hoc/events.jsx';
-import { MONTH_NAMES, MONTHS_IN_YEAR, TODAY } from '../../../constants/calendar.js';
-
-import {
-  setSpace,
-  setMiniSpace
-} from '../../../actions/space';
+import { setSpace, setMiniSpace } from '../../../actions/space';
 import { setView } from '../../../actions/view';
+
+import events from '../../../hoc/events.jsx';
+
+import { MONTH_NAMES, MONTHS_IN_YEAR, TODAY } from '../../../constants/calendar.js';
 
 import './year.scss';
 
 class Year extends React.Component {
   constructor(props) {
     super(props);
+
     this.onPrevClick = this.onArrowClick.bind(this, false);
     this.onNextClick = this.onArrowClick.bind(this, true);
   }
@@ -45,6 +44,7 @@ class Year extends React.Component {
         || (event.dateEnd.isSameOrAfter(month)
           && event.dateEnd.isBefore(nextMonth))) count++;
     });
+
     return count;
   }
 
@@ -62,6 +62,7 @@ class Year extends React.Component {
       }
       yearArray.push(oneMonth);
     }
+    
     return yearArray
   }
 

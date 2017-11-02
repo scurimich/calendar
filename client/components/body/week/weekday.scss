@@ -30,10 +30,10 @@
   display: flex;
   position: relative;
   min-height: 40px;
-  border-top: 1px solid #ccc;
 
   &__body {
     flex-grow: 1;
+    border-top: 1px solid #ccc;
   }
 
   &__event {

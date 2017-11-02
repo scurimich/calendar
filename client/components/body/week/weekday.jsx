@@ -1,16 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import WeekHourEvent from './weekhourevent.jsx';
 import dragAndDrop from '../../../hoc/dragndrop.jsx';
+
+import WeekHourEvent from './weekhourevent.jsx';
 
 import './weekday.scss';
 
 class WeekDay extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { id, events, getHours, weekend, eventDragAndDrop, setEventsPositions, setEventsSizes, groups } = this.props;
     const hours = getHours(events);

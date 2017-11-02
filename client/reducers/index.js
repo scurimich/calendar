@@ -14,14 +14,14 @@ import groupsStatus from './groupsstatus.js';
 import groupWindow from './groupwindow.js';
 import sidebar from './sidebar.js';
 import space from './space.js';
-import viewInfo from './viewinfo.js';
+import monthView from './monthView.js';
 import currentGroup from './filter.js';
 
 const reducer = combineReducers({
 	form,
 	user,
 	view,
-	viewInfo,
+	monthView,
 	date,
 	search,
 	events,

@@ -1,23 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import MonthWeek from './monthweek.jsx';
 import { WEEKDAYS } from '../../../constants/calendar.js';
 import calendarInfo from '../../../hoc/calendarinfo.jsx';
+
+import MonthWeek from './monthweek.jsx';
 
 import './month.scss';
 
 class Month extends React.Component {
-	constructor(props) {
-		super(props);
-	}
-
 	render() {
-		const {
-			space,
-			getWeeks,
-			getWeek
-		} = this.props;
+		const { space, getWeeks, getWeek } = this.props;
 		const weeks = getWeeks(space);
 
 		return (

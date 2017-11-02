@@ -6,10 +6,6 @@ import Event from './event.jsx';
 import './searchresults.scss';
 
 export default class SearchResults extends React.Component {
-	constructor(props) {
-		super(props)
-	}
-
 	onSrchResClick(date) {
 		return this.props.onSrchResClick.bind(null, date);
 	}

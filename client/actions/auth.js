@@ -60,8 +60,8 @@ export function auth(token) {
       dispatch({type: LOGIN, email: user});
     })
     .catch((err) => {
-      dispatch({type: LOGOUT});
       localStorageClear();
+      dispatch({type: LOGOUT});
     });
   }
 };

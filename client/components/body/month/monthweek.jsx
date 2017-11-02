@@ -3,18 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import MonthDay from './monthday.jsx';
-import MonthEvents from './monthevents.jsx';
+import { eventWindowShow } from '../../../actions/eventwindow.js';
+import { setDate, setSpace, setMiniSpace } from '../../../actions/space.js';
+import { setView, changeMonthView } from '../../../actions/view.js';
+
 import dragAndDrop from '../../../hoc/dragndrop.jsx';
 import events from '../../../hoc/events.jsx';
 
-import { eventWindowShow } from '../../../actions/eventwindow.js';
-import {
-  setDate,
-  setSpace,
-  setMiniSpace
-} from '../../../actions/space.js';
-import { setView, changeViewInfo } from '../../../actions/view.js';
+import MonthDay from './monthday.jsx';
+import MonthEvents from './monthevents.jsx';
 
 import './monthweek.scss';
 
@@ -22,20 +19,26 @@ class MonthWeek extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      selected: null
-    };
-
     this.onDateClick = this.onDateClick.bind(this);
-    this.getCellHeight = this.getCellHeight.bind(this);
-    this.getLineHeight = this.getLineHeight.bind(this);
     this.getLinesNumber = this.getLinesNumber.bind(this);
     this.changeSelectedDate = this.changeSelectedDate.bind(this);
     this.getEventsGroups = this.getEventsGroups.bind(this);
   }
 
+  componentDidUpdate() {
+    const { changeMonthView, monthView }  = this.props;
+    const cell = document.querySelector('.month-day__body');
+    const line = document.querySelector('.month-events__line');
+
+    if (cell && cell.clientHeight && cell.clientHeight !== monthView.cellSize) 
+      changeMonthView({ cellSize: cell.clientHeight });
+    if (cell && line.clientHeight && line.clientHeight !== monthView.lineSize)
+      changeMonthView({ lineSize: line.clientHeight });
+  }
+
   changeSelectedDate(date, e) {
-    this.setState({ selected: date });
+    const { changeMonthView } = this.props;
+    changeMonthView({ allEvents: date });
   }
 
   onAddClick(date, e) {
@@ -71,22 +74,9 @@ class MonthWeek extends React.Component {
     setMiniSpace(date);
   }
 
-  getCellHeight(cell) {
-    if (!cell) return;
-    const { changeViewInfo, viewInfo } = this.props;
-    if (viewInfo.cellSize !== cell.clientHeight)
-      changeViewInfo({ cellSize: cell.clientHeight });
-  }
-
-  getLineHeight(line) {
-    if (!line) return;
-    const { changeViewInfo, viewInfo } = this.props;
-    if (viewInfo.lineSize !== line.clientHeight)
-      changeViewInfo({ lineSize: line.clientHeight });
-  }
-
   getLinesNumber() {
-    const { cellSize, lineSize } = this.props.viewInfo;
+    const { cellSize, lineSize } = this.props.monthView;
+    console.log(cellSize, lineSize)
     return isFinite(Math.floor((cellSize - lineSize) / lineSize)) && Math.floor((cellSize - lineSize) / lineSize);
   }
 
@@ -113,10 +103,20 @@ class MonthWeek extends React.Component {
       getWeekLines,
       filterWeek
     } = this.props;
-    const { selected } = this.state;
-    const { onDateClick, onAddClick, onDayClick, getCellHeight, changeSelectedDate, getLineHeight, getLinesNumber, getEventsGroups } = this;
+    const {
+      onDateClick,
+      onAddClick,
+      onDayClick,
+      getCellHeight,
+      changeSelectedDate,
+      getLineHeight,
+      getLinesNumber,
+      getEventsGroups
+     } = this;
+    const { allEvents, cellSize } = this.props.monthView;
     const filteredEvents = filterWeek({weekBegin: firstDay, events});
     const week = getWeek({space:firstDay, globalSpace: space, events: filteredEvents, date});
+
     return (
       <li className='month__week'>
         <MonthEvents
@@ -127,7 +127,6 @@ class MonthWeek extends React.Component {
           changeSelectedDate={changeSelectedDate}
           eventDragAndDrop={eventDragAndDrop}
           getWeekLines={getWeekLines}
-          getLineHeight={getLineHeight}
         />
          <ul className='month__days'>
           {
@@ -136,7 +135,7 @@ class MonthWeek extends React.Component {
                 {...day}
                 events={getEventsGroups(day.events)}
                 key={ndx}
-                selected={selected && selected.isSame(day.date)}
+                selected={allEvents && allEvents.isSame(day.date)}
                 hover={
                   selectedEvent
                   && selectedEvent.dateBegin.isSameOrBefore(day.date)
@@ -145,7 +144,6 @@ class MonthWeek extends React.Component {
                 onDateClick={onDateClick}
                 onAddClick={onAddClick.bind(this, day.date)}
                 onDayClick={onDayClick.bind(this, day.date)}
-                getCellHeight={getCellHeight}
                 changeSelectedDate={changeSelectedDate}
                 eventDragAndDrop={eventDragAndDrop}
               />
@@ -165,14 +163,14 @@ MonthWeek.propTypes = {
   events: PropTypes.array,
   groups: PropTypes.array,
   weekNdx: PropTypes.number,
-  viewInfo: PropTypes.object,
+  monthView: PropTypes.object,
   eventDragAndDrop: PropTypes.func,
   setView: PropTypes.func,
   setSpace: PropTypes.func,
   setMiniSpace: PropTypes.func,
   eventWindowShow: PropTypes.func,
   setDate: PropTypes.func,
-  changeViewInfo: PropTypes.func,
+  changeMonthView: PropTypes.func,
   getWeek: PropTypes.func,
   getWeekLines: PropTypes.func,
   filterWeek: PropTypes.func
@@ -184,7 +182,7 @@ const mapStateToProps = state => ({
   groups: state.groups,
   space: state.space.main,
   selectedEvent: state.selected,
-  viewInfo: state.viewInfo
+  monthView: state.monthView
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
@@ -193,7 +191,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   setSpace,
   setMiniSpace,
   setView,
-  changeViewInfo,
+  changeMonthView,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(events(dragAndDrop(MonthWeek)));

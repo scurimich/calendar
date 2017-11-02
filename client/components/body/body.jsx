@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import { addEvent, updateEvent } from '../../actions/events.js';
+import { eventWindowShow, eventWindowHide } from '../../actions/eventwindow.js';
+import { groupWindowShow, groupWindowHide } from '../../actions/groupwindow.js';
+import { addGroup, updateGroup } from '../../actions/groups.js';
+
 import Year from './year/year.jsx';
 import Month from './month/month.jsx';
 import Week from './week/week.jsx';
@@ -10,26 +15,11 @@ import Day from './day/day.jsx';
 import EventWindow from './dialogs/eventwindow.jsx';
 import GroupWindow from './dialogs/groupwindow.jsx';
 
-import {
-	addEvent,
-	updateEvent
-} from '../../actions/events.js';
-import { eventWindowShow, eventWindowHide } from '../../actions/eventwindow.js';
-import { groupWindowShow, groupWindowHide } from '../../actions/groupwindow.js';
-import { addGroup, updateGroup } from '../../actions/groups.js';
-
 import './body.scss';
 
 class Body extends React.Component {
-	constructor(props) {
-		super(props);
-	}
-
 	setCurrentView() {
-		const {
-			active,
-			space,
-		} = this.props;
+		const { active, space } = this.props;
 
 		switch(active) {
 			case 'Day': return <Day />;

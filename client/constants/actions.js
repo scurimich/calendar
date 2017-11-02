@@ -34,7 +34,7 @@ export const REMOVE_EVENT_SELECTION = 'REMOVE_EVENT_SELECTION';
 export const SELECT_GROUP = 'SELECT_GROUP';
 //view
 export const CHANGE_VIEW = 'CHANGE_VIEW';
-export const CHANGE_VIEWINFO = 'CHANGE_VIEWINFO';
+export const CHANGE_MONTHVIEW = 'CHANGE_MONTHVIEW';
 //search
 export const CHANGE_SEARCH_STR = 'CHANGE_SEARCH_STR';
 //windows

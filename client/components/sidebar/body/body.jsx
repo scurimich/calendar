@@ -17,10 +17,6 @@ import Groups from './groups.jsx';
 import './body.scss';
 
 class SidebarBody extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   searchEvents() {
     const { search, events } = this.props;
     return events.filter(event => {
@@ -83,10 +79,10 @@ class SidebarBody extends React.Component {
     );
 
     return (
-    <div className='sidebar__body'>
-      <AddItem addEvent={eventWindowShow.bind(null, null)} addGroup={groupWindowShow.bind(null, null)} />
-      { search ? searchResults : sidebarInfo }
-    </div>
+      <div className='sidebar__body'>
+        <AddItem addEvent={eventWindowShow.bind(null, null)} addGroup={groupWindowShow.bind(null, null)} />
+        { search ? searchResults : sidebarInfo }
+      </div>
     )
   }
 };

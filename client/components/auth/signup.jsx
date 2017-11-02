@@ -6,16 +6,12 @@ import { register } from '../../actions/auth.js';
 
 import './signup.scss';
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-const input = ({ input, name, label, type, meta: { touched, error } }) => {
-  return (
-    <label className='signup__label'> {label}
-      <input className='signup__input' {...input} type={type} name={name} placeholder={label} />
-      {touched && (error && <span className='signup__error'>{error}</span>)}
-    </label>
-  );
-};
+const input = ({ input, name, label, type, meta: { touched, error } }) => (
+  <label className='signup__label'> {label}
+    <input className='signup__input' {...input} type={type} name={name} placeholder={label} />
+    {touched && (error && <span className='signup__error'>{error}</span>)}
+  </label>
+);
 
 const validate = values => {
   const errors = {};
@@ -37,23 +33,20 @@ const validate = values => {
   return errors;
 }
 
-const Signup = ({ handleSubmit }) => {
-  return (
-    <form id='signup' className='auth__signup signup' onSubmit={handleSubmit(register)}>
-      <h2 className='signup__head'>Create new account</h2>
-      <Field component={input} label='Email' type='text' name='email' />
-      <Field component={input} label='Password' type='text' name='password' />
-      <Field component={input} label='Repeat password' type='text' name='repeat' />
-      <button className='signup__button' type='submit'>register</button>
-    </form>
-  );
-}
+const Signup = ({ handleSubmit }) => (
+  <form id='signup' className='auth__signup signup' onSubmit={handleSubmit(register)}>
+    <h2 className='signup__head'>Create new account</h2>
+    <Field component={input} label='Email' type='text' name='email' />
+    <Field component={input} label='Password' type='password' name='password' />
+    <Field component={input} label='Repeat password' type='password' name='repeat' />
+    <button className='signup__button' type='submit'>register</button>
+  </form>
+);
 
 Signup.propTypes = {
   handleSubmit: PropTypes.func,
   submit: PropTypes.func
 };
-
 
 export default reduxForm({
   form: 'signup',

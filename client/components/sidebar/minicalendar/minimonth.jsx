@@ -1,17 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import MiniDay from './miniday.jsx';
 import { WEEKDAYS } from '../../../constants/calendar.js'
 import calendarInfo from '../../../hoc/calendarinfo.jsx';
+
+import MiniDay from './miniday.jsx';
 
 import './minimonth.scss';
 
 class MiniMonth extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   getMonth() {
     const { date, space, getWeeks, getWeek } = this.props;
     const weeks = getWeeks(space);

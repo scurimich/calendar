@@ -4,15 +4,6 @@ import PropTypes from 'prop-types';
 import './monthevents.scss';
 
 export default class MonthEvents extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-    const { getLineHeight } = this.props;
-    if (this.line) getLineHeight(this.line);
-  }
-
   getEvents() {
     const { events, date, linesCount, getWeekLines } = this.props;
 
@@ -25,8 +16,7 @@ export default class MonthEvents extends React.Component {
   }
 
   render() {
-    const currentEvents = this.getEvents();
-    const { lines, extra } = currentEvents;
+    const { lines, extra } = this.getEvents();
     const { eventDragAndDrop } = this.props;
 
     return (
@@ -88,6 +78,5 @@ MonthEvents.propTypes = {
   date: PropTypes.object,
   linesCount: PropTypes.number,
   changeSelectedDate: PropTypes.func,
-  eventDragAndDrop: PropTypes.func,
-  getLineHeight: PropTypes.func
+  eventDragAndDrop: PropTypes.func
 };

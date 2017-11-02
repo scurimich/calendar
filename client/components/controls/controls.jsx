@@ -3,18 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import View from './view/view.jsx';
-import Search from './search/search.jsx';
-import CurrentSpace from './currentspace/currentspace.jsx';
-
-import {
-	setSpace,
-	setMiniSpace
-} from '../../actions/space.js';
+import { setSpace, setMiniSpace } from '../../actions/space.js';
 import { setView } from '../../actions/view.js';
 import { changeSearchStr } from '../../actions/search.js';
 
 import { DAYS_IN_WEEK } from '../../constants/calendar.js';
+
+import View from './view/view.jsx';
+import Search from './search/search.jsx';
+import CurrentSpace from './currentspace/currentspace.jsx';
 
 import './controls.scss';
 
@@ -128,8 +125,7 @@ Controls.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-	// console.log('---------------------------')
-	// console.log(state.selected)
+	// console.log(state)
 	return {
 		activeView: state.view,
 		date: state.date,

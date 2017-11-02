@@ -1,28 +1,25 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
+
 import './groupwindow.scss';
 
-const textInput = ({ input, label, type, required, meta: { touched, error } }) => {
-  return (
-    <div className='group-window__input-container'>
-      <input className='group-window__input' {...input} placeholder={label} type={type} />
-      {touched && (error && <span className='message message_error'>{error}</span>)}
-    </div>
-  )
-};
+const textInput = ({ input, label, type, required, meta: { touched, error } }) => (
+  <div className='group-window__input-container'>
+    <input className='group-window__input' {...input} placeholder={label} type={type} />
+    {touched && (error && <span className='message message_error'>{error}</span>)}
+  </div>
+)
 
 const validate = values => {
   const errors = {};
   if (!values.label) errors.label = 'Required';
+
   return errors;
 }
 
 class GroupWindow extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   popupClasses() {
     let classes = 'group-window'
     return this.props.groupWindow.showed ? classes += ' opened' : classes;
@@ -32,6 +29,7 @@ class GroupWindow extends React.Component {
     const { handleSubmit, onWindowClose, addGroup, updateGroup, initialValues } = this.props;
     const id = initialValues._id;
     const submit = id ? updateGroup : addGroup;
+
     return (
       <div className={this.popupClasses()} id='group-window'>
         <div className='group-window__popup'>
@@ -54,6 +52,13 @@ class GroupWindow extends React.Component {
     );
   }
 }
+
+GroupWindow.propTypes = {
+  addGroup: PropTypes.func,
+  groupWindow: PropTypes.object,
+  onWindowClose: PropTypes.func,
+  updateWindow: PropTypes.func
+};
 
 export default connect(state => ({initialValues: state.groupWindow.data}), null)(reduxForm({
   form: 'group',

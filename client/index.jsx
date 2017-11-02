@@ -1,14 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-
 import createHistory from 'history/createBrowserHistory';
 import { Route } from 'react-router';
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
-
 import thunk from 'redux-thunk';
+
 import reducer from './reducers/index.js';
 import Auth from './components/auth/auth.jsx';
 import App from './components/app.jsx';

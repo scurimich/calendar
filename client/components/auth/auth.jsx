@@ -3,17 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router';
+
+import { auth } from '../../actions/auth.js';
+
 import Signup from './signup.jsx';
 import Signin from './signin.jsx';
 
-import { auth } from '../../actions/auth.js';
 import './auth.scss';
 
 class Auth extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   componentDidMount() {
     const token = localStorage.getItem('token');
     const { auth, user } = this.props;

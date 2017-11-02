@@ -6,17 +6,13 @@ import './monthday.scss';
 class MonthDay extends React.Component {
   constructor(props) {
     super(props);
+    
     this.removeSelectedDate = this.removeSelectedDate.bind(this);
-  }
-
-  componentDidMount() {
-    const { getCellHeight } = this.props;
-    if (this.body) getCellHeight(this.body);
   }
 
   removeSelectedDate(e) {
     e.stopPropagation();
-    const {changeSelectedDate} = this.props;
+    const { changeSelectedDate } = this.props;
     changeSelectedDate();
   }
 
@@ -39,7 +35,7 @@ class MonthDay extends React.Component {
       eventDragAndDrop,
     } = this.props;
     const { removeSelectedDate } = this;
-
+  
     return (
       <li
         id='day'
@@ -100,7 +96,6 @@ MonthDay.propTypes = {
   onDateClick: PropTypes.func,
   onAddClick: PropTypes.func,
   onDayClick: PropTypes.func,
-  getCellHeight: PropTypes.func,
   changeSelectedDate: PropTypes.func
 };
 

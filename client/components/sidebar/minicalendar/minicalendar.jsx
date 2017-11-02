@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import MiniMonth from './minimonth.jsx';
-import CurrentMonth from './currentmonth.jsx';
-
 import {
 	setDate,
 	setSpace,
@@ -15,9 +12,13 @@ import {
 } from '../../../actions/space';
 import { setView } from '../../../actions/view';
 
+import MiniMonth from './minimonth.jsx';
+import CurrentMonth from './currentmonth.jsx';
+
 class MiniCalendar extends React.Component {
 	constructor(props) {
 		super(props);
+		
 		this.setCurrentDate = this.setCurrentDate.bind(this);
 	}
 

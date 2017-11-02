@@ -73,6 +73,14 @@
 		  animation-iteration-count: infinite;
 		}
 	}
+
+	&__empty {
+		padding: 0 8px;
+		font-family: 'Open Sans', sans-serif;
+		font-weight: 400;
+		font-size: 14px;
+		color: #fff;
+	}
 }
 
 @keyframes events-spinner {

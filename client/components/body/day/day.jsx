@@ -4,19 +4,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import GeminiScrollbar from 'react-gemini-scrollbar';
 
-import HourEvent from './hourevent.jsx';
-
 import calendarInfo from '../../../hoc/calendarinfo.jsx';
 import dragAndDrop from '../../../hoc/dragndrop.jsx';
 import events from '../../../hoc/events.jsx';
 
+import HourEvent from './hourevent.jsx';
+
 import './day.scss';
 
 class Day extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   modifiedTimeEvents(events) {
     const { setEventsSizes, filterTime } = this.props;
     const timeEvents = filterTime(events);
@@ -62,6 +58,7 @@ class Day extends React.Component {
                 {
                   hours.map(hour => {
                     const events = setEventsPositions(hour.events);
+                    
                     return (
                       <li
                         className='day__hour day-hour'

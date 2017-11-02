@@ -5,18 +5,15 @@ import { bindActionCreators } from 'redux';
 import GeminiScrollbar from 'react-gemini-scrollbar';
 import moment from 'moment';
 
-import WeekDay from './weekday.jsx';
 import { WEEKDAYS } from '../../../constants/calendar.js';
 import calendarInfo from '../../../hoc/calendarinfo.jsx';
 import events from '../../../hoc/events.jsx';
 
+import WeekDay from './weekday.jsx';
+
 import './week.scss';
 
 class Week extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   getAllDayEvents(events) {
     const { space, getWeekLines, filterDays, groups } = this.props;
     const day = space.day() ? space.day() - 1 : 6;

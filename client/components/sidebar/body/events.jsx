@@ -2,16 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import GeminiScrollbar from 'react-gemini-scrollbar';
 
-import Event from './event.jsx';
 import events from '../../../hoc/events.jsx';
+
+import Event from './event.jsx';
 
 import './events.scss';
 
 class Events extends React.Component {
-	constructor(props) {
-    super(props);
-	}
-
   getGroup(id, event) {
     const { groups } = this.props;
     return groups.find(group => group._id === id);
@@ -31,7 +28,7 @@ class Events extends React.Component {
         <span className='events__loading'>loading</span>
       </div>
     );
-    const empty = <span className='events__empty'>There are no events, add one'</span>;
+    const empty = <span className='events__empty'>There are no events, add one.</span>;
     const content = (
       <GeminiScrollbar className='events__scrollbar'>
         <ul className='events__list'>

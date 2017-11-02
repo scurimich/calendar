@@ -5,14 +5,15 @@ import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router';
 import moment from 'moment';
 
+import { auth } from '../actions/auth.js';
+import { fetchEvents, changeEvent } from '../actions/events.js';
+import { fetchGroups } from '../actions/groups.js';
+
 import Sidebar from './sidebar/sidebar.jsx';
 import Controls from './controls/controls.jsx';
 import Body from './body/body.jsx';
 import NotificationContainer from './notification/notifictaioncontainer.jsx';
 
-import { auth } from '../actions/auth.js';
-import { fetchEvents, changeEvent } from '../actions/events.js';
-import { fetchGroups } from '../actions/groups.js';
 import './app.scss';
 
 class App extends React.Component {
@@ -68,8 +69,8 @@ class App extends React.Component {
 
   render() {
     const token = localStorage.getItem('token');
-    if (!token) return <Redirect to='/login' />;
 
+    if (!token) return <Redirect to='/login' />;
     const { getNotifications, removeNotification } = this;
     const { user, events } = this.props;
     const { authenticated } = user;

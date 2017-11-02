@@ -1,15 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import moment from 'moment';
-
 import Select from 'react-select';
+
 import { WEEKDAYS } from '../../../constants/calendar.js';
 
 import './eventwindow.scss';
 
 const inputText = ({ input, label, type, required, meta: { touched, error } }) => {
 	const req = required ? (<span className='event-window__required'>*</span>) : '';
+
 	return (
 		<label className='event-window__text-label'>{label}{req}
 			<input className='event-window__txt-input' {...input} placeholder={label} type={type} />
@@ -21,6 +23,7 @@ const inputText = ({ input, label, type, required, meta: { touched, error } }) =
 const inputDate = ({ input, label, type, required, meta: { touched, error } }) => {
 	if (typeof input.value === 'object') input.value = moment(input.value).format('YYYY-MM-D');
 	const req = required ? (<span className='event-window__required'>*</span>) : '';
+
 	return (
 		<div className='event-window__date-cont'>
 			<label className='event-window__date-label'>{label}{req}</label>
@@ -33,6 +36,7 @@ const inputDate = ({ input, label, type, required, meta: { touched, error } }) =
 const inputTime = ({ input, label, type, disabled, required, meta: { touched, error } }) => {
 	if (typeof input.value === 'object') input.value = input.value.format('HH:mm');
 	const req = required ? (<span className='event-window__required'>*</span>) : '';
+
 	return (
 		<div className='event-window__time-cont event-window__time-cont_left'>
 			<label className='event-window__time-label'>{label}{req}</label>
@@ -42,26 +46,23 @@ const inputTime = ({ input, label, type, disabled, required, meta: { touched, er
 	);
 };
 
-const periodicField = ({ input, type, disabled, required, meta: { touched, error } }) => {
-	return (
-		<div className='event-window__days'>
-			{
-				WEEKDAYS.map((val, ndx) => {
-					return (
-						<div key={ndx}>
-							<Field className='event-window__checkbox' component='input' type={type} id={val} name={`${input.name}[${ndx}]`} disabled={disabled}/>
-							<label className='event-window__check-label' htmlFor={val}>{val}</label>
-						</div>
-					);
-				})
-			}
-			{error && <span className='message message_error'>{error}</span>}
-		</div>
-	);
-};
+const periodicField = ({ input, type, disabled, required, meta: { touched, error } }) => (
+	<div className='event-window__days'>
+		{
+			WEEKDAYS.map((val, ndx) => {
+				return (
+					<div key={ndx}>
+						<Field className='event-window__checkbox' component='input' type={type} id={val} name={`${input.name}[${ndx}]`} disabled={disabled}/>
+						<label className='event-window__check-label' htmlFor={val}>{val}</label>
+					</div>
+				);
+			})
+		}
+		{error && <span className='message message_error'>{error}</span>}
+	</div>
+);
 
 const validate = values => {
-	// console.log(values);
 	const errors = {};
 	const dateBegin = moment(values.dateBegin);
 	const dateEnd = moment(values.dateEnd);
@@ -162,6 +163,7 @@ class EventWindow extends React.Component {
 		const { allDay, periodic, notification } = initialValues;
 		const id = initialValues._id;
 		const submit = id ? updateEvent : addEvent;
+
 		return (
 			<div className={this.active()} id='event-window'>
 				<div className='event-window__popup'>
@@ -220,6 +222,16 @@ class EventWindow extends React.Component {
 	}
 }
 
+EventWindow.propTypes = {
+	addEvent: PropTypes.func,
+	updateEvent: PropTypes.func,
+	eventWindow: PropTypes.object,
+	onWindowClose: PropTypes.func,
+	addGroup: PropTypes.func,
+	groups: PropTypes.array,
+	eventWindowShow: PropTypes.func
+};
+
 const mapStateToProps = state => {
 	const group = state.groups.find(group => group._id === state.eventWindow.data.group);
 	return {
@@ -233,4 +245,3 @@ export default connect(mapStateToProps, null)(reduxForm({
 	keepDirtyOnReinitialize: true,
 	validate
 })(EventWindow));
-

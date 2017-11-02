@@ -6,14 +6,12 @@ import { login } from '../../actions/auth.js';
 
 import './signin.scss';
 
-const input = ({ input, name, label, type, meta: { touched, error } }) => {
-  return (
-    <label className='signin__label'> {label}
-      <input className='signin__input' {...input} type={type} name={name} placeholder={label} />
-      {touched && (error && <span className='signin__error'>{error}</span>)}
-    </label>
-  );
-};
+const input = ({ input, name, label, type, meta: { touched, error } }) => (
+  <label className='signin__label'> {label}
+    <input className='signin__input' {...input} type={type} name={name} placeholder={label} />
+    {touched && (error && <span className='signin__error'>{error}</span>)}
+  </label>
+);
 
 const validate = values => {
   const errors = {};
@@ -30,16 +28,14 @@ const validate = values => {
   return errors;
 }
 
-const Signin = ({ handleSubmit }) => {
-  return (
-    <form id='sign' className='auth__signin signin' onSubmit={handleSubmit(login)}>
-  		<h2 className='signin__head'>Log in</h2>
-  		<Field component={input} type='text' name='email' label='Email' />
-  		<Field component={input} type='password' name='password' label='Password' />
-  		<button className='signin__button'>login</button>
-  	</form>
-  );
-}
+const Signin = ({ handleSubmit }) => (
+  <form id='sign' className='auth__signin signin' onSubmit={handleSubmit(login)}>
+		<h2 className='signin__head'>Log in</h2>
+		<Field component={input} type='text' name='email' label='Email' />
+		<Field component={input} type='password' name='password' label='Password' />
+		<button className='signin__button'>login</button>
+	</form>
+);
 
 Signin.propTypes = {
   handleSubmit: PropTypes.func,
