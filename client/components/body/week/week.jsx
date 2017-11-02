@@ -42,6 +42,15 @@ class Week extends React.Component {
     return halfHours;
   }
 
+  getWeekDays(week) {
+    console.log(week)
+    return week.map(day => ({
+      date: day.date,
+      today: day.today,
+      currentDate: day.currentDate
+    }));
+  }
+
   render() {
     const { events, getWeek, space, date, filterDay, filterWeek, getHours, setEventsPositions, setEventsSizes, groups } = this.props;
     const day = space.day() ? space.day() - 1 : 6;
@@ -50,13 +59,16 @@ class Week extends React.Component {
     const week = getWeek({space, date});
     const sidebar = this.getSidebar();
     const lines = this.getAllDayEvents(filteredEvents);
+    const weekDays = this.getWeekDays(week);
 
     return (
       <div className='body__week week'>
         <ul className='week__weekdays'>
           {
-            WEEKDAYS.map((day, ndx) => (
-              <li className='week__weekday' key={ndx}>{day}</li>
+            weekDays.map((day, ndx) => (
+              <li className='week__weekday' key={ndx}>
+                {day.date.format('ddd (DD.MM)')}
+              </li>
             ))
           }
         </ul>
