@@ -90,6 +90,10 @@
   display: flex;
   position: relative;
 
+  &_hover {
+    background-color: #efefef;
+  }
+
   &__time {
     box-sizing: border-box;
     display: flex;

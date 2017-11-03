@@ -158,7 +158,16 @@ class EventWindow extends React.Component {
 	}
 
 	render() {
-		const { handleSubmit, onWindowClose, eventWindow, addGroup, addEvent, updateEvent,  groups, initialValues } = this.props;
+		const {
+			handleSubmit,
+			onWindowClose,
+			eventWindow,
+			addGroup,
+			addEvent,
+			updateEvent,
+			groups,
+			initialValues
+		} = this.props;
 		const { dateBegin, dateEnd, timeBegin, timeEnd } = eventWindow.data;
 		const { allDay, periodic, notification } = initialValues;
 		const id = initialValues._id;

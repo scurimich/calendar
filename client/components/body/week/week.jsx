@@ -43,7 +43,6 @@ class Week extends React.Component {
   }
 
   getWeekDays(week) {
-    console.log(week)
     return week.map(day => ({
       date: day.date,
       today: day.today,
@@ -52,7 +51,19 @@ class Week extends React.Component {
   }
 
   render() {
-    const { events, getWeek, space, date, filterDay, filterWeek, getHours, setEventsPositions, setEventsSizes, groups } = this.props;
+    const {
+      events,
+      getWeek,
+      space,
+      date,
+      filterDay,
+      filterWeek,
+      getHours,
+      setEventsPositions,
+      setEventsSizes,
+      groups,
+      selectedEvent
+    } = this.props;
     const day = space.day() ? space.day() - 1 : 6;
     const weekBegin = space.clone().subtract(day, 'days');
     const filteredEvents = filterWeek({events, weekBegin});
@@ -143,6 +154,7 @@ class Week extends React.Component {
                       getHours={getHours}
                       setEventsPositions={setEventsPositions}
                       setEventsSizes={setEventsSizes}
+                      selectedEvent={selectedEvent}
                     />);
                   })
                 }
@@ -174,7 +186,8 @@ const mapStateToProps = state => ({
   date: state.date,
   space: state.space.main,
   events: state.events,
-  groups: state.groups
+  groups: state.groups,
+  selectedEvent: state.selected
 });
 
 export default connect(mapStateToProps, null)(calendarInfo(events(Week)));

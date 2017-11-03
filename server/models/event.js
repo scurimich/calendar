@@ -19,6 +19,7 @@ const eventSchema = mongoose.Schema({
   description: {
     type: String,
     required: false,
+    default: '',
     validate: [textValidate, 'Invalid description'],
     maxlength: [200, 'Title must be less than 200 characters']
   },

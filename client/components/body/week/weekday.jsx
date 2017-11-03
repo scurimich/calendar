@@ -9,8 +9,20 @@ import './weekday.scss';
 
 class WeekDay extends React.Component {
   render() {
-    const { id, events, getHours, weekend, eventDragAndDrop, setEventsPositions, setEventsSizes, groups } = this.props;
+    const {
+      date,
+      id,
+      events,
+      getHours,
+      weekend,
+      eventDragAndDrop,
+      setEventsPositions,
+      setEventsSizes,
+      groups,
+      selectedEvent
+    } = this.props;
     const hours = getHours(events);
+    
     return (
       <li id='day' className={`week__day${weekend ? ' week__day_weekend' : ''}`}>
         <ul className='week__hours'>
@@ -18,8 +30,14 @@ class WeekDay extends React.Component {
             hours.map(hour => {
               const eventsWithSize = setEventsSizes(hour.events);
               const events = setEventsPositions(eventsWithSize);
+              const nextHour = hour.time.clone().add(1, 'hours');
+              const hover = selectedEvent && selectedEvent.dateBegin.isSame(date) && selectedEvent.timeBegin.isBefore(nextHour) && selectedEvent.timeEnd.isAfter(hour.time);
+
               return (
-                <li className='week__hour week-hour' key={hour.time.format('HHmm')}>
+                <li
+                  className={`week__hour week-hour${hover ? ' week-hour_hover' : ''}`}
+                  key={hour.time.format('HHmm')}
+                >
                   <div
                     className='week-hour__body'
                     data-dd='true'
@@ -29,7 +47,15 @@ class WeekDay extends React.Component {
                     {
                       events.map((event, ndx) => {
                         const color = event.group && groups.find(group => group._id === event.group).color;
-                        return <WeekHourEvent {...event} key={ndx} color={color} eventDragAndDrop={eventDragAndDrop} />
+                        return (
+                          <WeekHourEvent
+                            {...event}
+                            key={ndx}
+                            color={color}
+                            eventDragAndDrop={eventDragAndDrop}
+                            selected={selectedEvent && selectedEvent._id === event._id}
+                          />
+                        );
                       })
                     }
                   </div>

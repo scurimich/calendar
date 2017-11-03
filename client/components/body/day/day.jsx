@@ -28,7 +28,15 @@ class Day extends React.Component {
   }
 
   render() {
-    const { space, events, getHours, filterDate, eventDragAndDrop, setEventsPositions } = this.props;
+    const {
+      space,
+      events,
+      getHours,
+      filterDate,
+      eventDragAndDrop,
+      setEventsPositions,
+      selectedEvent
+    } = this.props;
     const filteredEvents = filterDate({date: space, events});
     const allDayEvents = this.getAllDayEvents(filteredEvents);
     const modifiedEvents = this.modifiedTimeEvents(filteredEvents);
@@ -58,10 +66,12 @@ class Day extends React.Component {
                 {
                   hours.map(hour => {
                     const events = setEventsPositions(hour.events);
+                    const nextHour = hour.time.clone().add(1, 'hours');
+                    const hover = selectedEvent && selectedEvent.timeBegin.isBefore(nextHour) && selectedEvent.timeEnd.isAfter(hour.time);
                     
                     return (
                       <li
-                        className='day__hour day-hour'
+                        className={`day__hour day-hour${hover ? ' day-hour_hover' : ''}`}
                         key={hour.time.format('HHmm')}
                         data-key={hour.time.format('HHmm')}
                       >
@@ -75,7 +85,12 @@ class Day extends React.Component {
                         >
                           {
                             events.map((event, ndx) => (
-                              <HourEvent {...event} key={ndx} eventDragAndDrop={eventDragAndDrop}/>
+                              <HourEvent
+                                {...event}
+                                key={ndx}
+                                eventDragAndDrop={eventDragAndDrop}
+                                selected={selectedEvent && selectedEvent._id === event._id}
+                              />
                             ))
                           }
                         </div>
@@ -107,7 +122,8 @@ Day.propTypes = {
 const mapStateToProps = state => ({
   events: state.events,
   groups: state.groups,
-  space: state.space.main
+  space: state.space.main,
+  selectedEvent: state.selected
 });
 
 export default connect(mapStateToProps, null)(calendarInfo(dragAndDrop(events(Day))));

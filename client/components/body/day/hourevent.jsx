@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import './hourevent.scss';
 
-const HourEvent = ({_id, height, width, top, left, zIndex, color, title, description, timeBegin, timeEnd, eventDragAndDrop}) => (
+const HourEvent = ({_id, height, width, top, left, zIndex, color, title, description, timeBegin, timeEnd, eventDragAndDrop, selected}) => (
   <div
-    className='day-hour__event hour-event'
+    className={`day-hour__event hour-event${selected ? ' hour-event_selected' : ''}`}
     id={_id}
     style={ {'height': height + '%','width': width + '%', 'top': top + '%', 'left': left + '%', 'zIndex': zIndex} }
     onMouseDown={eventDragAndDrop}
