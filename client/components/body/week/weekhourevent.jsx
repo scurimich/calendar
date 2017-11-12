@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import './weekhourevent.scss';
 
 const WeekHourEvent = ({_id, height, width, top, left, zIndex, color, title, timeBegin, timeEnd, eventDragAndDrop, selected}) => (
   <div
-    className={`week-hour__event wh-event${selected ? ' wh-event_selected' : ''}`}
+    className={classNames('week-hour__event', 'wh-event', {'wh-event_selected': selected})}
     id={_id}
     style={ {'height': height + '%','width': width + '%', 'top': top + '%', 'left': left + '%', 'zIndex': zIndex} } 
     onMouseDown={eventDragAndDrop}

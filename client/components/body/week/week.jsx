@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import GeminiScrollbar from 'react-gemini-scrollbar';
 import moment from 'moment';
+import classNames from 'classnames';
 
 import { WEEKDAYS } from '../../../constants/calendar.js';
 import calendarInfo from '../../../hoc/calendarinfo.jsx';
@@ -93,14 +94,19 @@ class Week extends React.Component {
                       {
                         line.map((item, ndx) => {
                           if (!item._id) 
-                            return <span className={`week-events__offset week-events__offset_${item.size}`} key={ndx}></span>
+                            return <span className={classNames('week-events__offset', `week-events__offset_${item.size}`)} key={ndx}></span>
 
                           const color = item.group && item.group.color;
                           const time = item.allDay ? '' : `${item.timeBegin.format('HH:mm')} - ${item.timeEnd.format('HH:mm')}`;
 
                           return (
                             <div
-                              className={`week-events__item week-events__item_size-${item.size}${item.hidden ? ' week-events__item_hidden' : ''} week-event`} 
+                              className={classNames(
+                                'week-events__item',
+                                'week-event',
+                                `week-events__item_size-${item.size}`,
+                                {'week-events__item_hidden': item.hidden}
+                              )} 
                               key={ndx}
                               id={item._id}
                             >

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import dragAndDrop from '../../../hoc/dragndrop.jsx';
 
@@ -24,7 +25,7 @@ class WeekDay extends React.Component {
     const hours = getHours(events);
     
     return (
-      <li id='day' className={`week__day${weekend ? ' week__day_weekend' : ''}`}>
+      <li id='day' className={classNames('week__day', {'week__day_weekend': weekend})}>
         <ul className='week__hours'>
           {
             hours.map(hour => {
@@ -35,7 +36,7 @@ class WeekDay extends React.Component {
 
               return (
                 <li
-                  className={`week__hour week-hour${hover ? ' week-hour_hover' : ''}`}
+                  className={classNames('week__hour', 'week-hour', {'week-hour_hover': hover})}
                   key={hour.time.format('HHmm')}
                 >
                   <div

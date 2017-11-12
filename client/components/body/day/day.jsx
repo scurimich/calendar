@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import GeminiScrollbar from 'react-gemini-scrollbar';
+import classNames from 'classnames';
 
 import calendarInfo from '../../../hoc/calendarinfo.jsx';
 import dragAndDrop from '../../../hoc/dragndrop.jsx';
@@ -68,10 +69,13 @@ class Day extends React.Component {
                     const events = setEventsPositions(hour.events);
                     const nextHour = hour.time.clone().add(1, 'hours');
                     const hover = selectedEvent && selectedEvent.timeBegin.isBefore(nextHour) && selectedEvent.timeEnd.isAfter(hour.time);
+                    const hourClasses = classNames('day__hour', 'day-hour', {
+                      'day-hour_hover': hover
+                    });
                     
                     return (
                       <li
-                        className={`day__hour day-hour${hover ? ' day-hour_hover' : ''}`}
+                        className={hourClasses}
                         key={hour.time.format('HHmm')}
                         data-key={hour.time.format('HHmm')}
                       >

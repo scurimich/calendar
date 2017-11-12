@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import moment from 'moment';
 import Select from 'react-select';
+import classNames from 'classnames';
 
 import { WEEKDAYS } from '../../../constants/calendar.js';
 
@@ -107,12 +108,6 @@ class EventWindow extends React.Component {
 		this.selectGroup = this.selectGroup.bind(this);
 	}
 
-	active() {
-		const { showed, resetForm } = this.props.eventWindow;
-		let classes = 'event-window';
-		return showed ? classes += ' opened' : classes;
-	}
-
 	changeState(e) {
 		const { eventWindowShow } = this.props;
 		const field = e.currentTarget;
@@ -174,7 +169,7 @@ class EventWindow extends React.Component {
 		const submit = id ? updateEvent : addEvent;
 
 		return (
-			<div className={this.active()} id='event-window'>
+			<div className={classNames('event-window', {'opened': eventWindow.showed})} id='event-window'>
 				<div className='event-window__popup'>
 					<span className='event-window__close' onClick={onWindowClose}>
 						<i className="fa fa-times" aria-hidden="true"></i>

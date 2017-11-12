@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import './monthevents.scss';
 
@@ -28,15 +29,15 @@ export default class MonthEvents extends React.Component {
               {
                 line.map((item, ndx) => {
                   const color = item.group && item.group.color;
-                  const offset = <div className={`month-events__offset month-events__offset_${item.size}`} key={ndx}></div>;
+                  const offset = <div className={classNames('month-events__offset', `month-events__offset_${item.size}`)} key={ndx}></div>;
                   const event = (
                     <span
-                      className={
-                        `month-events__item
-                        month-events__item_size-${item.size}
-                        ${item.hidden ? 'month-events__item_hidden' : ''}
-                        month-event`
-                      }
+                      className={classNames(
+                        'month-events__item',
+                        'month-event',
+                        `month-events__item_size-${item.size}`,
+                        {'month-events__item_hidden': item.hidden}
+                      )}
                       key={ndx}
                       id={item._id}
                       ref={(line) => {this.line = line;}}

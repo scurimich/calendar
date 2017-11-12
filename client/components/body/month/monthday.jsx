@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import './monthday.scss';
 
@@ -35,19 +36,19 @@ class MonthDay extends React.Component {
       eventDragAndDrop,
     } = this.props;
     const { removeSelectedDate } = this;
+    const dayClasses = classNames('month__day', 'month-day', {
+      'month-day_active': currentDate,
+      'month-day_today': today,
+      'month-day_hover': hover,
+      'month-day_notcurrent': !currentSpace,
+      'month-day_weekend': weekend
+    });
   
     return (
       <li
         id='day'
         data-date={id}
-        className={
-          `month__day month-day
-          ${currentDate ? ' month-day_active' : ''}
-          ${today ? ' month-day_today' : ''}
-          ${hover ? ' month-day_hover' : ''}
-          ${!currentSpace ? ' month-day_notcurrent' : ''}
-          ${weekend ? ' month-day_weekend' : ''}`
-        }
+        className={dayClasses}
         data-dd='true'
         onClick={onDayClick}
       >
@@ -56,7 +57,7 @@ class MonthDay extends React.Component {
           <span id='add-event' className='month-day__add' onClick={onAddClick}>+</span>
         </div>
         <div className='month-day__body' ref={(body) => {this.body = body;}}></div>
-        <div className={`month-day__all${selected ? '' : ' month-day__all_hidden'}`}>
+        <div className={classNames('month-day__all', {'month-day__all_hidden': !selected})}>
           <div className='month-day__info'>
             <span className='month-day__full'>{date.format('DD MMMM YYYY')}</span>
             <span className='month-day__close' onClick={removeSelectedDate}><i className="fa fa-times" aria-hidden="true"></i></span>

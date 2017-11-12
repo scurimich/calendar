@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import { WEEKDAYS } from '../../../constants/calendar.js'
 import calendarInfo from '../../../hoc/calendarinfo.jsx';
@@ -38,7 +39,7 @@ class MiniMonth extends React.Component {
           month.dates.map((week, ndx) => {
             return (
               <li className='sidebar-month__week sidebar-week' key={ndx} >
-                <ul className={`sidebar-week__list${month.activeWeek === ndx ? ' sidebar-week__list_active' : ''}`}>
+                <ul className={classNames('sidebar-week__list', {'sidebar-week__list_active': month.activeWeek === ndx})}>
                 {
                   week.map((day, key) => {
                     return (<MiniDay {...day} key={key} onDayClick={setCurrentDate.bind(null, day.date)} />);

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
+import classNames from 'classnames';
 
 import './groupwindow.scss';
 
@@ -20,18 +21,13 @@ const validate = values => {
 }
 
 class GroupWindow extends React.Component {
-  popupClasses() {
-    let classes = 'group-window'
-    return this.props.groupWindow.showed ? classes += ' opened' : classes;
-  }
-
   render() {
-    const { handleSubmit, onWindowClose, addGroup, updateGroup, initialValues } = this.props;
+    const { handleSubmit, onWindowClose, addGroup, updateGroup, initialValues, groupWindow } = this.props;
     const id = initialValues._id;
     const submit = id ? updateGroup : addGroup;
 
     return (
-      <div className={this.popupClasses()} id='group-window'>
+      <div className={classNames('group-window', {'opened': groupWindow.showed})} id='group-window'>
         <div className='group-window__popup'>
           <span className='group-window__close' onClick={onWindowClose}>
             <i className="fa fa-times" aria-hidden="true"></i>

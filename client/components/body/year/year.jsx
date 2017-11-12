@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
+import classNames from 'classnames';
 
 import { setSpace, setMiniSpace } from '../../../actions/space';
 import { setView } from '../../../actions/view';
@@ -74,7 +75,7 @@ class Year extends React.Component {
     return (
       <div className="body__year year">
         <span className='year__arrow' onClick={this.onPrevClick}>
-          <i className="fa fa-angle-left" aria-hidden="true"></i>
+          <i className='fa fa-angle-left' aria-hidden='true'></i>
         </span>
         <ul className="year__list">
           {
@@ -89,7 +90,7 @@ class Year extends React.Component {
 
               return (
                 <li
-                  className={`year__item${month.current ? ' year__item_active' : ''}`}
+                  className={classNames('year__item', {'year__item_active': month.current})}
                   key={ndx}
                   onClick={this.onMonthClick.bind(this, month)}
                 >
