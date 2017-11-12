@@ -1,19 +1,18 @@
 'user strict';
 
 const webpack = require('webpack');
+const merge = require('webpack-merge');
 const path = require('path');
 const NODE_ENV = process.env.NODE_ENV || 'dev';
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-
-module.exports = {
+const common = {
 	entry: './client/index.jsx',
 	output: {
 		filename: 'build.js',
 		path: path.resolve(__dirname, 'public/build/'),
 		publicPath: 'build'
 	},
-	devtool: NODE_ENV == 'dev' ? 'inline-source-map' : null,
 	devServer: {
 		hot: true,
 		port: 9000,
@@ -21,7 +20,6 @@ module.exports = {
 			'*': 'http://localhost:3000'
 		}
 	},
-	watch: NODE_ENV == 'dev',
 	watchOptions: {
 		aggregateTimeout: 100
 	},
@@ -63,13 +61,19 @@ module.exports = {
 	},
 }
 
-if (NODE_ENV == 'prod') {
-	module.exports.plugins.push(
-		new webpack.optimize.UglifyJsPlugin({
-			compress: {
-				warnings: false,
-				drop_console: true
-			}
-		})
-	);
+if (NODE_ENV == 'dev') {
+	module.exports = merge(common, {
+		devtool: 'inline-source-map',
+		watch: true,
+		plugins: [
+			new webpack.optimize.UglifyJsPlugin({
+				compress: {
+					warnings: false,
+					drop_console: true
+				}
+			})
+		]
+	});
+} else {
+	module.exports = common;
 }
