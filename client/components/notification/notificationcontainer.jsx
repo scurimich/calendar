@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Notification from 'react-web-notification/lib/components/Notification';
 import moment from 'moment';
 
@@ -75,3 +76,9 @@ export default class NotificationContainer extends React.Component {
     />
   }
 }
+
+NotificationContainer.propTypes = {
+  events: PropTypes.array,
+  notifications: PropTypes.array,
+  removeNotification: PropTypes.func
+};

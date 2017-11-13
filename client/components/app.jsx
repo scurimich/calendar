@@ -6,13 +6,13 @@ import { Redirect } from 'react-router';
 import moment from 'moment';
 
 import { auth } from '../actions/auth.js';
-import { fetchEvents, changeEvent } from '../actions/events.js';
+import { fetchEvents, updateEvent } from '../actions/events.js';
 import { fetchGroups } from '../actions/groups.js';
 
 import Sidebar from './sidebar/sidebar.jsx';
 import Controls from './controls/controls.jsx';
 import Body from './body/body.jsx';
-import NotificationContainer from './notification/notifictaioncontainer.jsx';
+import NotificationContainer from './notification/notificationcontainer.jsx';
 
 import './app.scss';
 
@@ -63,8 +63,9 @@ class App extends React.Component {
   }
 
   removeNotification(id) {
-    const { changeEvent } = this.props;
-    changeEvent({ id: id, event: {notification: false} });
+    console.log(this)
+    const { updateEvent } = this.props;
+    updateEvent({ id: id, event: {notification: false} });
   }
 
   render() {
@@ -88,7 +89,11 @@ class App extends React.Component {
           <Controls />
           <Body />
         </div>
-        <NotificationContainer notifications={getNotifications()} events={events} removeNotification={removeNotification} />
+        <NotificationContainer
+          notifications={getNotifications()}
+          events={events}
+          removeNotification={removeNotification}
+        />
       </div>
     );
     
@@ -104,7 +109,7 @@ App.propTypes = {
   groupsStatus: PropTypes.string,
   auth: PropTypes.func,
   fetchEvents: PropTypes.func,
-  changeEvent: PropTypes.func,
+  updateEvent: PropTypes.func,
   fetchGroups: PropTypes.func
 }
 
@@ -120,7 +125,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => bindActionCreators({
   auth,
   fetchEvents,
-  changeEvent,
+  updateEvent,
   fetchGroups
 }, dispatch);
 
