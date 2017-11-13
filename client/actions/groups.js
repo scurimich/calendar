@@ -48,7 +48,7 @@ export function addGroup(group, dispatch) {
         throw new SubmissionError(errors);
       }
       dispatch({ type: GROUP_WINDOW_HIDE });
-      dispatch({ type: GROUP_ADD, group });
+      dispatch({ type: GROUP_ADD, group: json });
       dispatch(reset('group'));
       resolve();
     });

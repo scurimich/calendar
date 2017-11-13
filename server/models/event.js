@@ -73,7 +73,7 @@ const eventSchema = mongoose.Schema({
 });
 
 function textValidate(value) {
-  return !value || value.match(/^[\w.,!\?-_*\$@\s]+$/gi)[0] === value;
+  return !value || value.match(/^[\wа-яА-Я.,!\?-_*\$@\s]+$/gi)[0] === value;
 }
 
 function dateValidate(value) {

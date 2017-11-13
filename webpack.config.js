@@ -3,7 +3,7 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const path = require('path');
-const NODE_ENV = process.env.NODE_ENV || 'dev';
+const NODE_ENV = process.env.NODE_ENV || 'development';
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const common = {
@@ -12,16 +12,6 @@ const common = {
 		filename: 'build.js',
 		path: path.resolve(__dirname, 'public/build/'),
 		publicPath: 'build'
-	},
-	devServer: {
-		hot: true,
-		port: 9000,
-		proxy: {
-			'*': 'http://localhost:3000'
-		}
-	},
-	watchOptions: {
-		aggregateTimeout: 100
 	},
 	resolve: {
 		modules: ['node_modules'],
@@ -61,10 +51,19 @@ const common = {
 	},
 }
 
-if (NODE_ENV == 'dev') {
+if (NODE_ENV == 'development') {
 	module.exports = merge(common, {
-		devtool: 'inline-source-map',
-		watch: true,
+		devServer: {
+			hot: true,
+			port: 9000,
+			proxy: {
+				'*': 'http://localhost:3000'
+			}
+		},
+		devtool: 'inline-source-map'
+	});
+} else {
+	module.exports = merge(common, {
 		plugins: [
 			new webpack.optimize.UglifyJsPlugin({
 				compress: {
@@ -74,6 +73,4 @@ if (NODE_ENV == 'dev') {
 			})
 		]
 	});
-} else {
-	module.exports = common;
 }

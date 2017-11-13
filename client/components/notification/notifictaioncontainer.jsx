@@ -1,5 +1,6 @@
 import React from 'react';
 import Notification from 'react-web-notification/lib/components/Notification';
+import moment from 'moment';
 
 export default class NotificationContainer extends React.Component {
   constructor(props) {

@@ -6,10 +6,10 @@ import { register } from '../../actions/auth.js';
 
 import './signup.scss';
 
-const input = ({ input, name, label, type, meta: { touched, error } }) => (
+const input = ({ input, name, label, type, meta: { touched, error, active } }) => (
   <label className='signup__label'> {label}
     <input className='signup__input' {...input} type={type} name={name} placeholder={label} />
-    {touched && (error && <span className='signup__error'>{error}</span>)}
+    {!active && touched && (error && <span className='signup__error'>{error}</span>)}
   </label>
 );
 

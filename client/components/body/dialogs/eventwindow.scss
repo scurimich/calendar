@@ -13,8 +13,7 @@
 	}
 
 	&__popup {
-		width: 350px;
-		padding: 10px 20px 20px;
+		padding: 16px;
 		border: 1px solid #ccc;
 		border-radius: 2px;
 		background-color: #fff;
@@ -23,29 +22,41 @@
 		top: 5%;
 	}
 
-	&__close {
-		position: absolute;
-		right: 19px;
-		top: 12px;
-		font-size: 26px;
-		cursor: pointer;
+	&__head {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 8px;
 	}
 
-	&__head {
-		margin-bottom: 15px;
+	&__title {
 		font-family: 'Open Sans Condensed', sans-serif;
-		font-size: 28px;
+		font-size: 24px;
+		line-height: 1;
 		font-weight: 600;
 		color: #323232;
 		text-transform: uppercase;
 	}
 
+	&__close {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 30px;
+		height: 30px;
+		font-family: 'Open Sans', sans-serif;
+		font-size: 30px;
+		font-weight: 400;
+		cursor: pointer;
+	}
+
 	&__text-label {
 		display: block;
-		margin-bottom: 5px;
+		margin-top: 12px;
+		margin-bottom: 4px;
 		position: relative;
 		font-family: 'Open Sans', sans-serif;
-		font-size: 16px;
+		font-size: 18px;
 		color: #323232;
 	}
 
@@ -55,13 +66,16 @@
 		vertical-align: top;
 	}
 
-	&__txt-input {
+	&__text {
 		box-sizing: border-box;
 		width: 100%;
 		padding: 2px 5px 3px 5px;
 		font-family: 'Open Sans', sans-serif;
 		font-size: 16px;
 		color: #323232;
+		resize: none;
+		border: 1px solid #b3b3b3;
+		border-radius: 2px;
 	}
 
 	&__subtitle {
@@ -69,17 +83,23 @@
 		font-size: 18px;
 		font-weight: 400;
 		color: #323232;
-		margin-bottom: 5px;
-		margin-top: 20px;
+		margin-bottom: 4px;
+		margin-top: 12px;
 	}
 
 	&__dates {
-		font-size: 0;
+		display: flex;
+		flex-wrap: nowrap;
 	}
 
-	&__date-cont {
-		margin-bottom: 10px;
-		position: relative;
+	&__date-container {
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: center;
+
+		&:first-child {
+			margin-right: 16px;
+		}
 	}
 
 	&__date-label {
@@ -87,42 +107,38 @@
 		font-family: 'Open Sans', sans-serif;
 		font-size: 14px;
 		color: #323232;
-		width: 20%;
+		margin-right: 4px;
 	}
 
-	&__dt-input {
+	&__date-input {
 		box-sizing: border-box;
+		padding: 2px 4px;
 		font-family: 'Open Sans', sans-serif;
 		font-size: 14px;
 		color: #323232;
-		width: 80%;
+		border-radius: 2px;
+		border: 1px solid #b3b3b3;
 	}
 
 	&__all-day {
-		margin-bottom: 10px;
+		margin-bottom: 8px;
 	}
 
 	&__repeat {
-		margin-bottom: 10px;
+		margin-bottom: 8px;
 	}
 
-	&__time {
+	&__period {
 		display: flex;
-		justify-content: space-between;
 		font-size: 0;
 	}
 
-	&__time-cont {
+	&__time-container {
 		display: flex;
-		position: relative;
-		width: 45%;
+		align-items: center;
 
-		&_left {
-			justify-content: flex-start;
-		}
-
-		&_right {
-			justify-content: flex-end;
+		&:first-child {
+			margin-right: 16px;
 		}
 	}
 
@@ -138,12 +154,14 @@
 		}
 	}
 
-	&__tm-input {
+	&__time-input {
 		box-sizing: border-box;
 		font-family: 'Open Sans', sans-serif;
 		font-size: 14px;
 		color: #323232;
 		width: 70%;
+		border-radius: 2px;
+		border: 1px solid #b3b3b3;
 	}
 
 	&__link-cont {
@@ -156,6 +174,7 @@
 		font-size: 14px;
 		color: #f0403c;
 		text-decoration: none;
+		cursor: pointer;
 	}
 
 	&__number-input {
@@ -171,15 +190,21 @@
 
 	&__days {
 		display: flex;
-		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 10px;
+		margin-bottom: 8px;
 	}
 
-	&__check-label {
+	&__day {
+		&:not(:last-child) {
+			margin-right: 8px;
+		}
+	}
+
+	&__checkbox-label {
 		font-family: 'Open Sans', sans-serif;
 		font-size: 13px;
 		color: #323232;
+		white-space: nowrap;
 
 		&:before {
 			content: '';
@@ -194,20 +219,20 @@
 			margin-bottom: 3px;
 		}
 
-		&_bg {
-			font-size: 15px;
+		&_large {
+			font-size: 14px;
 		}
 	}
 
 	&__checkbox {
 		display: none;
 
-		&:checked+.event-window__check-label:before {
+		&:checked+.event-window__checkbox-label:before {
 			background-color: #f0403c;
 			box-shadow: inset 0 0 1px 2px #fff;
 		}
 
-		&:disabled+.event-window__check-label {
+		&:disabled+.event-window__checkbox-label {
 			opacity: .5;
 		}
 	}

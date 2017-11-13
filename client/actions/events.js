@@ -43,8 +43,8 @@ export function fetchEvents() {
 }
 
 export function addEvent(data, dispatch) {
-  const dateBegin = moment(data.dateBegin, 'YYYY-MM-DD');
-  const dateEnd = moment(data.dateEnd, 'YYYY-MM-DD');
+  const dateBegin = moment(data.dateBegin);
+  const dateEnd = moment(data.dateEnd);
 
   data.duration = (dateEnd - dateBegin) / DAY;
   if (data.week && data.week.length !== DAYS_IN_WEEK)

@@ -13,7 +13,7 @@ const groupSchema = mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    match: /^(\w\s?){1,20}$/i
+    match: /^([\wа-яА-Я]\s?){1,20}$/i
   },
   color: {
     type: String,

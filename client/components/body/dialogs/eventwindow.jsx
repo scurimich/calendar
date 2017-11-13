@@ -10,51 +10,62 @@ import { WEEKDAYS } from '../../../constants/calendar.js';
 
 import './eventwindow.scss';
 
-const inputText = ({ input, label, type, required, meta: { touched, error } }) => {
+const inputText = ({ input, label, type, required, meta: { touched, error, active } }) => {
 	const req = required ? (<span className='event-window__required'>*</span>) : '';
 
 	return (
 		<label className='event-window__text-label'>{label}{req}
-			<input className='event-window__txt-input' {...input} placeholder={label} type={type} />
-			{touched && (error && <span className='message message_error'>{error}</span>)}
+			<input className='event-window__text' {...input} placeholder={label} type={type} />
+			{!active && touched && (error && <span className='message message_error'>{error}</span>)}
 		</label>
 	)
 };
 
-const inputDate = ({ input, label, type, required, meta: { touched, error } }) => {
+const textarea = ({ input, label, required, meta: { touched, error, active } }) => (
+	<label className='event-window__text-label'>{label}
+		<textarea className='event-window__text' {...input} placeholder={label}></textarea>
+		{!active && touched && (error && <span className='message message_error'>{error}</span>)}
+	</label>
+);
+
+const inputDate = ({ input, label, type, required, meta: { touched, error, active } }) => {
 	if (typeof input.value === 'object') input.value = moment(input.value).format('YYYY-MM-D');
 	const req = required ? (<span className='event-window__required'>*</span>) : '';
 
 	return (
-		<div className='event-window__date-cont'>
-			<label className='event-window__date-label'>{label}{req}</label>
-			<input className='event-window__dt-input' {...input} type={type}/>
-			{touched && (error && <span className='message message_error'>{error}</span>)}
+		<div className='event-window__date'>
+			<div className='event-window__date-container'>
+				<label className='event-window__date-label'>{label}{req}</label>
+				<input className='event-window__date-input' {...input} type={type}/>
+			</div>
+			{!active && touched && (error && <span className='message message_error'>{error}</span>)}
 		</div>
 	);
 };
 
-const inputTime = ({ input, label, type, disabled, required, meta: { touched, error } }) => {
+const inputTime = ({ input, label, type, disabled, required, meta: { touched, error, active } }) => {
 	if (typeof input.value === 'object') input.value = input.value.format('HH:mm');
 	const req = required ? (<span className='event-window__required'>*</span>) : '';
 
 	return (
-		<div className='event-window__time-cont event-window__time-cont_left'>
-			<label className='event-window__time-label'>{label}{req}</label>
-			<input className='event-window__tm-input' {...input} type={type} disabled={disabled}/>
-			{touched && (error && <span className='message message_error'>{error}</span>)}
+		<div className='event-window__time'>
+			<div className='event-window__time-container'>
+				<label className='event-window__time-label'>{label}{req}</label>
+				<input className='event-window__time-input' {...input} type={type} disabled={disabled}/>
+			</div>
+			{!active && touched && (error && <span className='message message_error'>{error}</span>)}
 		</div>
 	);
 };
 
-const periodicField = ({ input, type, disabled, required, meta: { touched, error } }) => (
+const periodicField = ({ input, type, disabled, required, meta: { touched, error, active } }) => (
 	<div className='event-window__days'>
 		{
 			WEEKDAYS.map((val, ndx) => {
 				return (
-					<div key={ndx}>
+					<div className='event-window__day'key={ndx}>
 						<Field className='event-window__checkbox' component='input' type={type} id={val} name={`${input.name}[${ndx}]`} disabled={disabled}/>
-						<label className='event-window__check-label' htmlFor={val}>{val}</label>
+						<label className='event-window__checkbox-label' htmlFor={val}>{val}</label>
 					</div>
 				);
 			})
@@ -167,35 +178,45 @@ class EventWindow extends React.Component {
 		const { allDay, periodic, notification } = initialValues;
 		const id = initialValues._id;
 		const submit = id ? updateEvent : addEvent;
+		const groupsField = (
+			<Field
+				name='group'
+				component={this.selectGroup}
+				options={groups}
+				optionRenderer={this.selectRender}
+				valueRenderer={this.selectLabelRender}
+				resetVal={this.selectClear}
+			/>
+		);
 
 		return (
 			<div className={classNames('event-window', {'opened': eventWindow.showed})} id='event-window'>
 				<div className='event-window__popup'>
-					<span className='event-window__close' onClick={onWindowClose}>
-						<i className="fa fa-times" aria-hidden="true"></i>
-					</span>
-					<h2 className='event-window__head'>{id ? 'Update' : 'Add'} event</h2>
+					<div className='event-window__head'>
+						<h2 className='event-window__title'>{id ? 'Update' : 'Add'} event</h2>
+						<span className='event-window__close' onClick={onWindowClose}>×</span>
+					</div>
 					<form className='event-window__form' onSubmit={handleSubmit(submit.bind(this))}>
 						<Field component={inputText} type='text' name='title' label='Event title' required={true}/>
-						<Field component={inputText} type='text' name='description' label='Event description' required={false}/>
+						<Field component={textarea} name='description' label='Event description' required={false}/>
 						<h3 className='event-window__subtitle'>Dates</h3>
 						<div className='event-window__dates'>
-							<Field component={inputDate} type='date' name='dateBegin' label='Begin:' value={dateBegin} required={true}/>
-							<Field component={inputDate} type='date' name='dateEnd' label='End:' value={dateEnd} required={true}/>
+							<Field component={inputDate} type='date' name='dateBegin' label='Begin:' value={dateBegin} required={true} novalidate/>
+							<Field component={inputDate} type='date' name='dateEnd' label='End:' value={dateEnd} required={true} novalidate/>
 						</div>
-						<h3 className='event-window__subtitle'>Time</h3>
+						<h3 className='event-window__subtitle'>Time (all-day or certain period of time)</h3>
 						<div className='event-window__all-day'>
 							<Field className='event-window__checkbox' component='input' type='checkbox' id='all-day' name='allDay' value='allday' onClick={this.changeState} checked={allDay}/>
-							<label className='event-window__check-label event-window__check-label_bg' htmlFor='all-day'>All day</label>
+							<label className='event-window__checkbox-label event-window__checkbox-label_large' htmlFor='all-day'>All-day</label>
 						</div>
-						<div className='event-window__time'>
-							<Field component={inputTime} type='time' name='timeBegin' label='Begin:' disabled={allDay} required={!allDay}/>
-							<Field component={inputTime} type='time' name='timeEnd' label='End:' disabled={allDay} required={!allDay}/>
+						<div className='event-window__period'>
+							<Field component={inputTime} type='time' name='timeBegin' label='Begin:' disabled={allDay} required={!allDay} novalidate/>
+							<Field component={inputTime} type='time' name='timeEnd' label='End:' disabled={allDay} required={!allDay} novalidate/>
 						</div>
 						<h3 className='event-window__subtitle'>Days of the Week</h3>
 						<div className='event-window__repeat'>
 							<Field className='event-window__checkbox' component='input' type='checkbox' id='periodic' name='periodic' value='periodic' onClick={this.changeState} checked={periodic}/>
-							<label className='event-window__check-label event-window__check-label_bg' htmlFor='periodic'>Repeating</label>
+							<label className='event-window__checkbox-label event-window__checkbox-label_large' htmlFor='periodic'>Certain days</label>
 						</div>
 						<Field component={periodicField} type='checkbox' name='week' disabled={!periodic}/>
 						<h3 className='event-window__subtitle'>Groups</h3>
@@ -203,18 +224,11 @@ class EventWindow extends React.Component {
 							<div className='event-window__link-cont'>
 								<a className='event-window__add' onClick={addGroup}>Add Group</a>
 							</div>
-							<Field
-								name='group'
-								component={this.selectGroup}
-								options={groups}
-								optionRenderer={this.selectRender}
-								valueRenderer={this.selectLabelRender}
-								resetVal={this.selectClear}
-							/>
+							{(groups.length && groupsField) || ''}
 						</div>
 						<div className='event-window__notification'>
 							<Field className='event-window__checkbox' component='input' type='checkbox' id='notification' name='notification' onClick={this.changeState} checked={notification}/>
-							<label className='event-window__check-label event-window__check-label_bg' htmlFor='notification'>Notification</label>
+							<label className='event-window__checkbox-label event-window__checkbox-label_large' htmlFor='notification'>Enable desktop notification</label>
 						</div>
 						<div className='event-window__control'>
 							<button className='event-window__button' type='submit'>submit</button>

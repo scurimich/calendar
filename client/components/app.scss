@@ -91,28 +91,11 @@ input, textarea {
 }
 
 .message {
-	position: absolute;
-	bottom: 37px;
-	right: 10px;
+	display: block;
 	font-size: 13px;
-	padding: 3px 8px;
-	background-color: #fff;
-	border-radius: 2px;
-
-	&:after {
-		content: '';
-		display: block;
-		position: absolute;
-		bottom: -4px;
-		left: 50%;
-		border: 4px solid #fff;
-		transform: rotate(45deg);
-		z-index: 1;
-	}
 
 	&_error {
 		color: #f0403c;
-		border: 1px solid #f0403c;
 
 		&:after {
 			box-shadow: 1px 1px 0 0 #f0403c;
@@ -121,7 +104,6 @@ input, textarea {
 
 	&_warning {
 		color: #1f97fc;
-		border: 1px solid #1f97fc;
 
 		&:after {
 			box-shadow: 1px 1px 0 0 #1f97fc;

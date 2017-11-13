@@ -6,10 +6,10 @@ import { login } from '../../actions/auth.js';
 
 import './signin.scss';
 
-const input = ({ input, name, label, type, meta: { touched, error } }) => (
+const input = ({ input, name, label, type, meta: { touched, error, active } }) => (
   <label className='signin__label'> {label}
     <input className='signin__input' {...input} type={type} name={name} placeholder={label} />
-    {touched && (error && <span className='signin__error'>{error}</span>)}
+    {!active && touched && (error && <span className='signin__error'>{error}</span>)}
   </label>
 );
 

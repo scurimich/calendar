@@ -45,8 +45,9 @@ class Groups extends React.Component {
       groupWindowShow(value);
     }
     if (classes.indexOf('group-select__remove') + 1) {
-      const { removeGroup } = this.props;
+      const { removeGroup, selectGroup } = this.props;
       removeGroup(value);
+      selectGroup(null);
     }
   }
 

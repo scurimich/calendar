@@ -52,17 +52,20 @@ class SidebarBody extends React.Component {
         eventWindowShow={eventWindowShow}
       />
     );
+    const groupsComponent = (
+      <Groups 
+        selectedGroup={currentGroup}
+        groups={groups}
+        selectGroup={selectGroup}
+        groupWindowShow={groupWindowShow}
+        removeGroup={removeGroup}
+        groupWindowShow={groupWindowShow}
+      />
+    );
 
     const sidebarInfo = (
       <div className='sidebar__events events'>
-        <Groups 
-          selectedGroup={currentGroup}
-          groups={groups}
-          selectGroup={selectGroup}
-          groupWindowShow={groupWindowShow}
-          removeGroup={removeGroup}
-          groupWindowShow={groupWindowShow}
-        />
+        {(groups.length && groupsComponent) || ''}
         <Events
           date={date}
           events={events}

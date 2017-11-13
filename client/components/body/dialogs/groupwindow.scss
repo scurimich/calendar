@@ -14,8 +14,7 @@
   }
 
   &__popup {
-    width: 250px;
-    padding: 10px 20px 20px;
+    padding: 12px 16px;
     border: 1px solid #ccc;
     border-radius: 2px;
     background-color: #fff;
@@ -24,21 +23,32 @@
     top: 5%;
   }
 
-  &__close {
-    position: absolute;
-    right: 19px;
-    top: 12px;
-    font-size: 26px;
-    cursor: pointer;
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
   }
 
-  &__head {
-    margin-bottom: 15px;
+  &__title {
     font-family: 'Open Sans Condensed', sans-serif;
-    font-size: 28px;
+    font-size: 24px;
+    line-height: 1;
     font-weight: 600;
     color: #323232;
     text-transform: uppercase;
+  }
+
+  &__close {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 30px;
+    font-weight: 400;
+    cursor: pointer;
   }
 
   &__text-label {
@@ -52,7 +62,6 @@
   &__inputs {
     display: flex;
     flex-wrap: nowrap;
-    align-items: flex-end;
     justify-content: space-between;
   }
 
