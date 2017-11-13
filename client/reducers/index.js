@@ -14,7 +14,7 @@ import groupsStatus from './groupsstatus.js';
 import groupWindow from './groupwindow.js';
 import sidebar from './sidebar.js';
 import space from './space.js';
-import monthView from './monthView.js';
+import monthView from './monthview.js';
 import currentGroup from './filter.js';
 
 const reducer = combineReducers({

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import Social from './Social.jsx';
+import Social from './social.jsx';
 
 import './footer.scss';
 
