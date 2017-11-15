@@ -50,6 +50,7 @@ export function deleteEvent(req, res) {
     const id = req.params.id;
     Event.findByIdAndRemove(id, (err, event) => {
       if (err) return res.send(err);
+      res.send(event);
     });
   });
 }

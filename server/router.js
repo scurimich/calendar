@@ -15,7 +15,7 @@ export default function (app) {
   app.get('/event', reqAuth, getEvents);
   app.post('/event', reqAuth, addEvent);
   app.put('/event/:id', reqAuth, updateEvent);
-  app.delete('/event/:id', reqAuth, updateEvent);
+  app.delete('/event/:id', reqAuth, deleteEvent);
 
   app.get('/group', reqAuth, getGroups);
   app.post('/group', reqAuth, addGroup);

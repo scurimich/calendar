@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { addEvent, updateEvent } from '../../actions/events.js';
+import { addEvent, updateEvent, removeEvent } from '../../actions/events.js';
 import { eventWindowShow, eventWindowHide } from '../../actions/eventwindow.js';
 import { groupWindowShow, groupWindowHide } from '../../actions/groupwindow.js';
 import { addGroup, updateGroup } from '../../actions/groups.js';
@@ -37,7 +37,8 @@ class Body extends React.Component {
 			groups,
 			groupWindow,
 			groupWindowShow,
-			groupWindowHide
+			groupWindowHide,
+			removeEvent
 		} = this.props;
 		const view = this.setCurrentView();
 
@@ -47,6 +48,7 @@ class Body extends React.Component {
 				<EventWindow
 					addEvent={addEvent}
 					updateEvent={updateEvent}
+					removeEvent={removeEvent}
 					eventWindow={eventWindow}
 					onWindowClose={eventWindowHide}
 					addGroup={groupWindowShow}
@@ -88,7 +90,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 	eventWindowShow,
 	eventWindowHide,
 	groupWindowShow,
-	groupWindowHide
+	groupWindowHide,
+	removeEvent
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Body);

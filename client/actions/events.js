@@ -78,8 +78,22 @@ export function addEvent(data, dispatch) {
     });
 }
 
-export function removeEvent(event) {
-	return { type: EVENT_REMOVE, event}
+export function removeEvent(id) {
+  return dispatch => {
+    return  fetch(`/event/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': localStorage.getItem('token')
+      }
+    })
+    .then(res => res.json())
+    .then(json => {
+      dispatch({ type: EVENT_WINDOW_HIDE });
+      dispatch(reset('event'));
+      dispatch({ type: EVENT_REMOVE, id });
+    })
+  };
 }
 
 export function updateEvent(event, dispatch) {

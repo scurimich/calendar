@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { reduxForm, Field } from 'redux-form';
 import moment from 'moment';
 import Select from 'react-select';
@@ -117,6 +118,7 @@ class EventWindow extends React.Component {
 		this.selectRender = this.selectRender.bind(this);
 		this.selectLabelRender = this.selectLabelRender.bind(this);
 		this.selectGroup = this.selectGroup.bind(this);
+		this.deleteEvent = this.deleteEvent.bind(this);
 	}
 
 	changeState(e) {
@@ -125,6 +127,11 @@ class EventWindow extends React.Component {
 		const data = {};
 		data[field.name] = field.checked;
 		eventWindowShow(data)
+	}
+
+	deleteEvent() {
+		const { removeEvent, initialValues } = this.props;
+		removeEvent(initialValues._id);
 	}
 
 	selectRender({ label, value, color }) {
@@ -188,6 +195,7 @@ class EventWindow extends React.Component {
 				resetVal={this.selectClear}
 			/>
 		);
+		const deleteButton = <button className='event-window__button' type='button' onClick={this.deleteEvent}>delete</button>
 
 		return (
 			<div className={classNames('event-window', {'opened': eventWindow.showed})} id='event-window'>
@@ -232,6 +240,7 @@ class EventWindow extends React.Component {
 						</div>
 						<div className='event-window__control'>
 							<button className='event-window__button' type='submit'>submit</button>
+							{ id ? deleteButton : ''}
 						</div>
 					</form>
 				</div>
@@ -247,7 +256,8 @@ EventWindow.propTypes = {
 	onWindowClose: PropTypes.func,
 	addGroup: PropTypes.func,
 	groups: PropTypes.array,
-	eventWindowShow: PropTypes.func
+	eventWindowShow: PropTypes.func,
+	removeEvent: PropTypes.func
 };
 
 const mapStateToProps = state => {
