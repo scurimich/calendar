@@ -21,8 +21,19 @@ const validate = values => {
 }
 
 class GroupWindow extends React.Component {
+  componentDidUpdate() {
+    const { groupWindow } = this.props;
+    if (groupWindow.showed) document.addEventListener('keydown', this.keypressEsc.bind(this));
+    else document.removeEventListener('keydown', this.keypressEsc);
+  }
+
+  keypressEsc(e) {
+    const { groupWindowHide } = this.props;
+    if (e.which === 27) groupWindowHide();
+  }
+
   render() {
-    const { handleSubmit, onWindowClose, addGroup, updateGroup, initialValues, groupWindow } = this.props;
+    const { handleSubmit, groupWindowHide, addGroup, updateGroup, initialValues, groupWindow } = this.props;
     const id = initialValues._id;
     const submit = id ? updateGroup : addGroup;
 
@@ -31,7 +42,7 @@ class GroupWindow extends React.Component {
         <div className='group-window__popup'>
           <div className='group-window__head'>
             <h2 className='group-window__title'>{id ? 'Update' : 'Add'} Group</h2>
-            <span className='group-window__close' onClick={onWindowClose}>×</span>
+            <span className='group-window__close' onClick={groupWindowHide}>×</span>
           </div>
           <form className='group-window__form' onSubmit={handleSubmit(submit)}>
             <label className='group-window__text-label'>Name and Color</label>
@@ -52,7 +63,7 @@ class GroupWindow extends React.Component {
 GroupWindow.propTypes = {
   addGroup: PropTypes.func,
   groupWindow: PropTypes.object,
-  onWindowClose: PropTypes.func,
+  groupWindowHide: PropTypes.func,
   updateWindow: PropTypes.func
 };
 

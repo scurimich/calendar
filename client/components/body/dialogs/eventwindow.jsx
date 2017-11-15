@@ -121,6 +121,17 @@ class EventWindow extends React.Component {
 		this.deleteEvent = this.deleteEvent.bind(this);
 	}
 
+	componentDidUpdate() {
+		const { eventWindow } = this.props;
+		if (eventWindow.showed) document.addEventListener('keydown', this.keypressEsc.bind(this));
+		else document.removeEventListener('keydown', this.keypressEsc);
+	}
+
+	keypressEsc(e) {
+		const { eventWindowHide } = this.props;
+		if (e.which === 27) eventWindowHide();
+	}
+
 	changeState(e) {
 		const { eventWindowShow } = this.props;
 		const field = e.currentTarget;
@@ -173,7 +184,7 @@ class EventWindow extends React.Component {
 	render() {
 		const {
 			handleSubmit,
-			onWindowClose,
+			eventWindowHide,
 			eventWindow,
 			addGroup,
 			addEvent,
@@ -202,7 +213,7 @@ class EventWindow extends React.Component {
 				<div className='event-window__popup'>
 					<div className='event-window__head'>
 						<h2 className='event-window__title'>{id ? 'Update' : 'Add'} event</h2>
-						<span className='event-window__close' onClick={onWindowClose}>×</span>
+						<span className='event-window__close' onClick={eventWindowHide}>×</span>
 					</div>
 					<form className='event-window__form' onSubmit={handleSubmit(submit.bind(this))}>
 						<Field component={inputText} type='text' name='title' label='Event title' required={true}/>
@@ -253,7 +264,7 @@ EventWindow.propTypes = {
 	addEvent: PropTypes.func,
 	updateEvent: PropTypes.func,
 	eventWindow: PropTypes.object,
-	onWindowClose: PropTypes.func,
+	eventWindowHide: PropTypes.func,
 	addGroup: PropTypes.func,
 	groups: PropTypes.array,
 	eventWindowShow: PropTypes.func,

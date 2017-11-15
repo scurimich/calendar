@@ -18,8 +18,9 @@
 		border-radius: 2px;
 		background-color: #fff;
 		position: absolute;
-		left: 25%;
+		left: 50%;
 		top: 5%;
+		transform: translate(-50%);
 	}
 
 	&__head {

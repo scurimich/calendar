@@ -50,7 +50,7 @@ class Body extends React.Component {
 					updateEvent={updateEvent}
 					removeEvent={removeEvent}
 					eventWindow={eventWindow}
-					onWindowClose={eventWindowHide}
+					eventWindowHide={eventWindowHide}
 					addGroup={groupWindowShow}
 					groups={groups}
 					eventWindowShow={eventWindowShow}
@@ -58,7 +58,7 @@ class Body extends React.Component {
 				<GroupWindow
 					addGroup={addGroup}
 					groupWindow={groupWindow}
-					onWindowClose={groupWindowHide}
+					groupWindowHide={groupWindowHide}
 					updateGroup={updateGroup}
 				/>
 			</div>
