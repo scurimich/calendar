@@ -1,12 +1,14 @@
 # installation (dev)
 
 1. npm i
-2. npm run back-dev
-3. npm run front-dev
+2. npm run dev:back
+3. npm run dev:front
 
 # todos
 
 * ~~moment.js~~
-* react performance
+* ~~deploy~~
+* performance
 * client structure
-* deploy
+
+[demo](thawing-falls-11927.herokuapp.com)
