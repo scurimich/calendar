@@ -102,13 +102,17 @@ class App extends React.Component {
           <div
             className={classNames('content__swipe', {'hidden': sidebar})}
             onClick={this.switchSidebar}
-            onTouchStart={this.switchSidebar}
+            onTouchEnd={this.switchSidebar}
             ref = { (node) => {this.swipe = node;} }
           >
             <i className='fa fa-chevron-right' aria-hidden="true"></i>
           </div>
         </div>
-        <div className={classNames('content__main', {'blocked': sidebar})} onClick={this.hideSidebar} onTouchStart={this.hideSidebar}>
+        <div
+          className={classNames('content__main', {'blocked': sidebar})}
+          onClick={this.hideSidebar}
+          onTouchEnd={this.hideSidebar}
+        >
           <Controls />
           <Body />
         </div>

@@ -3,7 +3,11 @@
 	flex-wrap: nowrap;
 	justify-content: space-between;
 	align-items: flex-end;
-	min-width: 250px;
+	width: 250px;
+
+	@media (max-width: 768px) {
+		width: 220px;
+	}
 
 	&__arrow {
 		display: flex;
@@ -37,6 +41,10 @@
 		@media (max-width: 1070px) {
 			font-size: 13px;
 			padding: 4px 16px;
+		}
+
+		@media (max-width: 768px) {
+			padding: 4px 8px;
 		}
 	}
 }

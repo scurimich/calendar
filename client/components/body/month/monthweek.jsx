@@ -32,7 +32,7 @@ class MonthWeek extends React.Component {
 
     if (cell && cell.clientHeight && cell.clientHeight !== monthView.cellSize) 
       changeMonthView({ cellSize: cell.clientHeight });
-    if (cell && line.clientHeight && line.clientHeight !== monthView.lineSize)
+    if (line && line.clientHeight && line.clientHeight !== monthView.lineSize)
       changeMonthView({ lineSize: line.clientHeight });
   }
 

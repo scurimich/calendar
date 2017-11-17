@@ -11,6 +11,10 @@
   align-items: center;
   padding: 16px;
 
+  @media (max-width: 768px) {
+    padding: 16px 8px;
+  }
+
   &__views {
     margin: 0 4px;
 
