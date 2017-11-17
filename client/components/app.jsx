@@ -4,10 +4,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router';
 import moment from 'moment';
+import classNames from 'classnames';
 
 import { auth } from '../actions/auth.js';
 import { fetchEvents, updateEvent } from '../actions/events.js';
 import { fetchGroups } from '../actions/groups.js';
+import { switchSidebar } from '../actions/sidebar.js';
 
 import Sidebar from './sidebar/sidebar.jsx';
 import Controls from './controls/controls.jsx';
@@ -22,6 +24,8 @@ class App extends React.Component {
 
     this.removeNotification = this.removeNotification.bind(this);
     this.getNotifications = this.getNotifications.bind(this);
+    this.switchSidebar = this.switchSidebar.bind(this);
+    this.hideSidebar = this.hideSidebar.bind(this);
   }
 
   componentDidMount() {
@@ -63,9 +67,20 @@ class App extends React.Component {
   }
 
   removeNotification(id) {
-    console.log(this)
     const { updateEvent } = this.props;
-    updateEvent({ id: id, event: {notification: false} });
+    updateEvent({ event: {notification: false}, id });
+  }
+
+  switchSidebar() {
+    const { switchSidebar } = this.props;
+    switchSidebar();
+  }
+
+  hideSidebar(e) {
+    const { sidebar, switchSidebar } = this.props;
+    if (sidebar) {
+      switchSidebar();
+    }
   }
 
   render() {
@@ -73,7 +88,7 @@ class App extends React.Component {
 
     if (!token) return <Redirect to='/login' />;
     const { getNotifications, removeNotification } = this;
-    const { user, events } = this.props;
+    const { user, events, sidebar } = this.props;
     const { authenticated } = user;
 
     const waiting = (
@@ -81,11 +96,19 @@ class App extends React.Component {
     );
 
     const application = (
-      <div className="content">
+      <div className='content'>
         <div className='content__sidebar'>
-          <Sidebar />
+          <Sidebar ref={ (node) => {this.sidebarComponent = node;} } />
+          <div
+            className={classNames('content__swipe', {'hidden': sidebar})}
+            onClick={this.switchSidebar}
+            onTouchStart={this.switchSidebar}
+            ref = { (node) => {this.swipe = node;} }
+          >
+            <i className='fa fa-chevron-right' aria-hidden="true"></i>
+          </div>
         </div>
-        <div className="content__main">
+        <div className={classNames('content__main', {'blocked': sidebar})} onClick={this.hideSidebar} onTouchStart={this.hideSidebar}>
           <Controls />
           <Body />
         </div>
@@ -107,6 +130,7 @@ App.propTypes = {
   eventsStatus: PropTypes.string,
   groups: PropTypes.array,
   groupsStatus: PropTypes.string,
+  sidebar: PropTypes.bool,
   auth: PropTypes.func,
   fetchEvents: PropTypes.func,
   updateEvent: PropTypes.func,
@@ -119,14 +143,16 @@ const mapStateToProps = state => ({
   events: state.events,
   eventsStatus: state.eventsStatus.status,
   groups: state.groups,
-  groupsStatus: state.groupsStatus.status
+  groupsStatus: state.groupsStatus.status,
+  sidebar: state.sidebar
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   auth,
   fetchEvents,
   updateEvent,
-  fetchGroups
+  fetchGroups,
+  switchSidebar
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

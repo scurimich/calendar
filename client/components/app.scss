@@ -69,24 +69,57 @@ input, textarea {
 		flex-direction: column;
 		height: 100%;
   	width: calc(100% - 280px);
+		position: relative;
 
-  	@media (max-width: 700px) {
-  		transorm: translate(100%);
+  	@media (max-width: 960px) {
+  		width: calc(100% - 32px);
+
+  		&.blocked {
+
+  			&:after {
+  				content: '';
+  				position: absolute;
+  				top: 0;
+  				bottom: 0;
+  				left: 0;
+  				right: 0;
+  				background-color: #fff;
+  				opacity: .5;
+  				z-index: 999;
+  			}
+  		}
   	}
 	}
 
 	&__sidebar {
 		flex-grow: 0;
 		flex-shrink: 0;
+		display: flex;
 		width: 280px;
+		position: relative;
+		background-color: #323232;
 
-	  @media (max-width: 860px) {
-			width: 210px;
+	  @media (max-width: 960px) {
+	  	width: 32px;
 	  }
+	}
 
-  	@media (max-width: 700px) {
-  		width: 100%;
-  	}
+	&__swipe {
+		flex-grow: 1;
+		display: none;
+		justify-content: center;
+		align-items: center;
+		width: 32px;
+		cursor: pointer;
+  	background-color: #323232;
+
+		@media (max-width: 960px) {
+			display: flex;
+
+			&.hidden {
+				display: none;
+			}
+		}
 	}
 }
 

@@ -1,9 +1,9 @@
-import { ACTIVE_SIDEBAR_INFO } from '../constants/actions.js';
+import { SWITCH_SIDEBAR } from '../constants/actions.js';
 
-export default function sidebar(state = 'events', action) {
+export default function sidebar(state = false, action) {
 	switch (action.type) {
-		case 'ACTIVE_SIDEBAR_INFO':
-			return action.content;
+		case SWITCH_SIDEBAR:
+			return !state;
 		default:
 			return state;
 	}

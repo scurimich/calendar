@@ -1,5 +1,5 @@
-import { ACTIVE_SIDEBAR_INFO } from '../constants/actions.js';
+import { SWITCH_SIDEBAR } from '../constants/actions.js';
 
-export function changeSidebarContent(content) {
-  return { type: ACTIVE_SIDEBAR_INFO, content: content };
+export function switchSidebar(content) {
+  return { type: SWITCH_SIDEBAR };
 }

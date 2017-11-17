@@ -42,8 +42,8 @@ class MonthWeek extends React.Component {
   }
 
   onAddClick(date, e) {
-    e.stopPropagation();
     const { eventWindowShow } = this.props;
+    e.stopPropagation();
     const data = {
       _id: null,
       allDay: true,
@@ -67,8 +67,8 @@ class MonthWeek extends React.Component {
   }
 
   onDateClick(date, e) {
-    e.stopPropagation();
     const { setView, setSpace, setMiniSpace } = this.props;
+    e.stopPropagation();
     setView('Day');
     setSpace(date);
     setMiniSpace(date);
@@ -95,6 +95,7 @@ class MonthWeek extends React.Component {
       firstDay,
       events,
       groups,
+      sidebar,
       weekNdx,
       eventDragAndDrop,
       selectedEvent,
@@ -122,6 +123,7 @@ class MonthWeek extends React.Component {
           date={firstDay}
           events={getEventsGroups(filteredEvents)}
           linesCount={getLinesNumber() || 1}
+          sidebar={sidebar}
           ndx={weekNdx}
           changeSelectedDate={changeSelectedDate}
           eventDragAndDrop={eventDragAndDrop}
@@ -163,6 +165,7 @@ MonthWeek.propTypes = {
   groups: PropTypes.array,
   weekNdx: PropTypes.number,
   monthView: PropTypes.object,
+  sidebar: PropTypes.bool,
   eventDragAndDrop: PropTypes.func,
   setView: PropTypes.func,
   setSpace: PropTypes.func,
@@ -181,7 +184,8 @@ const mapStateToProps = state => ({
   groups: state.groups,
   space: state.space.main,
   selectedEvent: state.selected,
-  monthView: state.monthView
+  monthView: state.monthView,
+  sidebar: state.sidebar
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
