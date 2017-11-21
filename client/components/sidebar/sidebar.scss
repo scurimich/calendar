@@ -3,20 +3,20 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 280px;
   height: 100%;
   background-color: #323232;
-	border-right: 1px solid #858585;
+  transition: .3s;
 
-  @media (max-width: 960px) {
+  @media (max-width: 1070px) {
+    width: 280px;
     position: absolute;
-    transform: translate(-232px);
+    transform: translate(-280px);
     z-index: 1000;
 
     &.active {
       position: static;
       transform: translate(0);
-      width: 280px;
     }
   }
 }

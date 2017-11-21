@@ -65,7 +65,7 @@ export default class MonthEvents extends React.Component {
                 </div>
               );
 
-              return item.count === 0 ? offset : more;
+              return !item.count ? offset : more;
             })
           }
         </li>

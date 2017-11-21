@@ -7,10 +7,20 @@
 	&__item {
 		&:not(:last-child) {
 			margin-right: 2px;
+
+			@media (max-width: 768px) {
+				margin-right: 8px;
+			}
+		}
+
+		@media (max-width: 768px) {
+			flex-grow: 1;
+			display: flex;
 		}
 	}
 
 	&__link {
+		box-sizing: border-box;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -25,19 +35,15 @@
 		transition: .3s;
 		cursor: pointer;
 
+		@media (max-width: 768px) {
+			flex: 1 1;
+			padding: 6px 8px;
+			width: auto;
+		}
+
 		&_active {
 			color: #fff;
 			background-color: #f0403c;
-		}
-
-		@media (max-width: 1070px) {
-			width: 32px;
-			padding: 5px 8px 6px;
-			font-size: 11px;
-		}
-
-		@media (max-width: 960px) {
-			width: 50px;
 		}
 	}
 }

@@ -22,6 +22,8 @@ input, textarea {
 
 .app {
 	height: 100%;
+	min-width: 320px;
+	min-height: 360px;
 	animation: app-opacity .2s linear;
 }
 
@@ -70,8 +72,9 @@ input, textarea {
 		height: 100%;
   	width: calc(100% - 280px);
 		position: relative;
+		transition: .3s;
 
-  	@media (max-width: 960px) {
+  	@media (max-width: 1070px) {
   		width: calc(100% - 32px);
 
   		&.blocked {
@@ -98,8 +101,10 @@ input, textarea {
 		width: 280px;
 		position: relative;
 		background-color: #323232;
+		border-right: 1px solid #858585;
+		transition: .3s;
 
-	  @media (max-width: 960px) {
+	  @media (max-width: 1070px) {
 	  	width: 32px;
 	  }
 	}
@@ -114,7 +119,7 @@ input, textarea {
 		color: #fff;
   	background-color: #323232;
 
-		@media (max-width: 960px) {
+		@media (max-width: 1070px) {
 			display: flex;
 
 			&.hidden {

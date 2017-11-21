@@ -5,9 +5,9 @@
 }
 
 .month-day {
+  flex: 1 1 40px;
   display: flex;
   flex-direction: column;
-  width: calc(100% / 5);
   position: relative;
   border-top: 1px solid #e6e6e6;
 
@@ -54,6 +54,11 @@
     font-size: 14px;
     color: #323232;
     cursor: pointer;
+
+    @media (max-width: 768px) {
+      margin-left: 2px;
+      font-size: 11px;
+    }
   }
 
   &__add {
@@ -64,10 +69,31 @@
     font-size: 24px;
     line-height: 100%;
     color: #323232;
+
+    @media (max-width: 768px) {
+      margin-right: 2px;
+      font-size: 21px;
+    }
   }
 
   &__body {
     flex-grow: 1;
+  }
+
+  &__events {
+    display: none;
+    padding-left: 2px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    color: #323232;
+
+    @media (max-height: 400px) {
+      display: block;
+    }
+  }
+
+  &__count {
+    color: #f0403c;
   }
 
   &__all {

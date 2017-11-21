@@ -56,31 +56,12 @@ class MonthDay extends React.Component {
           <span id='day-date' className='month-day__number' onClick={onDateClick}>{date.date()}</span>
           <span id='add-event' className='month-day__add' onClick={onAddClick}>+</span>
         </div>
-        <div className='month-day__body' ref={(body) => {this.body = body;}}></div>
-        <div className={classNames('month-day__all', {'month-day__all_hidden': !selected})}>
-          <div className='month-day__info'>
-            <span className='month-day__full'>{date.format('DD MMMM YYYY')}</span>
-            <span className='month-day__close' onClick={removeSelectedDate}><i className="fa fa-times" aria-hidden="true"></i></span>
-          </div>
+        <div className='month-day__body' ref={(body) => {this.body = body;}}>
           {
-            events.map(event => {
-              const color = event.group && event.group.color;
-
-              return (
-                <div
-                  className='month-day__event'
-                  key={event._id}
-                  id={event._id}
-                  onMouseDown={eventDragAndDrop}
-                >
-                  <div
-                    className='month-day__event-back'
-                    style={ color ? {'backgroundColor': color} : {} }
-                  ></div>
-                  {event.title}
-                </div>
-              );
-            })
+            events.length ?
+              <span className='month-day__events'>
+                <span className='month-day__count'>{events.length}</span> event{events.length - 1 ? 's' : ''}
+              </span> : ''
           }
         </div>
       </li>

@@ -71,12 +71,14 @@ class App extends React.Component {
     updateEvent({ event: {notification: false}, id });
   }
 
-  switchSidebar() {
+  switchSidebar(e) {
+    console.log(e.type);
     const { switchSidebar } = this.props;
     switchSidebar();
   }
 
   hideSidebar(e) {
+    console.log(e.type);
     const { sidebar, switchSidebar } = this.props;
     if (sidebar) {
       switchSidebar();

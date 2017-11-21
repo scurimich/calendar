@@ -10,6 +10,10 @@
 		border-radius: 3px;
 		border: none;
 		background-color: #e6e6e6;
+
+		@media (max-width: 768px) {
+			padding: 6px 12px;
+		}
 	}
 
 	&__cancel {

@@ -15,6 +15,8 @@ import { setView } from '../../../actions/view';
 import MiniMonth from './minimonth.jsx';
 import CurrentMonth from './currentmonth.jsx';
 
+import './minicalendar.scss';
+
 class MiniCalendar extends React.Component {
 	constructor(props) {
 		super(props);

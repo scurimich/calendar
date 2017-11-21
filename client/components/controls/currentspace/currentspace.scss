@@ -4,10 +4,7 @@
 	justify-content: space-between;
 	align-items: flex-end;
 	width: 250px;
-
-	@media (max-width: 768px) {
-		width: 220px;
-	}
+	transition: .3s;
 
 	&__arrow {
 		display: flex;
@@ -21,6 +18,12 @@
 		text-decoration: none;
 		border-radius: 2px;
 		cursor: pointer;
+
+		@media (max-width: 768px) {
+			width: 30px;
+			height: 30px;
+			font-size: 24px;
+		}
 	}
 
 	&__title {
@@ -29,12 +32,13 @@
 		justify-content: center;
 		align-items: center;
 		margin: 0 4px;
-		padding: 2px 16px;
+		padding: 4px 16px 3px;
 		font-family: 'Open Sans', sans-serif;
-		font-size: 16px;
+		font-size: 14px;
 		font-weight: 600;
 		color: #323232;
 		text-decoration: none;
+		white-space: nowrap;
 		background-color: #ebebeb;
 		border-radius: 2px;
 
@@ -44,7 +48,7 @@
 		}
 
 		@media (max-width: 768px) {
-			padding: 4px 8px;
+			font-size: 16px;
 		}
 	}
 }

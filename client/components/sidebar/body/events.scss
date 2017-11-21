@@ -4,10 +4,6 @@
 	flex-direction: column;
 	overflow: hidden;
 
-	@media (max-width: 700px) {
-		padding-right: 18px;
-	}
-
 	&__date {
 		padding: 0 0 12px 8px;
 		font-family: 'Open Sans', sans-serif;
@@ -15,8 +11,8 @@
 		color: #fff;
 		font-weight: 400;
 
-		@media (max-width: 700px) {
-			padding-left: 24px;
+		@media (max-height: 400px) {
+			padding: 0 0 4px 4px;
 		}
 	}
 
@@ -42,10 +38,6 @@
 	&__list {
 		flex-grow: 1;
 		padding-right: 10px;
-
-		@media (max-width: 860px) {
-			padding-right: 8px;
-		}
 	}
 
 	&__spinner-container {
