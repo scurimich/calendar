@@ -66,9 +66,11 @@ if (NODE_ENV == 'development') {
 	module.exports = merge(common, {
 		plugins: [
 			new webpack.optimize.UglifyJsPlugin({
+				beautify: false,
 				compress: {
 					warnings: false,
-					drop_console: true
+					drop_console: true,
+					unsafe: true
 				}
 			})
 		]

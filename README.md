@@ -10,5 +10,6 @@
 * ~~deploy~~
 * performance
 * client structure
+* lazy load
 
 [demo](http://thawing-falls-11927.herokuapp.com)
